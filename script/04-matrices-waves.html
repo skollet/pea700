@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; The numerical toolbox II: matrices and waves – Prognostic Modelling</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05-one-step-methods.html" rel="next">
+<link href="./03-numerical-toolbox.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3892b3adcc577e567f7e69fe50577df6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./04-matrices-waves.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Prognostic Modelling</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-governing-equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-numerical-toolbox.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-matrices-waves.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Time integration of ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-one-step-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#from-a-differential-equation-to-a-matrix" id="toc-from-a-differential-equation-to-a-matrix" class="nav-link active" data-scroll-target="#from-a-differential-equation-to-a-matrix"><span class="header-section-number">4.1</span> From a differential equation to a matrix</a>
+  <ul class="collapse">
+  <li><a href="#a-model-problem" id="toc-a-model-problem" class="nav-link" data-scroll-target="#a-model-problem"><span class="header-section-number">4.1.1</span> A model problem</a></li>
+  <li><a href="#sparsity" id="toc-sparsity" class="nav-link" data-scroll-target="#sparsity"><span class="header-section-number">4.1.2</span> Sparsity</a></li>
+  <li><a href="#symmetry-and-positive-definiteness" id="toc-symmetry-and-positive-definiteness" class="nav-link" data-scroll-target="#symmetry-and-positive-definiteness"><span class="header-section-number">4.1.3</span> Symmetry and positive definiteness</a></li>
+  <li><a href="#eigenvalues-and-eigenvectors" id="toc-eigenvalues-and-eigenvectors" class="nav-link" data-scroll-target="#eigenvalues-and-eigenvectors"><span class="header-section-number">4.1.4</span> Eigenvalues and eigenvectors</a></li>
+  </ul></li>
+  <li><a href="#norms-and-the-condition-number" id="toc-norms-and-the-condition-number" class="nav-link" data-scroll-target="#norms-and-the-condition-number"><span class="header-section-number">4.2</span> Norms and the condition number</a>
+  <ul class="collapse">
+  <li><a href="#norms" id="toc-norms" class="nav-link" data-scroll-target="#norms"><span class="header-section-number">4.2.1</span> Norms</a></li>
+  <li><a href="#the-condition-number" id="toc-the-condition-number" class="nav-link" data-scroll-target="#the-condition-number"><span class="header-section-number">4.2.2</span> The condition number</a></li>
+  <li><a href="#the-condition-number-of-the-model-matrix" id="toc-the-condition-number-of-the-model-matrix" class="nav-link" data-scroll-target="#the-condition-number-of-the-model-matrix"><span class="header-section-number">4.2.3</span> The condition number of the model matrix</a></li>
+  </ul></li>
+  <li><a href="#fourier-analysis" id="toc-fourier-analysis" class="nav-link" data-scroll-target="#fourier-analysis"><span class="header-section-number">4.3</span> Fourier analysis</a>
+  <ul class="collapse">
+  <li><a href="#waves-on-a-grid" id="toc-waves-on-a-grid" class="nav-link" data-scroll-target="#waves-on-a-grid"><span class="header-section-number">4.3.1</span> Waves on a grid</a></li>
+  <li><a href="#the-discrete-fourier-transform" id="toc-the-discrete-fourier-transform" class="nav-link" data-scroll-target="#the-discrete-fourier-transform"><span class="header-section-number">4.3.2</span> The discrete Fourier transform</a></li>
+  <li><a href="#the-shortest-wave-and-aliasing" id="toc-the-shortest-wave-and-aliasing" class="nav-link" data-scroll-target="#the-shortest-wave-and-aliasing"><span class="header-section-number">4.3.3</span> The shortest wave and aliasing</a></li>
+  <li><a href="#why-waves-are-the-natural-test-for-a-numerical-method" id="toc-why-waves-are-the-natural-test-for-a-numerical-method" class="nav-link" data-scroll-target="#why-waves-are-the-natural-test-for-a-numerical-method"><span class="header-section-number">4.3.4</span> Why waves are the natural test for a numerical method</a></li>
+  <li><a href="#the-second-difference-and-the-model-matrix" id="toc-the-second-difference-and-the-model-matrix" class="nav-link" data-scroll-target="#the-second-difference-and-the-model-matrix"><span class="header-section-number">4.3.5</span> The second difference and the model matrix</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.4</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">4.5</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./04-matrices-waves.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-matrices-waves" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning goals
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After this unit you can</p>
+<ul>
+<li>set up the matrix of a finite difference discretization and describe its structure,</li>
+<li>derive the eigenvalues of the model matrix and its condition number,</li>
+<li>explain what the condition number says about the solution of a linear system,</li>
+<li>decompose a signal on a grid into waves with the discrete Fourier transform,</li>
+<li>explain the shortest resolvable wave, aliasing and the effective resolution of a grid.</li>
+</ul>
+</div>
+</div>
+<p>Two more tools are needed before we turn to differential equations. Matrices describe what a discretization does to all grid points at once. Waves describe what it does to each spatial scale. The two views are closely related: the eigenvectors of the most important matrix of this lecture are waves.</p>
+<section id="from-a-differential-equation-to-a-matrix" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="from-a-differential-equation-to-a-matrix"><span class="header-section-number">4.1</span> From a differential equation to a matrix</h2>
+<section id="a-model-problem" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="a-model-problem"><span class="header-section-number">4.1.1</span> A model problem</h3>
+<p>Consider the one-dimensional Poisson equation with homogeneous Dirichlet conditions,</p>
+<p><span id="eq-model-problem"><span class="math display">\[
+- \frac{\mathrm{d}^2 u}{\mathrm{d}x^2} = f(x), \qquad u(0) = u(L) = 0 .
+\tag{4.1}\]</span></span></p>
+<p>We divide <span class="math inline">\([0, L]\)</span> into <span class="math inline">\(N + 1\)</span> intervals of width <span class="math inline">\(h = L / (N + 1)\)</span> with grid points <span class="math inline">\(x_j = j h\)</span>. The values <span class="math inline">\(u_0 = u_{N+1} = 0\)</span> are known; the unknowns are <span class="math inline">\(u_1, \dots, u_N\)</span>. At each interior point we replace the second derivative by the central difference <a href="03-numerical-toolbox.html#eq-fd-second" class="quarto-xref">Equation&nbsp;<span>3.6</span></a>:</p>
+<p><span class="math display">\[
+\frac{-u_{j-1} + 2 u_j - u_{j+1}}{h^2} = f_j, \qquad j = 1, \dots, N .
+\]</span></p>
+<p>These are <span class="math inline">\(N\)</span> linear equations for <span class="math inline">\(N\)</span> unknowns. We write them out for <span class="math inline">\(N = 4\)</span>, using <span class="math inline">\(u_0 = u_5 = 0\)</span> in the first and the last equation:</p>
+<p><span class="math display">\[
+\begin{aligned}
+2 u_1 - u_2 &amp;= h^2 f_1 \\
+-u_1 + 2 u_2 - u_3 &amp;= h^2 f_2 \\
+-u_2 + 2 u_3 - u_4 &amp;= h^2 f_3 \\
+-u_3 + 2 u_4 &amp;= h^2 f_4
+\end{aligned}
+\qquad \Longleftrightarrow \qquad
+\begin{pmatrix}
+2 &amp; -1 &amp;  0 &amp;  0 \\
+-1 &amp;  2 &amp; -1 &amp;  0 \\
+0 &amp; -1 &amp;  2 &amp; -1 \\
+0 &amp;  0 &amp; -1 &amp;  2
+\end{pmatrix}
+\begin{pmatrix} u_1 \\ u_2 \\ u_3 \\ u_4 \end{pmatrix}
+= h^2 \begin{pmatrix} f_1 \\ f_2 \\ f_3 \\ f_4 \end{pmatrix} .
+\]</span></p>
+<p>In general, discretizing a linear differential equation leads to a linear system</p>
+<p><span class="math display">\[
+A \vec x = \vec b
+\]</span></p>
+<p>with as many unknowns as grid points. Here <span class="math inline">\(A = T / h^2\)</span> with the <strong>model matrix</strong></p>
+<p><span id="eq-model-matrix"><span class="math display">\[
+T = \begin{pmatrix}
+2 &amp; -1 &amp;        &amp;        &amp;    \\
+-1 &amp;  2 &amp; -1     &amp;        &amp;    \\
+   &amp; \ddots &amp; \ddots &amp; \ddots &amp;    \\
+   &amp;        &amp; -1     &amp; 2      &amp; -1 \\
+   &amp;        &amp;        &amp; -1     &amp; 2
+\end{pmatrix} .
+\tag{4.2}\]</span></span></p>
+<p>Row <span class="math inline">\(j\)</span> of the matrix is the stencil of the difference formula, centred on the diagonal. <span class="math inline">\(T\)</span> accompanies us through the units on elliptic and parabolic problems. It has three properties that are typical for matrices from discretizations.</p>
+</section>
+<section id="sparsity" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="sparsity"><span class="header-section-number">4.1.2</span> Sparsity</h3>
+<p>Each row has at most three non-zero entries, because each grid point is coupled only to its neighbours. Of the <span class="math inline">\(N^2\)</span> entries only <span class="math inline">\(3N - 2\)</span> are non-zero. Such a matrix is <strong>sparse</strong>. Sparse matrices are stored and processed without their zeros, for example with <code>scipy.sparse</code>. For a model with <span class="math inline">\(10^8\)</span> grid points this is the difference between possible and impossible: the full matrix would have <span class="math inline">\(10^{16}\)</span> entries.</p>
+</section>
+<section id="symmetry-and-positive-definiteness" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="symmetry-and-positive-definiteness"><span class="header-section-number">4.1.3</span> Symmetry and positive definiteness</h3>
+<p><span class="math inline">\(T\)</span> is symmetric, <span class="math inline">\(T = T^T\)</span>. It is also <strong>positive definite</strong>: <span class="math inline">\(\vec x^T T \vec x &gt; 0\)</span> for all <span class="math inline">\(\vec x \ne 0\)</span>. To see this we write out the quadratic form for <span class="math inline">\(N = 3\)</span>,</p>
+<p><span class="math display">\[
+\vec x^T T \vec x = 2 x_1^2 + 2 x_2^2 + 2 x_3^2 - 2 x_1 x_2 - 2 x_2 x_3
+= x_1^2 + (x_1 - x_2)^2 + (x_2 - x_3)^2 + x_3^2 ,
+\]</span></p>
+<p>a sum of squares that vanishes only if all <span class="math inline">\(x_j\)</span> are zero. The same rearrangement works for every <span class="math inline">\(N\)</span>. Matrices from diffusion problems have this property, and the most efficient solvers rely on it (Chapter 11).</p>
+</section>
+<section id="eigenvalues-and-eigenvectors" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="eigenvalues-and-eigenvectors"><span class="header-section-number">4.1.4</span> Eigenvalues and eigenvectors</h3>
+<p>An <strong>eigenvector</strong> <span class="math inline">\(\vec v\)</span> of a matrix <span class="math inline">\(A\)</span> is a vector that <span class="math inline">\(A\)</span> only stretches,</p>
+<p><span class="math display">\[
+A \vec v = \lambda \vec v ,
+\]</span></p>
+<p>with the <strong>eigenvalue</strong> <span class="math inline">\(\lambda\)</span>. For a symmetric matrix all eigenvalues are real and the eigenvectors are orthogonal; for a positive definite matrix all eigenvalues are positive.</p>
+<p>The eigenvalues of <span class="math inline">\(T\)</span> can be derived by hand. Since <span class="math inline">\(T\)</span> represents a second derivative, and the second derivative of a sine is a sine, we try a sine wave sampled on the grid,</p>
+<p><span class="math display">\[
+v_j = \sin (j \theta), \qquad j = 1, \dots, N ,
+\]</span></p>
+<p>with a parameter <span class="math inline">\(\theta\)</span> to be determined. Row <span class="math inline">\(j\)</span> of <span class="math inline">\(T \vec v\)</span> is</p>
+<p><span class="math display">\[
+(T \vec v)_j = -\sin \big( (j - 1) \theta \big) + 2 \sin (j \theta) - \sin \big( (j + 1) \theta \big) .
+\]</span></p>
+<p>With the identity <span class="math inline">\(\sin(a - b) + \sin(a + b) = 2 \sin a \cos b\)</span> for <span class="math inline">\(a = j \theta\)</span>, <span class="math inline">\(b = \theta\)</span> this becomes</p>
+<p><span class="math display">\[
+(T \vec v)_j = 2 \sin (j \theta) - 2 \sin (j \theta) \cos \theta
+= (2 - 2 \cos \theta) \, v_j .
+\]</span></p>
+<p>So <span class="math inline">\(\vec v\)</span> is an eigenvector with eigenvalue <span class="math inline">\(2 - 2 \cos \theta\)</span>, provided the first and last row are also satisfied. These rows lack one neighbour, which is correct only if the missing values vanish: <span class="math inline">\(v_0 = \sin 0 = 0\)</span> holds automatically, and <span class="math inline">\(v_{N+1} = \sin \big( (N + 1) \theta \big) = 0\)</span> requires <span class="math inline">\((N + 1) \theta = k \pi\)</span>. This selects <span class="math inline">\(N\)</span> values of <span class="math inline">\(\theta\)</span>:</p>
+<p><span id="eq-model-eigenvalues"><span class="math display">\[
+\lambda_k = 2 - 2 \cos \frac{k \pi}{N + 1} = 4 \sin^2 \frac{k \pi}{2 (N + 1)}, \qquad
+(\vec v_k)_j = \sin \frac{j k \pi}{N + 1}, \qquad k = 1, \dots, N .
+\tag{4.3}\]</span></span></p>
+<p>The eigenvectors are sine waves with <span class="math inline">\(k\)</span> half-waves across the domain (<a href="#fig-eigenvectors" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>). The smallest eigenvalue belongs to the longest wave, the largest to the shortest.</p>
+<div id="cell-fig-eigenvectors" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> diags</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> diags([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], shape<span class="op">=</span>(N, N))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>eigenvalues, eigenvectors <span class="op">=</span> np.linalg.eigh(T.toarray())</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="dv">3</span>))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>j <span class="op">=</span> np.arange(<span class="dv">1</span>, N <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index <span class="kw">in</span> [<span class="dv">0</span>, <span class="dv">1</span>, N <span class="op">-</span> <span class="dv">1</span>]:</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> eigenvectors[:, index]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    ax.plot(j, v <span class="op">*</span> np.sign(v[<span class="dv">0</span>]), <span class="st">"o-"</span>, ms<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span><span class="vs">rf"</span><span class="dv">$</span><span class="vs">k = </span><span class="sc">{</span>index <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="dv">$</span><span class="vs">, </span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda = </span><span class="sc">{</span>eigenvalues[index]<span class="sc">:.3f}</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"grid point $j$"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>ax.set_xticks([<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>])</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-eigenvectors" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-eigenvectors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-eigenvectors-output-1.png" width="545" height="283" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eigenvectors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: Eigenvectors of the model matrix for <span class="math inline">\(N = 20\)</span>: the two longest waves and the shortest wave.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="norms-and-the-condition-number" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="norms-and-the-condition-number"><span class="header-section-number">4.2</span> Norms and the condition number</h2>
+<section id="norms" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="norms"><span class="header-section-number">4.2.1</span> Norms</h3>
+<p>The size of a vector is measured by a norm, for example the Euclidean norm and the maximum norm,</p>
+<p><span class="math display">\[
+\|\vec x\|_2 = \sqrt{\sum_j x_j^2}, \qquad \|\vec x\|_\infty = \max_j |x_j| .
+\]</span></p>
+<p>Norms are what we mean by “the error” of a solution on a grid. The norm of a matrix is the largest factor by which it can stretch a vector,</p>
+<p><span id="eq-matrix-norm"><span class="math display">\[
+\|A\| = \max_{\vec x \ne 0} \frac{\|A \vec x\|}{\|\vec x\|} ,
+\qquad \text{so that} \qquad \|A \vec x\| \le \|A\| \, \|\vec x\| .
+\tag{4.4}\]</span></span></p>
+<p>For a symmetric matrix and the Euclidean norm, <span class="math inline">\(\|A\|_2\)</span> is the largest eigenvalue in magnitude.</p>
+</section>
+<section id="the-condition-number" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="the-condition-number"><span class="header-section-number">4.2.2</span> The condition number</h3>
+<p>How sensitive is the solution of <span class="math inline">\(A \vec x = \vec b\)</span> to errors in the right hand side? Let <span class="math inline">\(\vec b\)</span> be perturbed by <span class="math inline">\(\delta \vec b\)</span>, and let <span class="math inline">\(\delta \vec x\)</span> be the resulting change of the solution. Subtracting <span class="math inline">\(A \vec x = \vec b\)</span> from <span class="math inline">\(A (\vec x + \delta \vec x) = \vec b + \delta \vec b\)</span> gives <span class="math inline">\(A \, \delta \vec x = \delta \vec b\)</span>, hence</p>
+<p><span class="math display">\[
+\delta \vec x = A^{-1} \delta \vec b
+\quad \Longrightarrow \quad
+\|\delta \vec x\| \le \|A^{-1}\| \, \|\delta \vec b\| ,
+\]</span></p>
+<p>using <a href="#eq-matrix-norm" class="quarto-xref">Equation&nbsp;<span>4.4</span></a>. The same inequality applied to <span class="math inline">\(\vec b = A \vec x\)</span> gives <span class="math inline">\(\|\vec b\| \le \|A\| \, \|\vec x\|\)</span>, or <span class="math inline">\(1 / \|\vec x\| \le \|A\| / \|\vec b\|\)</span>. Multiplying the two inequalities,</p>
+<p><span id="eq-condition-bound"><span class="math display">\[
+\frac{\|\delta \vec x\|}{\|\vec x\|} \le
+\underbrace{\|A\| \, \|A^{-1}\|}_{\kappa(A)} \, \frac{\|\delta \vec b\|}{\|\vec b\|} .
+\tag{4.5}\]</span></span></p>
+<p>The factor <span class="math inline">\(\kappa(A) = \|A\| \, \|A^{-1}\|\)</span> is the <strong>condition number</strong> of the matrix. It bounds the amplification of relative errors, and is therefore the condition number of <a href="01-introduction.html" class="quarto-xref"><span>Chapter 1</span></a> for the problem “solve a linear system”. For a symmetric positive definite matrix, <span class="math inline">\(\|A\|_2 = \lambda_{\max}\)</span> and <span class="math inline">\(\|A^{-1}\|_2 = 1 / \lambda_{\min}\)</span>, so that</p>
+<p><span class="math display">\[
+\kappa(A) = \frac{\lambda_{\max}}{\lambda_{\min}} .
+\]</span></p>
+<p>A rule of thumb: with <span class="math inline">\(\kappa = 10^{p}\)</span> about <span class="math inline">\(p\)</span> of the 16 digits are lost.</p>
+</section>
+<section id="the-condition-number-of-the-model-matrix" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="the-condition-number-of-the-model-matrix"><span class="header-section-number">4.2.3</span> The condition number of the model matrix</h3>
+<p>From <a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.3</span></a> we can compute <span class="math inline">\(\kappa(T)\)</span> for large <span class="math inline">\(N\)</span>. The largest eigenvalue, <span class="math inline">\(k = N\)</span>, has <span class="math inline">\(\cos \big( N \pi / (N + 1) \big) \approx -1\)</span>, so <span class="math inline">\(\lambda_{\max} \approx 4\)</span>. For the smallest, <span class="math inline">\(k = 1\)</span>, the argument <span class="math inline">\(\theta = \pi / (N + 1)\)</span> is small and <span class="math inline">\(\cos \theta \approx 1 - \theta^2 / 2\)</span>:</p>
+<p><span id="eq-model-condition"><span class="math display">\[
+\lambda_{\min} = 2 - 2 \cos \frac{\pi}{N + 1} \approx \frac{\pi^2}{(N + 1)^2}
+\quad \Longrightarrow \quad
+\kappa(T) \approx \frac{4 (N + 1)^2}{\pi^2} .
+\tag{4.6}\]</span></span></p>
+<div id="b9a90059" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> N <span class="kw">in</span> [<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">1000</span>]:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> diags([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], shape<span class="op">=</span>(N, N))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    eigenvalues <span class="op">=</span> np.linalg.eigvalsh(T.toarray())</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> np.arange(<span class="dv">1</span>, N <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    exact <span class="op">=</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> np.cos(k <span class="op">*</span> np.pi <span class="op">/</span> (N <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"N = </span><span class="sc">{</span>N<span class="sc">:4d}</span><span class="ss">: max. deviation from the formula </span><span class="sc">{</span><span class="bu">abs</span>(eigenvalues <span class="op">-</span> exact)<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.1e}</span><span class="ss">,"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" condition number </span><span class="sc">{</span>eigenvalues[<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> eigenvalues[<span class="dv">0</span>]<span class="sc">:9.1f}</span><span class="ss">,"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" estimate </span><span class="sc">{</span><span class="dv">4</span> <span class="op">*</span> (N <span class="op">+</span> <span class="dv">1</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">/</span> np<span class="sc">.</span>pi<span class="op">**</span><span class="dv">2</span><span class="sc">:9.1f}</span><span class="ss">,"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" non-zeros </span><span class="sc">{</span>T<span class="sc">.</span>nnz<span class="sc">}</span><span class="ss"> of </span><span class="sc">{</span>N <span class="op">*</span> N<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>N =   10: max. deviation from the formula 4.4e-16, condition number      48.4, estimate      49.0, non-zeros 28 of 100
+N =  100: max. deviation from the formula 2.7e-15, condition number    4133.6, estimate    4134.3, non-zeros 298 of 10000
+N = 1000: max. deviation from the formula 3.6e-15, condition number  406095.0, estimate  406095.7, non-zeros 2998 of 1000000</code></pre>
+</div>
+</div>
+<p>The condition number grows as <span class="math inline">\(N^2\)</span>, that is as <span class="math inline">\(1 / h^2\)</span>. Refining the grid makes the discretization more accurate and the linear system harder to solve. This conflict is the reason why solvers for linear systems take up two units of this lecture (Chapter 10, Chapter 11).</p>
+</section>
+</section>
+<section id="fourier-analysis" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="fourier-analysis"><span class="header-section-number">4.3</span> Fourier analysis</h2>
+<section id="waves-on-a-grid" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="waves-on-a-grid"><span class="header-section-number">4.3.1</span> Waves on a grid</h3>
+<p>A periodic function on a domain of length <span class="math inline">\(L\)</span> can be written as a sum of waves,</p>
+<p><span id="eq-fourier-series"><span class="math display">\[
+u(x) = \sum_{m} \hat u_m \, e^{i k_m x}, \qquad k_m = \frac{2 \pi m}{L} ,
+\tag{4.7}\]</span></span></p>
+<p>with wavenumbers <span class="math inline">\(k_m\)</span>, wavelengths <span class="math inline">\(L / |m|\)</span> and complex amplitudes <span class="math inline">\(\hat u_m\)</span>. The complex exponential combines cosine and sine, <span class="math inline">\(e^{i k x} = \cos kx + i \sin kx\)</span> (Euler’s formula), and is used because it is much easier to differentiate and to multiply than the trigonometric functions.</p>
+<p>On a grid with <span class="math inline">\(N\)</span> points <span class="math inline">\(x_j = j \, \Delta x\)</span>, <span class="math inline">\(j = 0, \dots, N - 1\)</span>, and <span class="math inline">\(L = N \Delta x\)</span>, only <span class="math inline">\(N\)</span> values <span class="math inline">\(u_j\)</span> are known, so only <span class="math inline">\(N\)</span> amplitudes can be determined. At the grid points <span class="math inline">\(e^{i k_m x_j} = e^{2 \pi i \, m j / N}\)</span>, and the series becomes</p>
+<p><span id="eq-idft"><span class="math display">\[
+u_j = \sum_{m=0}^{N-1} \hat u_m \, e^{2 \pi i \, m j / N} .
+\tag{4.8}\]</span></span></p>
+</section>
+<section id="the-discrete-fourier-transform" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="the-discrete-fourier-transform"><span class="header-section-number">4.3.2</span> The discrete Fourier transform</h3>
+<p>To solve <a href="#eq-idft" class="quarto-xref">Equation&nbsp;<span>4.8</span></a> for the amplitudes we use the fact that waves on a grid are orthogonal:</p>
+<p><span id="eq-orthogonality"><span class="math display">\[
+\sum_{j=0}^{N-1} e^{2 \pi i \, (m - n) j / N} =
+\begin{cases} N &amp; \text{if } m = n , \\ 0 &amp; \text{otherwise.} \end{cases}
+\tag{4.9}\]</span></span></p>
+<p>For <span class="math inline">\(m = n\)</span> every term is one. Otherwise the sum is a geometric series <span class="math inline">\(\sum_{j=0}^{N-1} q^j = (1 - q^N)/(1 - q)\)</span> with <span class="math inline">\(q = e^{2 \pi i (m - n)/N} \ne 1\)</span> and <span class="math inline">\(q^N = e^{2 \pi i (m - n)} = 1\)</span>, so it vanishes.</p>
+<p>We multiply <a href="#eq-idft" class="quarto-xref">Equation&nbsp;<span>4.8</span></a> by <span class="math inline">\(e^{-2 \pi i \, n j / N}\)</span> and sum over <span class="math inline">\(j\)</span>. By <a href="#eq-orthogonality" class="quarto-xref">Equation&nbsp;<span>4.9</span></a> only the term <span class="math inline">\(m = n\)</span> survives on the right hand side, and it equals <span class="math inline">\(N \hat u_n\)</span>. This gives the <strong>discrete Fourier transform</strong> (DFT):</p>
+<p><span id="eq-dft"><span class="math display">\[
+\hat u_n = \frac{1}{N} \sum_{j=0}^{N-1} u_j \, e^{-2 \pi i \, n j / N} .
+\tag{4.10}\]</span></span></p>
+<p>Computed directly, the <span class="math inline">\(N\)</span> sums cost <span class="math inline">\(N^2\)</span> operations. The <strong>fast Fourier transform</strong> (FFT) obtains the same result with <span class="math inline">\(O(N \log N)\)</span> operations. In NumPy, <code>np.fft.fft</code> computes the sum in <a href="#eq-dft" class="quarto-xref">Equation&nbsp;<span>4.10</span></a> without the factor <span class="math inline">\(1/N\)</span>, and <code>np.fft.rfft</code> does the same for real data, returning only the amplitudes for <span class="math inline">\(0 \le n \le N/2\)</span>. For real data the amplitude of the wave with <span class="math inline">\(n\)</span> periods in the domain is <span class="math inline">\(2 |\hat u_n|\)</span>.</p>
+<div id="cell-fig-spectrum" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>N, L <span class="op">=</span> <span class="dv">128</span>, <span class="fl">1.0</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(N) <span class="op">*</span> L <span class="op">/</span> N</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>signal <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> <span class="dv">3</span> <span class="op">*</span> x) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> <span class="dv">10</span> <span class="op">*</span> x) <span class="op">+</span> <span class="fl">0.2</span> <span class="op">*</span> rng.standard_normal(N)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>amplitude <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> <span class="bu">abs</span>(np.fft.rfft(signal)) <span class="op">/</span> N</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> np.fft.rfftfreq(N, d<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> N)       <span class="co"># number of waves in the domain</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">3</span>))</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ax1.plot(x, signal)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">"$x$"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">"$u$"</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>ax2.stem(m, amplitude, basefmt<span class="op">=</span><span class="st">" "</span>, markerfmt<span class="op">=</span><span class="st">"."</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>ax2.set_xlim(<span class="dv">0</span>, <span class="dv">30</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">"number of waves in the domain, $m$"</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"amplitude"</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-spectrum" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spectrum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-spectrum-output-1.png" width="857" height="278" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spectrum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: A signal composed of two waves and noise (left) and its amplitude spectrum (right).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-shortest-wave-and-aliasing" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="the-shortest-wave-and-aliasing"><span class="header-section-number">4.3.3</span> The shortest wave and aliasing</h3>
+<p>The shortest wave that a grid can represent has one crest and one trough on two neighbouring points. Its wavelength is <span class="math inline">\(2 \Delta x\)</span> and its wavenumber is the <strong>Nyquist wavenumber</strong> <span class="math inline">\(k_{\max} = \pi / \Delta x\)</span>.</p>
+<p>What happens to a wave with a larger wavenumber? Consider the wavenumbers <span class="math inline">\(k\)</span> and <span class="math inline">\(k + 2 \pi / \Delta x\)</span>. At the grid points <span class="math inline">\(x_j = j \Delta x\)</span></p>
+<p><span class="math display">\[
+e^{i (k + 2 \pi / \Delta x) \, x_j} = e^{i k x_j} \, e^{2 \pi i \, j} = e^{i k x_j} ,
+\]</span></p>
+<p>because <span class="math inline">\(e^{2 \pi i j} = 1\)</span> for every integer <span class="math inline">\(j\)</span>. The two waves have the same values at all grid points. On the grid they cannot be distinguished. A wave that is shorter than <span class="math inline">\(2 \Delta x\)</span> therefore does not disappear when it is sampled: it is mistaken for a longer wave with a wavenumber in the range <span class="math inline">\(|k| \le k_{\max}\)</span>. This is <strong>aliasing</strong>.</p>
+<p>In <a href="#fig-aliasing" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> a wave with wavelength <span class="math inline">\(\tfrac43 \Delta x\)</span>, that is <span class="math inline">\(k = \tfrac32 \pi / \Delta x\)</span>, appears as the wave with <span class="math inline">\(k - 2 \pi / \Delta x = -\tfrac12 \pi / \Delta x\)</span>, which has the wavelength <span class="math inline">\(4 \Delta x\)</span>.</p>
+<div id="cell-fig-aliasing" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-aliasing" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-aliasing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-aliasing-output-1.png" width="582" height="253" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aliasing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3: Aliasing. At the grid points (dots) a wave with wavelength <span class="math inline">\(4\Delta x / 3\)</span> cannot be distinguished from a wave with wavelength <span class="math inline">\(4 \Delta x\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Aliasing matters in nonlinear models. The product of two waves is</p>
+<p><span class="math display">\[
+e^{i k_1 x} \, e^{i k_2 x} = e^{i (k_1 + k_2) x} ,
+\]</span></p>
+<p>a wave with the wavenumber <span class="math inline">\(k_1 + k_2\)</span>. A nonlinear term such as <span class="math inline">\(u \, \partial u / \partial x\)</span> therefore creates shorter waves from longer ones. If <span class="math inline">\(k_1 + k_2\)</span> exceeds <span class="math inline">\(k_{\max}\)</span>, the grid misrepresents the product as a longer wave, and energy appears at scales where it does not belong. This can make a model unstable (Chapter 17).</p>
+</section>
+<section id="why-waves-are-the-natural-test-for-a-numerical-method" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="why-waves-are-the-natural-test-for-a-numerical-method"><span class="header-section-number">4.3.4</span> Why waves are the natural test for a numerical method</h3>
+<p>For a linear equation with constant coefficients each wave evolves independently of the others. It therefore suffices to understand what a numerical method does to a single wave <span class="math inline">\(e^{ikx}\)</span>, and that is easy to compute.</p>
+<p>The exact derivative of a wave is</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}}{\mathrm{d}x} e^{ikx} = i k \, e^{ikx} :
+\]</span></p>
+<p>the wave is multiplied by <span class="math inline">\(ik\)</span>. For the central difference <a href="03-numerical-toolbox.html#eq-fd-central" class="quarto-xref">Equation&nbsp;<span>3.5</span></a> we factor out <span class="math inline">\(e^{ikx}\)</span> and use <span class="math inline">\(e^{i\alpha} - e^{-i\alpha} = 2 i \sin \alpha\)</span>:</p>
+<p><span class="math display">\[
+\frac{e^{ik(x + \Delta x)} - e^{ik(x - \Delta x)}}{2 \Delta x}
+= \frac{e^{ik \Delta x} - e^{-ik \Delta x}}{2 \Delta x} \, e^{ikx}
+= i \, \frac{\sin (k \Delta x)}{\Delta x} \, e^{ikx} .
+\]</span></p>
+<p>The wave is again multiplied by <span class="math inline">\(i\)</span> times a real number. The numerical derivative is that of a wave with the <strong>modified wavenumber</strong></p>
+<p><span id="eq-modified-wavenumber"><span class="math display">\[
+k_{\text{eff}} = \frac{\sin (k \Delta x)}{\Delta x} .
+\tag{4.11}\]</span></span></p>
+<p>For <span class="math inline">\(k \Delta x \ll 1\)</span> the expansion <span class="math inline">\(\sin (k \Delta x) \approx k \Delta x - (k \Delta x)^3 / 6\)</span> gives <span class="math inline">\(k_{\text{eff}} \approx k \left[ 1 - (k \Delta x)^2 / 6 \right]\)</span>: the relative error is <span class="math inline">\((k \Delta x)^2 / 6\)</span>. This is the truncation error of <a href="03-numerical-toolbox.html#eq-fd-central" class="quarto-xref">Equation&nbsp;<span>3.5</span></a>, now expressed for each wave separately.</p>
+<div id="cell-fig-modified-wavenumber" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div id="fig-modified-wavenumber" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-modified-wavenumber-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-modified-wavenumber-output-1.png" width="478" height="366" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-modified-wavenumber-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.4: Modified wavenumber of the central differences of second and fourth order. The exact derivative corresponds to the diagonal.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-modified-wavenumber" class="quarto-xref">Figure&nbsp;<span>4.4</span></a> shows what the statement “second order” hides. For long waves the approximation is excellent. For the <span class="math inline">\(4 \Delta x\)</span> wave, <span class="math inline">\(k \Delta x = \pi / 2\)</span>, the derivative is too small by the factor <span class="math inline">\(\sin (\pi/2) / (\pi/2) = 0.64\)</span>. For the <span class="math inline">\(2 \Delta x\)</span> wave it is zero: the central difference does not see the shortest wave at all. A wave needs about ten grid points per wavelength to be treated accurately by a scheme of second order; then <span class="math inline">\(k \Delta x = \pi / 5\)</span> and the error is 6 %.</p>
+<p>This has a consequence that every user of model output should know. The smallest features that a model represents correctly are several times larger than its grid spacing. The <strong>effective resolution</strong> of a weather model with a grid spacing of 2 km is closer to 10 km.</p>
+</section>
+<section id="the-second-difference-and-the-model-matrix" class="level3" data-number="4.3.5">
+<h3 data-number="4.3.5" class="anchored" data-anchor-id="the-second-difference-and-the-model-matrix"><span class="header-section-number">4.3.5</span> The second difference and the model matrix</h3>
+<p>The same calculation for the second difference <a href="03-numerical-toolbox.html#eq-fd-second" class="quarto-xref">Equation&nbsp;<span>3.6</span></a>, now with <span class="math inline">\(e^{i\alpha} + e^{-i\alpha} = 2 \cos \alpha\)</span>, gives</p>
+<p><span class="math display">\[
+\frac{e^{ik(x + \Delta x)} - 2 e^{ikx} + e^{ik(x - \Delta x)}}{\Delta x^2}
+= - \frac{2 - 2 \cos (k \Delta x)}{\Delta x^2} \, e^{ikx}
+= - \frac{4}{\Delta x^2} \sin^2 \frac{k \Delta x}{2} \, e^{ikx} .
+\]</span></p>
+<p>Compare this with the eigenvalues <a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.3</span></a> of the model matrix: they are the same expression, with <span class="math inline">\(k \Delta x = k \pi / (N + 1)\)</span>. The wave analysis and the eigenvalue analysis are two views of one fact. Waves are the eigenvectors of difference operators with constant coefficients, and the factor by which a wave is multiplied is the eigenvalue.</p>
+<p>Applied to a complete scheme in space and time, this analysis shows whether a wave is damped, amplified or moved at the wrong speed. This is the von Neumann stability analysis (Chapter 12, Chapter 13).</p>
+</section>
+</section>
+<section id="summary" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.4</span> Summary</h2>
+<ul>
+<li>Discretizing a linear differential equation gives a linear system. Each row of the matrix is the stencil of the difference formula.</li>
+<li>Matrices from discretizations are sparse. Those from diffusion problems are symmetric and positive definite.</li>
+<li>The eigenvectors of the model matrix are sine waves, with eigenvalues <span class="math inline">\(2 - 2 \cos (k \pi / (N + 1))\)</span>.</li>
+<li>The condition number bounds the amplification of relative errors in the solution of a linear system. For the model matrix it grows as <span class="math inline">\(1 / h^2\)</span>.</li>
+<li>A grid represents waves down to a wavelength of <span class="math inline">\(2 \Delta x\)</span>, but treats them accurately only above about <span class="math inline">\(10 \Delta x\)</span>. Shorter waves are aliased.</li>
+<li>A difference formula multiplies each wave by a factor. Comparing it with the exact factor shows the error scale by scale.</li>
+</ul>
+</section>
+<section id="further-reading" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">4.5</span> Further reading</h2>
+<p><span class="citation" data-cites="durran2010">Durran (<a href="references.html#ref-durran2010" role="doc-biblioref">2010</a>)</span>, chapter 3, for the wave view of finite differences; <span class="citation" data-cites="shewchuk1994">Shewchuk (<a href="references.html#ref-shewchuk1994" role="doc-biblioref">1994</a>)</span> for eigenvalues, quadratic forms and the condition number.</p>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-durran2010" class="csl-entry" role="listitem">
+Durran, Dale R. 2010. <em>Numerical Methods for Fluid Dynamics: With Applications to Geophysics</em>. 2nd ed. Springer.
+</div>
+<div id="ref-shewchuk1994" class="csl-entry" role="listitem">
+Shewchuk, Jonathan R. 1994. <em>An Introduction to the Conjugate Gradient Method Without the Agonizing Pain</em>. Carnegie Mellon University.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03-numerical-toolbox.html" class="pagination-link" aria-label="The numerical toolbox I: derivatives, integrals, roots">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05-one-step-methods.html" class="pagination-link" aria-label="One-step methods">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="03-numerical-toolbox_files/libs/clipboard/clipboard.min.js"></script>
+<script src="03-numerical-toolbox_files/libs/quarto-html/tabby.min.js"></script>
+<script src="03-numerical-toolbox_files/libs/quarto-html/popper.min.js"></script>
+<script src="03-numerical-toolbox_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="03-numerical-toolbox_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="03-numerical-toolbox_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="03-numerical-toolbox_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="03-numerical-toolbox_files/libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="03-numerical-toolbox_files/libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Stefan Kollet">
+  <title>The numerical toolbox: derivatives, integrals, roots</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="03-numerical-toolbox_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="03-numerical-toolbox_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="03-numerical-toolbox_files/libs/revealjs/dist/theme/quarto-a2f22940636043241442355684c13942.css">
+  <link href="03-numerical-toolbox_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="03-numerical-toolbox_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="03-numerical-toolbox_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="03-numerical-toolbox_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="03-numerical-toolbox_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="03-numerical-toolbox_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script type="module" src="03-numerical-toolbox_files/libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+  <link href="03-numerical-toolbox_files/libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">The numerical toolbox: derivatives, integrals, roots</h1>
+  <p class="subtitle">Prognostic Modelling (pea700) · Lecture 3</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Stefan Kollet
+</div>
+</div>
+</div>
+
+</section>
+<section id="recap-of-lecture-2" class="slide level2">
+<h2>Recap of lecture 2</h2>
+<ul>
+<li>Gradient, divergence, curl, Laplacian; divergence = net outflow per volume</li>
+<li>Conservation law <span class="math inline">\(\partial u / \partial t + \nabla \cdot \vec F = s\)</span>, closed by advective and diffusive fluxes</li>
+<li>Classify first: ODE/PDE, order, linearity, elliptic/parabolic/hyperbolic</li>
+<li>Well-posed: right number of conditions, continuous dependence on the data</li>
+</ul>
+</section>
+<section id="today" class="slide level2">
+<h2>Today</h2>
+<ul>
+<li>Finite differences from the Taylor series, and their truncation error</li>
+<li>Measuring the order of convergence: the basic test of every code</li>
+<li>Why the step cannot be made arbitrarily small: round-off</li>
+<li>Stencils of any order</li>
+<li>Interpolation, quadrature, root finding</li>
+</ul>
+<div class="takeaway">
+<p>All tools rest on one idea: the Taylor series. Combine series so that unwanted terms cancel.</p>
+</div>
+</section>
+<section>
+<section id="finite-differences" class="title-slide slide level1 center">
+<h1>Finite differences</h1>
+
+</section>
+<section id="the-taylor-series" class="slide level2">
+<h2>The Taylor series</h2>
+<p><span class="math display">\[
+u(x + h) = u(x) + h \, u'(x) + \frac{h^2}{2} u''(x) + \frac{h^3}{6} u'''(x) + \frac{h^4}{24} u''''(x) + \dots
+\]</span></p>
+<p>Replace <span class="math inline">\(h\)</span> by <span class="math inline">\(-h\)</span>: the <strong>odd</strong> terms change sign, <span class="math inline">\((-h)^k = -h^k\)</span> for odd <span class="math inline">\(k\)</span></p>
+<p><span class="math display">\[
+u(x - h) = u(x) - h \, u'(x) + \frac{h^2}{2} u''(x) - \frac{h^3}{6} u'''(x) + \frac{h^4}{24} u''''(x) - \dots
+\]</span></p>
+<div class="fragment">
+<p><strong>Notation</strong>: <span class="math inline">\(e = O(h^p)\)</span> if <span class="math inline">\(|e| \le C h^p\)</span> for small <span class="math inline">\(h\)</span>, <span class="math inline">\(C\)</span> independent of <span class="math inline">\(h\)</span>.</p>
+<p>A method with error <span class="math inline">\(O(h^p)\)</span> is <strong>of order <span class="math inline">\(p\)</span></strong>: halving <span class="math inline">\(h\)</span> divides the error by about <span class="math inline">\(2^p\)</span>.</p>
+</div>
+</section>
+<section id="forward-difference" class="slide level2">
+<h2>Forward difference</h2>
+<p>Subtract <span class="math inline">\(u(x)\)</span>, divide by <span class="math inline">\(h\)</span>:</p>
+<p><span class="math display">\[
+\frac{u(x + h) - u(x)}{h} = u'(x) + \frac{h}{2} u''(x) + \frac{h^2}{6} u'''(x) + \dots
+\]</span></p>
+<div class="fragment">
+<p>Solve for <span class="math inline">\(u'(x)\)</span>: every term moves to the other side <strong>with a minus sign</strong></p>
+<p><span class="math display">\[
+u'(x) = \underbrace{\frac{u(x + h) - u(x)}{h}}_{\text{forward difference}}
+\; \underbrace{- \, \frac{h}{2} u''(x) - \frac{h^2}{6} u'''(x) - \dots}_{\text{truncation error}}
+\]</span></p>
+<p>First order. Backward difference <span class="math inline">\(\frac{u(x) - u(x - h)}{h}\)</span>: also first order, leading error <span class="math inline">\(+\frac{h}{2} u''\)</span>, <strong>opposite sign</strong>.</p>
+</div>
+</section>
+<section id="central-difference" class="slide level2">
+<h2>Central difference</h2>
+<p><span class="question">Think first: opposite signs. What happens if we combine them?</span></p>
+<div class="fragment">
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>in <span class="math inline">\(u(x + h)\)</span></th>
+<th>in <span class="math inline">\(u(x - h)\)</span></th>
+<th>difference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u\)</span></td>
+<td><span class="math inline">\(u\)</span></td>
+<td><span class="math inline">\(u\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u'\)</span></td>
+<td><span class="math inline">\(h \, u'\)</span></td>
+<td><span class="math inline">\(-h \, u'\)</span></td>
+<td><span class="math inline">\(2 h \, u'\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^2}{2} u''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^2}{2} u''\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u'''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^3}{6} u'''\)</span></td>
+<td><span class="math inline">\(-\tfrac{h^3}{6} u'''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^3}{3} u'''\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+<p>Divide by <span class="math inline">\(2h\)</span>, solve for <span class="math inline">\(u'(x)\)</span>:</p>
+<p><span class="math display">\[
+u'(x) = \frac{u(x + h) - u(x - h)}{2h} - \frac{h^2}{6} u'''(x) - \dots
+\qquad \text{second order, same cost}
+\]</span></p>
+</div>
+</section>
+<section id="second-derivative" class="slide level2">
+<h2>Second derivative</h2>
+<p><strong>Add</strong> the two series: the odd terms cancel</p>
+<p><span class="math display">\[
+u(x + h) + u(x - h) = 2 u(x) + h^2 u''(x) + \frac{h^4}{12} u''''(x) + \dots
+\]</span></p>
+<p>Subtract <span class="math inline">\(2u(x)\)</span>, divide by <span class="math inline">\(h^2\)</span>, solve for <span class="math inline">\(u''(x)\)</span>:</p>
+<p><span class="math display">\[
+u''(x) = \frac{u(x + h) - 2 u(x) + u(x - h)}{h^2} - \frac{h^2}{12} u''''(x) - \dots
+\]</span></p>
+<div class="fragment">
+<p><strong>Flux form</strong>: difference of two first derivatives at the half points</p>
+<p><span class="math display">\[
+u''(x) \approx \frac{1}{h} \left[ \underbrace{\frac{u(x + h) - u(x)}{h}}_{u'(x + h/2)} - \underbrace{\frac{u(x) - u(x - h)}{h}}_{u'(x - h/2)} \right]
+\]</span></p>
+<p>The core of every diffusion model; with variable <span class="math inline">\(D\)</span> it becomes <span class="math inline">\(D_{i+1/2}\)</span> and <span class="math inline">\(D_{i-1/2}\)</span>.</p>
+</div>
+</section>
+<section id="measuring-the-order-of-convergence" class="slide level2">
+<h2>Measuring the order of convergence</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p><span class="math inline">\(e(h) \approx C h^p \;\Rightarrow\; \log e = \log C + p \log h\)</span></p>
+<p><strong>Straight line</strong> with slope <span class="math inline">\(p\)</span> on log–log axes.</p>
+<p>From two steps, <span class="math inline">\(C\)</span> drops out:</p>
+<p><span class="math display">\[
+p = \frac{\log \left( e(h_1) / e(h_2) \right)}{\log \left( h_1 / h_2 \right)}
+\]</span></p>
+<p>Halving <span class="math inline">\(h\)</span>: <span class="math inline">\(p = \log_2\)</span> of the error ratio. Factor 4 = second order.</p>
+</div><div class="column" style="width:55%;">
+<div id="d1707a1a" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="03-numerical-toolbox_files/figure-revealjs/cell-3-output-1.png" width="753" height="481"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div class="takeaway">
+<p>Observed order = theoretical order is <strong>the</strong> test of a code. A bug almost always lowers the order.</p>
+</div>
+</section>
+<section id="truncation-versus-round-off" class="slide level2">
+<h2>Truncation versus round-off</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p>Stored values carry relative errors <span class="math inline">\(|\delta| \le \varepsilon\)</span>:</p>
+<p><span class="math display">\[
+u(x{+}h)(1{+}\delta_2) - u(x)(1{+}\delta_1)
+\]</span></p>
+<p>Numerator wrong by up to <span class="math inline">\(2 \varepsilon |u|\)</span>; divided by <span class="math inline">\(h\)</span>:</p>
+<p><span class="math display">\[
+e(h) = \underbrace{\frac{h}{2} |u''|}_{\text{truncation}} + \underbrace{\frac{2 \varepsilon |u|}{h}}_{\text{round-off}}
+\]</span></p>
+<p><span class="question">Think first: where is the minimum?</span></p>
+</div><div class="column" style="width:55%;">
+<div id="9c3f21aa" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="03-numerical-toolbox_files/figure-revealjs/cell-4-output-1.png" width="781" height="616"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="the-optimal-step" class="slide level2">
+<h2>The optimal step</h2>
+<p><span class="math display">\[
+\frac{\mathrm{d}e}{\mathrm{d}h} = \frac{|u''|}{2} - \frac{2 \varepsilon |u|}{h^2} = 0
+\quad \Longrightarrow \quad
+h_{\text{opt}} = 2 \sqrt{\frac{\varepsilon |u|}{|u''|}},
+\qquad
+e(h_{\text{opt}}) = 2 \sqrt{\varepsilon \, |u| \, |u''|}
+\]</span></p>
+<div class="fragment">
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><span class="math inline">\(h_{\text{opt}}\)</span></th>
+<th>smallest error</th>
+<th>digits lost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>forward, <span class="math inline">\(O(h)\)</span></td>
+<td><span class="math inline">\(\sim \sqrt{\varepsilon} \approx 10^{-8}\)</span></td>
+<td><span class="math inline">\(\sim 10^{-8}\)</span></td>
+<td>half of 16</td>
+</tr>
+<tr class="even">
+<td>central, <span class="math inline">\(O(h^2)\)</span></td>
+<td><span class="math inline">\(\sim \varepsilon^{1/3} \approx 10^{-5}\)</span></td>
+<td><span class="math inline">\(\sim \varepsilon^{2/3} \approx 10^{-11}\)</span></td>
+<td>about 5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+<div class="takeaway">
+<p>Higher order: smaller error at the same step and less sensitive to round-off. In a convergence test, choose <span class="math inline">\(h\)</span> neither so large that higher terms disturb the slope nor so small that round-off dominates.</p>
+</div>
+</div>
+</section>
+<section id="stencils-of-any-order-undetermined-coefficients" class="slide level2">
+<h2>Stencils of any order: undetermined coefficients</h2>
+<p>First derivative at a boundary, points <span class="math inline">\(x\)</span>, <span class="math inline">\(x + h\)</span>, <span class="math inline">\(x + 2h\)</span>. Factor of each derivative in each Taylor series:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th></th>
+<th><span class="math inline">\(u\)</span></th>
+<th><span class="math inline">\(h \, u'\)</span></th>
+<th><span class="math inline">\(h^2 u''\)</span></th>
+<th><span class="math inline">\(h^3 u'''\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u(x)\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u(x + h)\)</span></td>
+<td>1</td>
+<td>1</td>
+<td><span class="math inline">\(\tfrac12\)</span></td>
+<td><span class="math inline">\(\tfrac16\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u(x + 2h)\)</span></td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td><span class="math inline">\(\tfrac86\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<p><span class="math inline">\(w_0 u(x) + w_1 u(x{+}h) + w_2 u(x{+}2h)\)</span> shall contain <span class="math inline">\(u'\)</span> once, no <span class="math inline">\(u\)</span>, no <span class="math inline">\(u''\)</span>:</p>
+<p><span class="math display">\[
+w_0 + w_1 + w_2 = 0, \qquad w_1 + 2 w_2 = \tfrac1h, \qquad \tfrac12 w_1 + 2 w_2 = 0
+\]</span></p>
+</div>
+<div class="fragment">
+<p>Second minus third: <span class="math inline">\(\tfrac12 w_1 = \tfrac1h\)</span>, so <span class="math inline">\(w_1 = \tfrac2h\)</span>, <span class="math inline">\(w_2 = -\tfrac{1}{2h}\)</span>, <span class="math inline">\(w_0 = -\tfrac{3}{2h}\)</span>.</p>
+</div>
+</section>
+<section id="the-one-sided-formula-and-the-general-recipe" class="slide level2">
+<h2>The one-sided formula and the general recipe</h2>
+<p>Leading error from the uncontrolled column: <span class="math inline">\(\left( \tfrac16 w_1 + \tfrac86 w_2 \right) h^3 u''' = \left( \tfrac{1}{3h} - \tfrac{2}{3h} \right) h^3 u''' = -\tfrac13 h^2 u'''\)</span></p>
+<p><span class="math display">\[
+u'(x) = \frac{-3 u(x) + 4 u(x + h) - u(x + 2h)}{2h} + \frac{h^2}{3} u'''(x) + \dots
+\]</span></p>
+<p>Second order, but error constant <span class="math inline">\(\tfrac13\)</span>: <strong>twice</strong> that of the central difference.</p>
+<div class="fragment">
+<p><strong>General</strong>: offsets <span class="math inline">\(s_j\)</span>, <span class="math inline">\(m\)</span>-th derivative, <span class="math inline">\(n\)</span> points, <span class="math inline">\(n\)</span> linear equations</p>
+<p><span class="math display">\[
+\sum_{j=0}^{n-1} s_j^k \, w_j = \begin{cases} m! / h^m, &amp; k = m \\ 0, &amp; k \ne m \end{cases}
+\qquad k = 0, \dots, n - 1
+\]</span></p>
+<p>Five points, <span class="math inline">\(s = (-2, \dots, 2)\)</span>: <span class="math inline">\(u' \approx \tfrac{1}{12h}(1, -8, 0, 8, -1)\)</span>, fourth order.</p>
+</div>
+</section></section>
+<section>
+<section id="interpolation" class="title-slide slide level1 center">
+<h1>Interpolation</h1>
+
+</section>
+<section id="linear-interpolation-and-its-error" class="slide level2">
+<h2>Linear interpolation and its error</h2>
+<p><span class="math display">\[
+p(x) = u_j + \frac{u_{j+1} - u_j}{h} (x - x_j), \qquad \text{midpoint: } \tfrac12 (u_j + u_{j+1})
+\]</span></p>
+<p>Needed constantly: values between grid points, regridding, departure points of air parcels.</p>
+<div class="fragment">
+<p>Error of a polynomial of degree <span class="math inline">\(n\)</span> through <span class="math inline">\(n + 1\)</span> points:</p>
+<p><span class="math display">\[
+u(x) - p(x) = \frac{u^{(n+1)}(\xi)}{(n + 1)!} \prod_{j=0}^{n} (x - x_j)
+\]</span></p>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(n = 1\)</span>, <span class="math inline">\(t = x - x_j\)</span>: the product <span class="math inline">\(t(t - h)\)</span> is extreme at <span class="math inline">\(t = h/2\)</span>, value <span class="math inline">\(-h^2/4\)</span></p>
+<p><span class="math display">\[
+|u(x) - p(x)| \le \frac{h^2}{8} \max |u''| \qquad \text{second order, exact without curvature}
+\]</span></p>
+</div>
+</section>
+<section id="the-runge-phenomenon" class="slide level2">
+<h2>The Runge phenomenon</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><span class="question">Think first: more points, higher degree, better fit?</span></p>
+<div class="fragment">
+<p>Not on equidistant points: <span class="math inline">\(\prod (x - x_j)\)</span> is large near the ends, and <span class="math inline">\(u^{(n+1)}\)</span> can grow faster than <span class="math inline">\((n+1)!\)</span>.</p>
+<p>Remedies:</p>
+<ul>
+<li>piecewise, low degree (<strong>splines</strong>)</li>
+<li>cluster points at the ends (Chebyshev); a model grid rarely allows this</li>
+</ul>
+<div class="takeaway">
+<p>Refine the grid with a method of moderate order.</p>
+</div>
+</div>
+</div><div class="column" style="width:60%;">
+<div id="71fcb660" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="03-numerical-toolbox_files/figure-revealjs/cell-5-output-1.png" width="871" height="601"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</section></section>
+<section>
+<section id="quadrature" class="title-slide slide level1 center">
+<h1>Quadrature</h1>
+
+</section>
+<section id="midpoint-and-trapezoidal-rule" class="slide level2">
+<h2>Midpoint and trapezoidal rule</h2>
+<p>One subinterval of width <span class="math inline">\(h\)</span>, midpoint <span class="math inline">\(m\)</span>. Expand <span class="math inline">\(f(m + s)\)</span>, integrate from <span class="math inline">\(-h/2\)</span> to <span class="math inline">\(h/2\)</span>; odd powers of <span class="math inline">\(s\)</span> integrate to zero:</p>
+<p><span class="math display">\[
+\int_{-h/2}^{h/2} s^2 \, \mathrm{d}s = \frac{2}{3} \left( \frac{h}{2} \right)^3 = \frac{h^3}{12}
+\quad \Longrightarrow \quad
+\int f \, \mathrm{d}x = \underbrace{h \, f(m)}_{\text{midpoint}} + \frac{h^3}{24} f''(m) + O(h^5)
+\]</span></p>
+<div class="fragment">
+<p>End points: <span class="math inline">\(f(m - \tfrac h2) + f(m + \tfrac h2) = 2 f(m) + \tfrac{h^2}{4} f''(m) + O(h^4)\)</span>, so</p>
+<p><span class="math display">\[
+\underbrace{\frac{h}{2} \left[ f(m - \tfrac h2) + f(m + \tfrac h2) \right]}_{\text{trapezoidal}}
+= h f(m) + \frac{h^3}{8} f''
+= \int f \, \mathrm{d}x \underbrace{- \frac{h^3}{24} f'' + \frac{h^3}{8} f''}_{+ \frac{h^3}{12} f''}
+\]</span></p>
+</div>
+<div class="fragment">
+<p>Solved for the integral: <span class="math inline">\(\int f \, \mathrm{d}x = \text{trapezoidal} - \frac{h^3}{12} f''(m) + O(h^5)\)</span>.</p>
+<p>Twice the midpoint error, <strong>opposite sign</strong>.</p>
+</div>
+</section>
+<section id="composite-rules-and-simpson" class="slide level2">
+<h2>Composite rules and Simpson</h2>
+<p><span class="math inline">\(N = (b - a)/h\)</span> subintervals: local <span class="math inline">\(O(h^3)\)</span> adds up to <span class="math inline">\(O(h^2)\)</span></p>
+<p><span class="math display">\[
+\text{midpoint: } \frac{h^2}{24} \big[ f'(b) - f'(a) \big], \qquad
+\text{trapezoidal: } -\frac{h^2}{12} \big[ f'(b) - f'(a) \big]
+\]</span></p>
+<p>Periodic <span class="math inline">\(f\)</span> over one period: <span class="math inline">\(f'(b) = f'(a)\)</span>, the trapezoidal rule is extremely accurate.</p>
+<div class="fragment">
+<p><strong>Simpson</strong>: <span class="math inline">\(\tfrac23\)</span> midpoint <span class="math inline">\(+ \tfrac13\)</span> trapezoidal, the <span class="math inline">\(h^3\)</span> terms cancel: <span class="math inline">\(-\tfrac{2}{3} \cdot \tfrac{1}{24} + \tfrac13 \cdot \tfrac1{12} = 0\)</span></p>
+<p><span class="math display">\[
+\int_{m - h/2}^{m + h/2} f \, \mathrm{d}x \approx \frac{h}{6} \left[ f(m - \tfrac h2) + 4 f(m) + f(m + \tfrac h2) \right] \qquad \text{fourth order}
+\]</span></p>
+</div>
+</section>
+<section id="three-rules-one-test" class="slide level2">
+<h2>Three rules, one test</h2>
+<div id="88809f79" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="03-numerical-toolbox_files/figure-revealjs/cell-6-output-1.png" width="1471" height="511"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>In models</strong>: every time stepping scheme is a quadrature rule for <span class="math inline">\(\int_t^{t + \Delta t} f \, \mathrm{d}t\)</span> (left rectangle = forward Euler); finite volumes integrate fluxes over faces; finite elements use Gauss quadrature.</p>
+</section></section>
+<section>
+<section id="root-finding" class="title-slide slide level1 center">
+<h1>Root finding</h1>
+
+</section>
+<section id="reformulate-first" class="slide level2">
+<h2>Reformulate first</h2>
+<p>Nonlinear equations everywhere: implicit steps, saturation temperature, water table. Example (eigenvalues of diffusion with Robin conditions):</p>
+<p><span class="math display">\[
+\tan \lambda + 2 \lambda = 0
+\]</span></p>
+<p><span class="question">Think first: what goes wrong for a root finder?</span></p>
+<div class="fragment">
+<p><span class="math inline">\(\tan\)</span> jumps from <span class="math inline">\(+\infty\)</span> to <span class="math inline">\(-\infty\)</span> at <span class="math inline">\(\pi/2\)</span>: a <strong>sign change without a root</strong>. Multiply by <span class="math inline">\(\cos \lambda\)</span>:</p>
+<p><span class="math display">\[
+f(\lambda) = \sin \lambda + 2 \lambda \cos \lambda = 0, \qquad f'(\lambda) = 3 \cos \lambda - 2 \lambda \sin \lambda
+\]</span></p>
+<p>Same roots: where <span class="math inline">\(\cos \lambda = 0\)</span>, <span class="math inline">\(f = \sin \lambda = \pm 1 \ne 0\)</span>. First root in <span class="math inline">\([\pi/2, \pi]\)</span>: <span class="math inline">\(f(\pi/2) = 1 &gt; 0\)</span>, <span class="math inline">\(f(\pi) = -2\pi &lt; 0\)</span>.</p>
+</div>
+</section>
+<section id="bisection" class="slide level2">
+<h2>Bisection</h2>
+<p>Sign change on <span class="math inline">\([a, b]\)</span> <span class="math inline">\(\Rightarrow\)</span> root inside. Halve, keep the half with the sign change.</p>
+<p><span class="math display">\[
+e_k \le \frac{b - a}{2^{k+1}}
+\qquad \Longrightarrow \qquad
+k \ge \log_2 \frac{b - a}{\tau} - 1
+\]</span></p>
+<p><span class="math inline">\(b - a = \pi/2\)</span>, <span class="math inline">\(\tau = 10^{-12}\)</span>: 40 iterations. One binary digit per iteration, 3.3 per decimal digit.</p>
+<div class="fragment">
+<p><strong>Linear convergence</strong>: the error bound shrinks by a fixed factor, <span class="math inline">\(\tfrac12\)</span>.</p>
+<ul>
+<li>cannot fail, but slow</li>
+<li>does not extend to systems</li>
+</ul>
+</div>
+</section>
+<section id="newtonraphson" class="slide level2">
+<h2>Newton–Raphson</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Keep two Taylor terms (the tangent) and set to zero:</p>
+<p><span class="math display">\[
+f(x_k + \delta) \approx f(x_k) + \delta \, f'(x_k) = 0
+\]</span></p>
+<p><span class="math display">\[
+x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)}
+\]</span></p>
+</div><div class="column" style="width:50%;">
+<div id="c90dad05" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<div>
+<figure>
+<p><img data-src="03-numerical-toolbox_files/figure-revealjs/cell-7-output-1.png" width="751" height="482"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div class="fragment">
+<p>Error <span class="math inline">\(e_k = x_k - r\)</span>, so the step from <span class="math inline">\(x_k\)</span> to the root is <span class="math inline">\(r - x_k = -e_k\)</span>. Taylor at <span class="math inline">\(x_k\)</span>, evaluated at <span class="math inline">\(r\)</span>:</p>
+<p><span class="math display">\[
+0 = f(r) = f(x_k) - e_k \, f'(x_k) + \frac{e_k^2}{2} f''(\xi)
+\]</span></p>
+</div>
+</section>
+<section id="quadratic-convergence" class="slide level2">
+<h2>Quadratic convergence</h2>
+<p>Divide by <span class="math inline">\(f'(x_k)\)</span> and move <span class="math inline">\(-e_k\)</span> and <span class="math inline">\(f/f'\)</span> to the left (both change sign):</p>
+<p><span class="math display">\[
+e_k - \frac{f(x_k)}{f'(x_k)} = \frac{f''(\xi)}{2 f'(x_k)} \, e_k^2
+\]</span></p>
+<div class="fragment">
+<p>Left side: <span class="math inline">\(x_k - r - \frac{f(x_k)}{f'(x_k)} = x_{k+1} - r = e_{k+1}\)</span>. Hence</p>
+<p><span class="math display">\[
+\boxed{e_{k+1} \approx \frac{f''(r)}{2 f'(r)} \, e_k^2}
+\]</span></p>
+</div>
+<div class="fragment">
+<p>Error <span class="math inline">\(10^{-3} \to 10^{-6} \to 10^{-12}\)</span>: correct digits <strong>double</strong> per iteration.</p>
+<ul>
+<li>needs <span class="math inline">\(f'\)</span>, and a good start (where <span class="math inline">\(f' \approx 0\)</span> the tangent throws <span class="math inline">\(x\)</span> far away)</li>
+<li>double root, <span class="math inline">\(f'(r) = 0\)</span>: only linear</li>
+<li>practice: bisection to get close, then Newton (<code>scipy.optimize.root_scalar</code>, <code>brentq</code>)</li>
+</ul>
+</div>
+</section>
+<section id="newton-for-systems" class="slide level2">
+<h2>Newton for systems</h2>
+<p><span class="math inline">\(\vec F(\vec x) = 0\)</span>, <span class="math inline">\(N\)</span> equations. First-order Taylor with the <strong>Jacobian</strong> <span class="math inline">\(J_{ij} = \partial F_i / \partial x_j\)</span>:</p>
+<p><span class="math display">\[
+\vec F(\vec x_k + \delta \vec x) \approx \vec F(\vec x_k) + J(\vec x_k) \, \delta \vec x = 0
+\qquad \Longrightarrow \qquad
+J(\vec x_k) \, \delta \vec x = - \vec F(\vec x_k)
+\]</span></p>
+<div class="fragment">
+<p>Circle and hyperbola, start <span class="math inline">\((2, 0.5)\)</span>:</p>
+<p><span class="math display">\[
+\vec F = \begin{pmatrix} x^2 + y^2 - 4 \\ x y - 1 \end{pmatrix}, \qquad
+J = \begin{pmatrix} 2x &amp; 2y \\ y &amp; x \end{pmatrix}
+\]</span></p>
+<div id="74f30180" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-stdout">
+<pre><code>error in x:  1.5e-03   1.1e-06   8.0e-13   2.2e-16</code></pre>
+</div>
+</div>
+<div class="takeaway">
+<p>A nonlinear problem becomes a sequence of <strong>linear systems</strong>: how the Richards equation is solved. Next lecture: linear algebra.</p>
+</div>
+</div>
+</section>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<ul>
+<li>Finite differences and their truncation errors follow from the Taylor series; forward/backward are first order, central first and second derivatives second order.</li>
+<li>Measure the order on a log–log plot or from error ratios: the basic verification test.</li>
+<li>Round-off limits finite differences: the best step is about <span class="math inline">\(\sqrt\varepsilon\)</span> (forward), <span class="math inline">\(\varepsilon^{1/3}\)</span> (central).</li>
+<li>Stencil weights for any derivative follow from a small linear system.</li>
+<li>Linear interpolation, midpoint and trapezoidal rules are second order; Simpson fourth; high-degree polynomials on equidistant points oscillate.</li>
+<li>Bisection: linear and safe. Newton: quadratic near a simple root, and works for systems via the Jacobian.</li>
+</ul>
+</section>
+<section id="lab-and-next-lecture" class="slide level2">
+<h2>Lab and next lecture</h2>
+<ul>
+<li><strong>Lab</strong>: start Exercise 3 (truncation and round-off, one-sided difference, quadrature, root finding), due <span class="placeholder">date</span></li>
+<li>Start your <code>toolbox.py</code>: difference formulas, quadrature rules, bisection, Newton</li>
+<li><strong>Reading</strong>: script, unit 3</li>
+<li><strong>Next lecture</strong>: the numerical toolbox II: matrices and waves</li>
+</ul>
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Prognostic Modelling (pea700) · WiSe 2026/27</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="03-numerical-toolbox_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 760,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 6.0e-2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script type="ojs-module-contents">
+    eyJjb250ZW50cyI6W119
+    </script>
+    <script type="module">
+    if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+    window._ojs.paths.runtimeToDoc = "../../..";
+    window._ojs.paths.runtimeToRoot = "../../..";
+    window._ojs.paths.docToRoot = "";
+    window._ojs.selfContained = false;
+    window._ojs.runtime.interpretFromScriptTags();
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

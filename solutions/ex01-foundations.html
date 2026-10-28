@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exercise 1: Floating point numbers</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="ex01-foundations_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ex01-foundations_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="ex01-foundations_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="ex01-foundations_files/libs/quarto-html/popper.min.js"></script>
+<script src="ex01-foundations_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ex01-foundations_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ex01-foundations_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ex01-foundations_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ex01-foundations_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ex01-foundations_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ex01-foundations_files/libs/bootstrap/bootstrap-52b7431fd5103eb639085582735ab625.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ex01-foundations.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Exercise 1: Floating point numbers</h1>
+<p class="subtitle lead">Prognostic Modelling (pea700), WiSe 2026/27</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Out: week 1 · Back: week 2 · 7 points</em></p>
+<p>Covers unit 1 of the script. The preparation sets up the repository through which you hand in all exercises of the semester; see the rules at its end. The preparation and all three problems are worked on in the lab; what you do not finish there is homework.</p>
+<section id="preparation-git-gitlab-and-your-working-environment" class="level2">
+<h2 class="anchored" data-anchor-id="preparation-git-gitlab-and-your-working-environment">Preparation: Git, GitLab and your working environment</h2>
+<p>All solutions of this semester and the final project report are handed in through the institute’s GitLab server, <code>https://&lt;gitlab-address&gt;</code>. You will receive an invitation by e-mail during the first lab. GitLab stores your work in a <strong>git repository</strong>: a folder whose complete history of changes is recorded, so that every earlier state can be restored and every change can be traced. Version control is standard in scientific programming, and you will use it for every exercise.</p>
+<p>This preparation carries no points, but without it you cannot hand in. You may use any editor. We recommend <strong>Visual Studio Code</strong> (VS Code), which combines an editor, a terminal, Jupyter notebooks and git in one window; see the box at the end of this section.</p>
+<ol type="a">
+<li><p><strong>Set up git.</strong> Check that git is installed with <code>git --version</code> (on Windows, install <em>Git for Windows</em> from git-scm.com). Tell git who you are; this name appears in every commit you make:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">"First Last"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">"your.address@uni-bonn.de"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> init.defaultBranch main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Create an SSH key, which lets you push without typing a password, and add the <strong>public</strong> key to GitLab under <em>Preferences → SSH Keys</em>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-keygen</span> <span class="at">-t</span> ed25519 <span class="at">-C</span> <span class="st">"your.address@uni-bonn.de"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.ssh/id_ed25519.pub        <span class="co"># copy this line into GitLab</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-T</span> git@<span class="op">&lt;</span>gitlab-address<span class="op">&gt;</span>      <span class="co"># test: GitLab greets you by name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Never share the private key <code>~/.ssh/id_ed25519</code>.</p></li>
+<li><p><strong>Get your repository.</strong> Your personal repository has already been created in the course group <code>&lt;course-group&gt;</code>. It is named after the initial of your first name and your last name, for example <code>jsmith</code> for Jane Smith, and is visible only to you, the lecturer and the tutors. Accept the invitation from the e-mail, sign in, and copy the SSH address from the <em>Code</em> button of the project page. Clone the repository to your computer:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone git@<span class="op">&lt;</span>gitlab-address<span class="op">&gt;</span>:<span class="op">&lt;</span>course-group<span class="op">&gt;</span>/emustermann.git</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> emustermann</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Give it the following structure: one folder per exercise sheet, one for the project, a <code>README.md</code> with your name and matriculation number, and a <code>.gitignore</code> that keeps generated files out of the repository.</p>
+<pre><code>jsmith/
+    README.md
+    .gitignore
+    requirements.txt
+    ex01/
+    ex02/
+    ...
+    project/</code></pre>
+<p>with the <code>.gitignore</code></p>
+<pre><code>.venv/
+__pycache__/
+.ipynb_checkpoints/</code></pre></li>
+<li><p><strong>Set up Python.</strong> Create a virtual environment inside the repository, activate it, and install the packages of this course:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate        <span class="co"># Windows: .venv\Scripts\activate</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install numpy scipy matplotlib jupyter</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Write the four package names into <code>requirements.txt</code>, one per line, so that anybody can recreate the environment with <code>pip install -r requirements.txt</code>. The environment itself (<code>.venv/</code>) is not committed: it is large, and it only works on your computer.</p></li>
+<li><p><strong>Commit and push.</strong> Record the current state and send it to GitLab:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status                       <span class="co"># what has changed?</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add README.md .gitignore requirements.txt</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Set up repository for pea700"</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Check in the browser that the files have arrived. From now on every exercise follows the same cycle: work, <code>git add</code>, <code>git commit</code>, <code>git push</code>. If you work on more than one computer, start each session with <code>git pull</code>.</p></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Rules for handing in
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Each sheet goes into its folder <code>exNN/</code>. Code as a notebook (<code>.ipynb</code>) or script (<code>.py</code>) that runs without changes in the environment from <code>requirements.txt</code>. Derivations as PDF (scan or typeset) or in the markdown cells of the notebook.</li>
+<li>What is pushed to GitLab before the deadline is graded. Push early and often; there is no penalty for many commits.</li>
+<li>Do not commit generated or large files (environments, data files, output folders).</li>
+<li>The final project report goes into <code>project/</code>.</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Working with VS Code (optional)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Install VS Code from code.visualstudio.com and, in the <em>Extensions</em> view (<code>Ctrl+Shift+X</code>), the extensions <strong>Python</strong> and <strong>Jupyter</strong> (both by Microsoft).</li>
+<li><em>File → Open Folder</em> and choose your repository folder.</li>
+<li>Select the environment: <code>Ctrl+Shift+P</code> → <em>Python: Select Interpreter</em> → <code>.venv</code>. Notebooks then use it as their kernel.</li>
+<li>The <em>Source Control</em> view (<code>Ctrl+Shift+G</code>) shows changed files. Stage them with <code>+</code>, write a message, <em>Commit</em>, then <em>Sync Changes</em> to push and pull. The integrated terminal (<code>Ctrl+`</code>) accepts all commands above.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>The Python you need for this sheet
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open a notebook or a Python file in your repository folder <code>ex01/</code> and try:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.2</span>          <span class="co"># compute and store the result under the name x</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)               <span class="co"># show the value of x</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x ="</span>, x)        <span class="co"># show a text and then the value</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.20f}</span><span class="ss">"</span>)     <span class="co"># show x with 20 digits after the decimal point</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x <span class="op">==</span> <span class="fl">0.3</span>)        <span class="co"># == compares two values: True or False</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">0</span>                  <span class="co"># a counter</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> n <span class="op">&lt;</span> <span class="dv">3</span>:           <span class="co"># repeat the indented lines as long as n &lt; 3</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> n <span class="op">+</span> <span class="dv">1</span>          <span class="co"># increase the counter by 1</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"n ="</span>, n)    <span class="co"># prints n = 1, n = 2, n = 3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>=</code> stores a value, <code>==</code> compares two values. The lines that belong to the <code>while</code> loop are indented by four spaces; Python checks the condition before each pass and continues after the loop as soon as it is <code>False</code>. Everything else is introduced where it is needed.</p>
+</div>
+</div>
+</section>
+<section id="problem-1-python-as-a-calculator-in-the-lab-2-points" class="level2">
+<h2 class="anchored" data-anchor-id="problem-1-python-as-a-calculator-in-the-lab-2-points">Problem 1: Python as a calculator (in the lab, 2 points)</h2>
+<ol type="a">
+<li><p>Before you run anything, write down what you <strong>expect</strong> for each line. Then run the lines and compare.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">==</span> <span class="fl">0.3</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="fl">0.1</span><span class="sc">:.20f}</span><span class="ss">"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">1</span> <span class="op">/</span> <span class="dv">3</span> <span class="op">*</span> <span class="dv">3</span> <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="fl">1e16</span> <span class="op">+</span> <span class="dv">1</span> <span class="op">-</span> <span class="fl">1e16</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="fl">1e16</span> <span class="op">-</span> <span class="fl">1e16</span> <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="fl">10.0</span><span class="op">**</span><span class="dv">308</span> <span class="op">*</span> <span class="dv">10</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="fl">1e-320</span> <span class="op">/</span> <span class="fl">1e10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Explain each result in one sentence. Use the three facts about floating point numbers from the lecture: about 16 significant digits, a largest and a smallest number, and most decimal fractions are not exactly representable.</p></li>
+<li><p>How should two floating point numbers <code>a</code> and <code>b</code> be compared instead of <code>a == b</code>? Write a comparison that gives <code>True</code> for <code>0.1 + 0.2</code> and <code>0.3</code>.</p></li>
+</ol>
+<section id="solution" class="level3">
+<h3 class="anchored" data-anchor-id="solution">Solution</h3>
+<p>a) Each expression is computed and printed on its own line. The text in quotes is printed as it is; after the comma follows the value.</p>
+<div id="9b334b82" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.1 + 0.2 compared with 0.3</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.2</span>                      <span class="co"># compute the sum and store it under the name a</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"0.1 + 0.2 ="</span>, a)            <span class="co"># show the stored value</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"a == 0.3:"</span>, a <span class="op">==</span> <span class="fl">0.3</span>)       <span class="co"># == compares two values; the answer is True or False</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.1 with 20 digits after the decimal point</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"0.1 with 20 digits:"</span>, <span class="ss">f"</span><span class="sc">{</span><span class="fl">0.1</span><span class="sc">:.20f}</span><span class="ss">"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1/3 times 3 compared with 1</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> <span class="dv">3</span> <span class="op">*</span> <span class="dv">3</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"1 / 3 * 3 ="</span>, b)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"b == 1:"</span>, b <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># adding and subtracting a large number; 1e16 means 1 times 10 to the power 16</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> <span class="fl">1e16</span> <span class="op">+</span> <span class="dv">1</span> <span class="op">-</span> <span class="fl">1e16</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"1e16 + 1 - 1e16 ="</span>, c)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> <span class="fl">1e16</span> <span class="op">-</span> <span class="fl">1e16</span> <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"1e16 - 1e16 + 1 ="</span>, d)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co"># a very large and a very small result; ** means "to the power of"</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> <span class="fl">10.0</span><span class="op">**</span><span class="dv">308</span> <span class="op">*</span> <span class="dv">10</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"10.0**308 * 10 ="</span>, e)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="fl">1e-320</span> <span class="op">/</span> <span class="fl">1e10</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"1e-320 / 1e10 ="</span>, f)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.1 + 0.2 = 0.30000000000000004
+a == 0.3: False
+0.1 with 20 digits: 0.10000000000000000555
+1 / 3 * 3 = 1.0
+b == 1: True
+1e16 + 1 - 1e16 = 0.0
+1e16 - 1e16 + 1 = 1.0
+10.0**308 * 10 = inf
+1e-320 / 1e10 = 0.0</code></pre>
+</div>
+</div>
+<p>Some Python used here:</p>
+<ul>
+<li><code>a = 0.1 + 0.2</code> computes the right hand side and stores the result under the name <code>a</code>. It is not an equation; it is an instruction.</li>
+<li><code>a == 0.3</code> (two equal signs) <em>compares</em> and gives <code>True</code> or <code>False</code>.</li>
+<li><code>f"{0.1:.20f}"</code> is a formatted text: the <code>f</code> before the quotes tells Python to insert the value in braces, and <code>.20f</code> means “with 20 digits after the decimal point”.</li>
+<li><code>1e16</code> is Python’s way of writing <span class="math inline">\(1 \times 10^{16}\)</span>, and <code>1e-320</code> is <span class="math inline">\(1 \times 10^{-320}\)</span>.</li>
+</ul>
+<p>b)</p>
+<ul>
+<li><code>0.1 + 0.2 == 0.3</code> is <code>False</code>. None of the three numbers can be stored exactly in base 2. The sum is <code>0.30000000000000004</code>, which differs from the stored value of 0.3 in the last digit.</li>
+<li><code>0.1</code> is stored as <code>0.10000000000000000555…</code>: the double closest to 0.1.</li>
+<li><code>1 / 3 * 3 == 1</code> is <code>True</code>. Here the two rounding errors (in the division and in the multiplication) happen to cancel. Whether two floating point results are exactly equal is a matter of luck.</li>
+<li><code>1e16 + 1 - 1e16</code> gives <code>0.0</code>. With about 16 significant digits, <span class="math inline">\(10^{16} + 1\)</span> cannot be distinguished from <span class="math inline">\(10^{16}\)</span>: the 1 is lost in the first addition.</li>
+<li><code>1e16 - 1e16 + 1</code> gives <code>1.0</code>. The same numbers in a different order: now the large numbers cancel first, and the 1 survives. In floating point arithmetic the order of operations matters.</li>
+<li><code>10.0**308 * 10</code> gives <code>inf</code> (infinity). The result is larger than the largest double, about <span class="math inline">\(1.8 \times 10^{308}\)</span>: overflow.</li>
+<li><code>1e-320 / 1e10</code> gives <code>0.0</code>. The result is smaller than the smallest double, about <span class="math inline">\(5 \times 10^{-324}\)</span>: underflow.</li>
+</ul>
+<p>c) Instead of asking “are <code>a</code> and <code>b</code> equal?” we ask “is their difference smaller than a tolerance?”.</p>
+<div id="7c60f435" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.2</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fl">0.3</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>difference <span class="op">=</span> <span class="bu">abs</span>(a <span class="op">-</span> b)            <span class="co"># abs gives the absolute value, i.e. drops the sign</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"difference:"</span>, difference)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>tolerance <span class="op">=</span> <span class="fl">1e-12</span>                  <span class="co"># what we accept as "equal"</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"equal within the tolerance:"</span>, difference <span class="op">&lt;</span> tolerance)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>difference: 5.551115123125783e-17
+equal within the tolerance: True</code></pre>
+</div>
+</div>
+<p>The difference is about <span class="math inline">\(5.6 \times 10^{-17}\)</span>, far below the tolerance, so the comparison gives <code>True</code>. The tolerance must fit the size of the numbers: for numbers around <span class="math inline">\(10^{8}\)</span>, a difference of <span class="math inline">\(10^{-12}\)</span> is already below the accuracy of a double. Python’s module <code>math</code> contains a function that chooses the tolerance relative to the size of the numbers:</p>
+<div id="6211ce96" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math                        <span class="co"># load the module math, which contains mathematical functions</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"math.isclose(a, b):"</span>, math.isclose(a, b))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>math.isclose(a, b): True</code></pre>
+</div>
+</div>
+<p>Points: a) and b) 1, c) 1.</p>
+</section>
+</section>
+<section id="problem-2-a-time-loop-in-the-lab-2-points" class="level2">
+<h2 class="anchored" data-anchor-id="problem-2-a-time-loop-in-the-lab-2-points">Problem 2: A time loop (in the lab, 2 points)</h2>
+<p>Every prognostic model has a time loop. Here is a simple one that should advance the time from 0 to 1 in steps of 0.1:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>steps <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> t <span class="op">&lt;</span> <span class="fl">1.0</span>:</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> t <span class="op">+</span> dt</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> steps <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(steps, t)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="a">
+<li><p>How many steps do you expect? Run the code. How many steps are made, and what is the final time? Explain.</p></li>
+<li><p>Repeat with <code>dt = 0.25</code>. Why does the loop now behave as expected?</p></li>
+<li><p>Rewrite the loop such that it always makes exactly the intended number of steps: compute the number of steps first, loop over an integer counter <code>n</code>, and compute the time from the counter as <code>t = n * dt</code>.</p></li>
+</ol>
+<section id="solution-1" class="level3">
+<h3 class="anchored" data-anchor-id="solution-1">Solution</h3>
+<p>a) To see what happens, we print the time in every step. The <code>print</code> is the only change to the loop of the problem.</p>
+<div id="07c81a72" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="fl">0.0</span>                            <span class="co"># start time</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">0.1</span>                           <span class="co"># time step</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>steps <span class="op">=</span> <span class="dv">0</span>                          <span class="co"># counts the steps</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> t <span class="op">&lt;</span> <span class="fl">1.0</span>:                     <span class="co"># repeat the indented lines as long as t &lt; 1</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> t <span class="op">+</span> dt                     <span class="co"># advance the time by one step</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> steps <span class="op">+</span> <span class="dv">1</span>              <span class="co"># count the step</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"step"</span>, steps, <span class="st">"time"</span>, t)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"number of steps:"</span>, steps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>step 1 time 0.1
+step 2 time 0.2
+step 3 time 0.30000000000000004
+step 4 time 0.4
+step 5 time 0.5
+step 6 time 0.6
+step 7 time 0.7
+step 8 time 0.7999999999999999
+step 9 time 0.8999999999999999
+step 10 time 0.9999999999999999
+step 11 time 1.0999999999999999
+number of steps: 11</code></pre>
+</div>
+</div>
+<p>How the loop works: before each pass, Python checks the condition <code>t &lt; 1.0</code>. If it is <code>True</code>, the indented lines are executed once more; if it is <code>False</code>, Python continues after the loop. The indentation (four spaces) tells Python which lines belong to the loop.</p>
+<p>One expects 10 steps and a final time of 1. The loop makes <strong>11</strong> steps and ends at <span class="math inline">\(t = 1.1\)</span>. The printout shows why: 0.1 is not exactly representable, and the small rounding errors add up from step to step. After ten steps <span class="math inline">\(t\)</span> is <span class="math inline">\(0.9999999999999999\)</span>, which is still smaller than 1, so the loop runs once more. In a model this means one time step too many, or a forcing applied at the wrong time.</p>
+<p>b)</p>
+<div id="4a20d446" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">0.25</span>                          <span class="co"># the only change</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>steps <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> t <span class="op">&lt;</span> <span class="fl">1.0</span>:</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> t <span class="op">+</span> dt</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    steps <span class="op">=</span> steps <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"step"</span>, steps, <span class="st">"time"</span>, t)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"number of steps:"</span>, steps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>step 1 time 0.25
+step 2 time 0.5
+step 3 time 0.75
+step 4 time 1.0
+number of steps: 4</code></pre>
+</div>
+</div>
+<p>Now the loop stops after 4 steps exactly at <span class="math inline">\(t = 1\)</span>. The number 0.25 is <span class="math inline">\(2^{-2}\)</span>, a power of 2, and is stored exactly; all sums are therefore exact. Whether the loop of a) works thus depends on the time step, which makes such errors hard to find.</p>
+<p>c) We first compute how many steps are needed. The number of steps is a whole number (an integer), and integers are stored exactly. The loop counts the steps, and the time is computed from the step number.</p>
+<div id="73d2c49f" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>t_end <span class="op">=</span> <span class="fl">1.0</span>                        <span class="co"># end time</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">0.1</span>                           <span class="co"># time step</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>n_steps <span class="op">=</span> <span class="bu">round</span>(t_end <span class="op">/</span> dt)        <span class="co"># number of steps, rounded to a whole number</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"number of steps:"</span>, n_steps)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">0</span>                              <span class="co"># step counter, a whole number</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> n <span class="op">&lt;</span> n_steps:</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> n <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> n <span class="op">*</span> dt                     <span class="co"># time computed from the counter, not accumulated</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"step"</span>, n, <span class="st">"time"</span>, t)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>number of steps: 10
+step 1 time 0.1
+step 2 time 0.2
+step 3 time 0.30000000000000004
+step 4 time 0.4
+step 5 time 0.5
+step 6 time 0.6000000000000001
+step 7 time 0.7000000000000001
+step 8 time 0.8
+step 9 time 0.9
+step 10 time 1.0</code></pre>
+</div>
+</div>
+<p><code>round</code> rounds to the nearest whole number. It is needed because <code>t_end / dt</code> is itself a floating point number and could come out as <code>9.999999999999998</code> instead of 10.</p>
+<p>The loop now always makes exactly 10 steps and ends exactly at <span class="math inline">\(t = 1\)</span>. The times of some steps are still not exact (<code>0.6000000000000001</code> in step 6), because <span class="math inline">\(6 \times 0.1\)</span> is rounded. But this error is made once and does not add up from step to step as in a).</p>
+<p>Experienced Python programmers write the same loop shorter as <code>for n in range(1, n_steps + 1):</code>, which lets <code>n</code> run through <span class="math inline">\(1, 2, \dots, 10\)</span>; it does exactly the same.</p>
+<p>Points: a) 1, b) and c) 1.</p>
+</section>
+</section>
+<section id="problem-3-machine-epsilon-and-cancellation-in-the-lab-3-points" class="level2">
+<h2 class="anchored" data-anchor-id="problem-3-machine-epsilon-and-cancellation-in-the-lab-3-points">Problem 3: Machine epsilon and cancellation (in the lab, 3 points)</h2>
+<ol type="a">
+<li><p>Determine the machine epsilon experimentally: start with <code>eps = 1.0</code> and halve it as long as <code>1.0 + eps / 2 &gt; 1.0</code>. Compare with the value from the lecture, <span class="math inline">\(2^{-52} \approx 2.2 \times 10^{-16}\)</span>.</p></li>
+<li><p>The equation <span class="math inline">\(x^2 - 10^8 x + 1 = 0\)</span> has the roots <span class="math inline">\(x_{1,2} = \tfrac12 \left( 10^8 \pm \sqrt{10^{16} - 4} \right)\)</span>. The smaller root is very close to <span class="math inline">\(10^{-8}\)</span>. Compute it with this formula (<code>math.sqrt</code> computes the square root). How many digits are correct, and why? Find a formula that gives the smaller root accurately. Hint: <span class="math inline">\(x_1 x_2 = 1\)</span>.</p></li>
+</ol>
+<section id="solution-2" class="level3">
+<h3 class="anchored" data-anchor-id="solution-2">Solution</h3>
+<p>a) We halve <code>eps</code> as long as adding half of it to 1 still changes 1, and count how often this happens.</p>
+<div id="463f55c5" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> <span class="fl">1.0</span>                          <span class="co"># start value</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>halvings <span class="op">=</span> <span class="dv">0</span>                       <span class="co"># counts the halvings</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="fl">1.0</span> <span class="op">+</span> eps <span class="op">/</span> <span class="dv">2</span> <span class="op">&gt;</span> <span class="fl">1.0</span>:         <span class="co"># does half of eps still change 1?</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    eps <span class="op">=</span> eps <span class="op">/</span> <span class="dv">2</span>                  <span class="co"># then halve eps</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    halvings <span class="op">=</span> halvings <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"machine epsilon:"</span>, eps)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"number of halvings:"</span>, halvings)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"2 to the power -52:"</span>, <span class="fl">2.0</span><span class="op">**-</span><span class="dv">52</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>machine epsilon: 2.220446049250313e-16
+number of halvings: 52
+2 to the power -52: 2.220446049250313e-16</code></pre>
+</div>
+</div>
+<p>The loop stops after 52 halvings at <span class="math inline">\(\varepsilon = 2^{-52} \approx 2.2 \times 10^{-16}\)</span>: adding anything smaller than <span class="math inline">\(\varepsilon / 2\)</span> to 1 leaves 1 unchanged. This is the distance between 1 and the next larger double, and it reflects the 52 bits that a double stores after the leading digit.</p>
+<p>b) We compute the two roots step by step.</p>
+<div id="5cf42718" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math                        <span class="co"># the module math contains the square root math.sqrt</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> <span class="fl">1e16</span> <span class="op">-</span> <span class="dv">4</span>                       <span class="co"># the number under the square root</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> math.sqrt(d)                   <span class="co"># the square root</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"square root:"</span>, w)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>x1 <span class="op">=</span> (<span class="fl">1e8</span> <span class="op">+</span> w) <span class="op">/</span> <span class="dv">2</span>                 <span class="co"># larger root, + sign</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>x2_naive <span class="op">=</span> (<span class="fl">1e8</span> <span class="op">-</span> w) <span class="op">/</span> <span class="dv">2</span>           <span class="co"># smaller root, - sign, the formula of the problem</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"larger root  x1:"</span>, x1)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"smaller root x2, naive formula:"</span>, x2_naive)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>square root: 99999999.99999999
+larger root  x1: 100000000.0
+smaller root x2, naive formula: 7.450580596923828e-09</code></pre>
+</div>
+</div>
+<p>Python writes very small numbers as <code>7.450580596923828e-09</code>, which means <span class="math inline">\(7.45 \times 10^{-9}\)</span>. The correct value is very close to <span class="math inline">\(10^{-8}\)</span>, so the naive result is wrong already in the first digit. To check a root without knowing the exact value, we insert it into the equation; a correct root gives (almost) zero:</p>
+<div id="7b53abb5" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>check_naive <span class="op">=</span> x2_naive<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="fl">1e8</span> <span class="op">*</span> x2_naive <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x2 naive inserted into the equation:"</span>, check_naive)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>x2 naive inserted into the equation: 0.2549419403076172</code></pre>
+</div>
+</div>
+<p>The remainder is 0.25 instead of 0: the naive root is wrong.</p>
+<p><em>Why?</em> The formula subtracts two numbers that are almost equal: <span class="math inline">\(10^8\)</span> and <span class="math inline">\(\sqrt{10^{16} - 4} \approx 10^8 - 2 \times 10^{-8}\)</span>. Both agree in their first 16 digits, so the difference consists of the rounding errors of the two numbers. Neighbouring doubles near <span class="math inline">\(10^8\)</span> are about <span class="math inline">\(1.5 \times 10^{-8}\)</span> apart, so the result cannot be more accurate than that, which is as large as the root itself. Not a single digit can be trusted.</p>
+<p><em>The remedy.</em> The larger root is computed with a sum, without cancellation, and is accurate. Since <span class="math inline">\(x_1 x_2 = 1\)</span>, the smaller root is <span class="math inline">\(x_2 = 1 / x_1\)</span>:</p>
+<div id="2056d970" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x2_stable <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> x1</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"smaller root x2, stable formula:"</span>, x2_stable)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>check_stable <span class="op">=</span> x2_stable<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="fl">1e8</span> <span class="op">*</span> x2_stable <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"x2 stable inserted into the equation:"</span>, check_stable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>smaller root x2, stable formula: 1e-08
+x2 stable inserted into the equation: 1.1102230246251565e-16</code></pre>
+</div>
+</div>
+<p>Now the remainder is about <span class="math inline">\(10^{-16}\)</span>, zero within the accuracy of a double. Both formulas are mathematically identical; only the second avoids the subtraction of nearly equal numbers. The problem itself is well-conditioned; the first algorithm is unstable (unit 1 of the script, section on conditioning).</p>
+<p>Points: a) 1, b) 2.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

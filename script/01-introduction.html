@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; What is prognostic modelling? – Prognostic Modelling</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./02-governing-equations.html" rel="next">
+<link href="./syllabus.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3892b3adcc577e567f7e69fe50577df6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./01-introduction.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Prognostic Modelling</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-governing-equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-numerical-toolbox.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-matrices-waves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Time integration of ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-one-step-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#models-of-the-earth-system" id="toc-models-of-the-earth-system" class="nav-link active" data-scroll-target="#models-of-the-earth-system"><span class="header-section-number">1.1</span> Models of the Earth system</a>
+  <ul class="collapse">
+  <li><a href="#a-first-mathematical-model" id="toc-a-first-mathematical-model" class="nav-link" data-scroll-target="#a-first-mathematical-model"><span class="header-section-number">1.1.1</span> A first mathematical model</a></li>
+  <li><a href="#prognostic-and-diagnostic-equations" id="toc-prognostic-and-diagnostic-equations" class="nav-link" data-scroll-target="#prognostic-and-diagnostic-equations"><span class="header-section-number">1.1.2</span> Prognostic and diagnostic equations</a></li>
+  </ul></li>
+  <li><a href="#from-physical-law-to-computer-code" id="toc-from-physical-law-to-computer-code" class="nav-link" data-scroll-target="#from-physical-law-to-computer-code"><span class="header-section-number">1.2</span> From physical law to computer code</a>
+  <ul class="collapse">
+  <li><a href="#the-central-idea-replace-derivatives-by-differences" id="toc-the-central-idea-replace-derivatives-by-differences" class="nav-link" data-scroll-target="#the-central-idea-replace-derivatives-by-differences"><span class="header-section-number">1.2.1</span> The central idea: replace derivatives by differences</a></li>
+  <li><a href="#a-first-analysis" id="toc-a-first-analysis" class="nav-link" data-scroll-target="#a-first-analysis"><span class="header-section-number">1.2.2</span> A first analysis</a></li>
+  </ul></li>
+  <li><a href="#sources-of-error-and-uncertainty" id="toc-sources-of-error-and-uncertainty" class="nav-link" data-scroll-target="#sources-of-error-and-uncertainty"><span class="header-section-number">1.3</span> Sources of error and uncertainty</a></li>
+  <li><a href="#floating-point-arithmetic-and-round-off" id="toc-floating-point-arithmetic-and-round-off" class="nav-link" data-scroll-target="#floating-point-arithmetic-and-round-off"><span class="header-section-number">1.4</span> Floating point arithmetic and round-off</a>
+  <ul class="collapse">
+  <li><a href="#how-a-computer-stores-real-numbers" id="toc-how-a-computer-stores-real-numbers" class="nav-link" data-scroll-target="#how-a-computer-stores-real-numbers"><span class="header-section-number">1.4.1</span> How a computer stores real numbers</a></li>
+  <li><a href="#loss-of-significance" id="toc-loss-of-significance" class="nav-link" data-scroll-target="#loss-of-significance"><span class="header-section-number">1.4.2</span> Loss of significance</a></li>
+  <li><a href="#conditioning" id="toc-conditioning" class="nav-link" data-scroll-target="#conditioning"><span class="header-section-number">1.4.3</span> Conditioning</a></li>
+  </ul></li>
+  <li><a href="#concepts-that-return-in-every-unit" id="toc-concepts-that-return-in-every-unit" class="nav-link" data-scroll-target="#concepts-that-return-in-every-unit"><span class="header-section-number">1.5</span> Concepts that return in every unit</a></li>
+  <li><a href="#verification-and-validation" id="toc-verification-and-validation" class="nav-link" data-scroll-target="#verification-and-validation"><span class="header-section-number">1.6</span> Verification and validation</a></li>
+  <li><a href="#working-practice" id="toc-working-practice" class="nav-link" data-scroll-target="#working-practice"><span class="header-section-number">1.7</span> Working practice</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">1.8</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">1.9</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./01-introduction.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-introduction" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning goals
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After this unit you can</p>
+<ul>
+<li>explain what a prognostic model is and how prognostic and diagnostic equations differ,</li>
+<li>name the steps that lead from a physical law to a simulation result,</li>
+<li>list the sources of error in a numerical model and say which of them you control,</li>
+<li>explain round-off error and recognise loss of significance in a computation,</li>
+<li>distinguish verification from validation.</li>
+</ul>
+</div>
+</div>
+<section id="models-of-the-earth-system" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="models-of-the-earth-system"><span class="header-section-number">1.1</span> Models of the Earth system</h2>
+<p>In this lecture we deal with prognostic modelling of the physics of the Earth and the atmosphere. Before we write down any equation, we clarify what models are for.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Think first: what are models good for?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Prediction.</strong> A model simulates the past and present state of a system and predicts its future state. Weather and climate models predict the future state of the atmosphere and the ocean. This is what we call prognostic modelling.</li>
+<li><strong>Filling gaps.</strong> Measurements of temperature, rain or water levels are never continuous in space and time, not even from satellites. Models interpolate between locations and between measurement times. Nobody can measure the future, so looking ahead always needs a model that extrapolates.</li>
+<li><strong>Seeing the unobservable.</strong> Models give access to variables for which no sensor exists, or which cannot be measured with the required accuracy or coverage, for example the water stored in the deep subsurface.</li>
+<li><strong>Virtual experiments.</strong> Models allow experiments that are impossible, too expensive or too dangerous in reality: doubling atmospheric CO<sub>2</sub>, removing a mountain range, moving an earthquake source.</li>
+<li><strong>Understanding.</strong> Models help to understand complex systems and their feedbacks, because every process can be switched on and off.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Think first: what types of models exist, and what are their strengths?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Strength</th>
+<th>Weakness</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Analog (laboratory experiment)</td>
+<td>It is real</td>
+<td>Needs a laboratory and often much money; valid only in the range of the experiment; scaling to the real system is difficult</td>
+</tr>
+<tr class="even">
+<td>Statistical, including machine learning</td>
+<td>Works without knowing the governing laws; fast once trained</td>
+<td>Needs much data; based on assumptions that are hard to check; unreliable outside the range of the training data</td>
+</tr>
+<tr class="odd">
+<td>Mathematical (physics-based)</td>
+<td>Based on conservation laws, therefore able to extrapolate</td>
+<td>Based on simplifying assumptions; parameters are often unknown at the scale of the model; needs applied mathematics and computing</td>
+</tr>
+</tbody>
+</table>
+<p>This lecture treats mathematical models. The three types are increasingly combined, for example when a machine-learning model is trained on the output of a physics-based model (Chapter 22).</p>
+</div>
+</div>
+</div>
+<section id="a-first-mathematical-model" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="a-first-mathematical-model"><span class="header-section-number">1.1.1</span> A first mathematical model</h3>
+<p>A very familiar physical model is Newton’s second law, <span class="math inline">\(m a = F\)</span>. Written as a differential equation it reads</p>
+<p><span id="eq-newton"><span class="math display">\[
+m \frac{\mathrm{d}^2 u}{\mathrm{d}t^2} = F\!\left(t, u, \frac{\mathrm{d}u}{\mathrm{d}t}\right),
+\tag{1.1}\]</span></span></p>
+<p>where <span class="math inline">\(u(t)\)</span> is the position of a particle at time <span class="math inline">\(t\)</span> and <span class="math inline">\(F\)</span> is the force acting on it. Many problems in science and engineering have this form: an equation that contains one or more derivatives of an unknown function. To model the motion of the particle we have to find the function <span class="math inline">\(u(t)\)</span> that satisfies <a href="#eq-newton" class="quarto-xref">Equation&nbsp;<span>1.1</span></a>.</p>
+<p>Throughout the lecture <span class="math inline">\(u\)</span> denotes the unknown. Depending on the problem it is a position, a temperature, a pressure, a water depth or a vector of all of these.</p>
+</section>
+<section id="prognostic-and-diagnostic-equations" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="prognostic-and-diagnostic-equations"><span class="header-section-number">1.1.2</span> Prognostic and diagnostic equations</h3>
+<p>A <strong>prognostic equation</strong> contains a time derivative of the unknown. It states how fast the state changes, and therefore allows us to step from the state now to the state a moment later:</p>
+<p><span id="eq-prognostic"><span class="math display">\[
+\frac{\partial u}{\partial t} = \mathcal{F}(u, t).
+\tag{1.2}\]</span></span></p>
+<p>A <strong>diagnostic equation</strong> contains no time derivative. It relates variables at the same instant. The ideal gas law <span class="math inline">\(p = \rho R T\)</span> and hydrostatic balance <span class="math inline">\(\partial p / \partial z = -\rho g\)</span> are diagnostic equations of atmospheric models.</p>
+<p>A prognostic model consists of prognostic equations for the variables that carry the memory of the system, the <strong>state</strong>, together with diagnostic equations for everything that follows from the state. The mathematical task is an <strong>initial value problem</strong>: given the state at <span class="math inline">\(t = 0\)</span>, find the state at later times.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Prognostic variables (examples)</th>
+<th>Equations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Numerical weather prediction, climate</td>
+<td>wind, temperature, pressure or density, humidity</td>
+<td>conservation of momentum, energy and mass in a rotating, stratified fluid</td>
+</tr>
+<tr class="even">
+<td>Ocean circulation</td>
+<td>currents, temperature, salinity, sea surface height</td>
+<td>the same, for sea water</td>
+</tr>
+<tr class="odd">
+<td>Groundwater and soil hydrology</td>
+<td>pressure head or water content</td>
+<td>conservation of mass with Darcy’s law</td>
+</tr>
+<tr class="even">
+<td>Seismic wave propagation</td>
+<td>particle velocity, stress</td>
+<td>conservation of momentum with a stress–strain relation</td>
+</tr>
+</tbody>
+</table>
+<p>All these equations are derived in the same way, from the conservation of mass, momentum and energy (<a href="02-governing-equations.html" class="quarto-xref"><span>Chapter 2</span></a>), and they are solved with the same small set of numerical methods. That is why meteorologists and geophysicists can share this lecture.</p>
+</section>
+</section>
+<section id="from-physical-law-to-computer-code" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="from-physical-law-to-computer-code"><span class="header-section-number">1.2</span> From physical law to computer code</h2>
+<p>Almost no prognostic model of a real system can be solved with pencil and paper. We have to solve it numerically, which means that a simulation result is separated from reality by a chain of steps:</p>
+<ol type="1">
+<li><strong>Physical system.</strong> The atmosphere, an aquifer, the crust.</li>
+<li><strong>Conceptual model.</strong> Which processes matter, which are neglected, where the boundaries of the domain are.</li>
+<li><strong>Mathematical model.</strong> Differential equations with initial and boundary conditions and parameters.</li>
+<li><strong>Discretization.</strong> The continuous equations are replaced by algebraic equations for a finite number of unknowns.</li>
+<li><strong>Solution algorithm.</strong> The algebraic equations are solved, often only approximately.</li>
+<li><strong>Implementation.</strong> The algorithm is written as a program.</li>
+<li><strong>Simulation and evaluation.</strong> The program is run and its result is compared with observations.</li>
+</ol>
+<p>Every step introduces errors. The lecture is mainly about steps 4 to 6, but you will only be able to judge a result if you keep the whole chain in mind.</p>
+<section id="the-central-idea-replace-derivatives-by-differences" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="the-central-idea-replace-derivatives-by-differences"><span class="header-section-number">1.2.1</span> The central idea: replace derivatives by differences</h3>
+<p>A computer can add, subtract, multiply and divide. It cannot differentiate. The simplest way to translate a differential equation into arithmetic is the <strong>finite difference method</strong>, which replaces a derivative by a difference quotient, for example</p>
+<p><span id="eq-forward-difference"><span class="math display">\[
+\frac{\mathrm{d}u}{\mathrm{d}t} \approx \frac{u(t + \Delta t) - u(t)}{\Delta t},
+\tag{1.3}\]</span></span></p>
+<p>where <span class="math inline">\(\Delta t\)</span> is the time step. The derivative is the limit of the right hand side for <span class="math inline">\(\Delta t \to 0\)</span>. On a computer <span class="math inline">\(\Delta t\)</span> stays finite, and this is the origin of the discretization error.</p>
+<p>As an example take the decay equation</p>
+<p><span id="eq-decay"><span class="math display">\[
+\frac{\mathrm{d}u}{\mathrm{d}t} = -k u, \qquad u(0) = u_0,
+\tag{1.4}\]</span></span></p>
+<p>which describes radioactive decay, the cooling of a body or the emptying of a linear reservoir. Its exact solution is <span class="math inline">\(u(t) = u_0 e^{-kt}\)</span>. We insert <a href="#eq-forward-difference" class="quarto-xref">Equation&nbsp;<span>1.3</span></a>, write <span class="math inline">\(u_n\)</span> for the approximation of <span class="math inline">\(u(n \Delta t)\)</span> and solve for the new value:</p>
+<p><span id="eq-decay-euler"><span class="math display">\[
+u_{n+1} = u_n - k \, \Delta t \, u_n .
+\tag{1.5}\]</span></span></p>
+<p>This is a complete prognostic model. Starting from <span class="math inline">\(u_0\)</span> it produces the state at all later times using only multiplication and subtraction.</p>
+<div id="cell-fig-decay" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>k, u0, t_end <span class="op">=</span> <span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">4.0</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.5</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>t_exact <span class="op">=</span> np.linspace(<span class="dv">0</span>, t_end, <span class="dv">200</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ax.plot(t_exact, u0 <span class="op">*</span> np.exp(<span class="op">-</span>k <span class="op">*</span> t_exact), <span class="st">"k"</span>, label<span class="op">=</span><span class="st">"exact"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dt <span class="kw">in</span> [<span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>]:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    n_steps <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(t_end <span class="op">/</span> dt))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> np.empty(n_steps <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    u[<span class="dv">0</span>] <span class="op">=</span> u0</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        u[n <span class="op">+</span> <span class="dv">1</span>] <span class="op">=</span> u[n] <span class="op">-</span> k <span class="op">*</span> dt <span class="op">*</span> u[n]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    ax.plot(dt <span class="op">*</span> np.arange(n_steps <span class="op">+</span> <span class="dv">1</span>), u, <span class="st">"o-"</span>, ms<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span><span class="vs">rf"</span><span class="dv">$\D</span><span class="vs">elta t</span><span class="dv">$</span><span class="vs"> = </span><span class="sc">{</span>dt<span class="sc">}</span><span class="vs">"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    error <span class="op">=</span> <span class="bu">abs</span>(u[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> u0 <span class="op">*</span> np.exp(<span class="op">-</span>k <span class="op">*</span> t_end))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"dt = </span><span class="sc">{</span>dt<span class="sc">:4.1f}</span><span class="ss">: error at t = </span><span class="sc">{</span>t_end<span class="sc">:.0f}</span><span class="ss"> is </span><span class="sc">{</span>error<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$t$"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"$u$"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dt =  1.0: error at t = 4 is 0.0183
+dt =  0.5: error at t = 4 is 0.0144
+dt =  0.1: error at t = 4 is 0.0035</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-decay" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-decay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-introduction_files/figure-html/fig-decay-output-2.png" width="515" height="319" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-decay-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.1: Numerical solution of the decay equation with the forward difference for three time steps, compared with the exact solution.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-decay" class="quarto-xref">Figure&nbsp;<span>1.1</span></a> shows the behaviour we hope for: the smaller the time step, the closer the numerical solution is to the exact one. It also raises the questions that occupy us for the rest of the semester.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Try it
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The code below runs in your browser. Change the time step <code>dt</code> and press <em>Run Code</em>. Try 1.5, 2.0, 2.5 and 3.0. At which value does the numerical solution stop decaying?</p>
+<div>
+<div id="pyodide-1" class="exercise-cell">
+
+</div>
+<script type="pyodide-1-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiaW1wb3J0IG51bXB5IGFzIG5wXG5pbXBvcnQgbWF0cGxvdGxpYi5weXBsb3QgYXMgcGx0XG5cbmssIHUwLCB0X2VuZCA9IDEuMCwgMS4wLCAxMi4wXG5kdCA9IDAuNVxuXG5uX3N0ZXBzID0gaW50KHJvdW5kKHRfZW5kIC8gZHQpKVxudSA9IG5wLmVtcHR5KG5fc3RlcHMgKyAxKVxudVswXSA9IHUwXG5mb3IgbiBpbiByYW5nZShuX3N0ZXBzKTpcbiAgICB1W24gKyAxXSA9IHVbbl0gLSBrICogZHQgKiB1W25dXG5cbnRfZXhhY3QgPSBucC5saW5zcGFjZSgwLCB0X2VuZCwgMjAwKVxucGx0LmZpZ3VyZShmaWdzaXplPSg2LCAzLjUpKVxucGx0LnBsb3QodF9leGFjdCwgdTAgKiBucC5leHAoLWsgKiB0X2V4YWN0KSwgXCJrXCIsIGxhYmVsPVwiZXhhY3RcIilcbnBsdC5wbG90KGR0ICogbnAuYXJhbmdlKG5fc3RlcHMgKyAxKSwgdSwgXCJvLVwiLCBtcz0zLCBsYWJlbD1mXCJkdCA9IHtkdH1cIilcbnBsdC54bGFiZWwoXCJ0XCIpXG5wbHQueWxhYmVsKFwidVwiKVxucGx0LmxlZ2VuZCgpXG5wbHQuc2hvdygpIn0=
+</script>
+</div>
+</div>
+</div>
+<ul>
+<li>How fast does the error decrease when <span class="math inline">\(\Delta t\)</span> decreases? (Accuracy)</li>
+<li>With <span class="math inline">\(\Delta t = 1\)</span> the numerical solution drops to zero in one step. What happens for <span class="math inline">\(\Delta t = 3\)</span>? (Stability)</li>
+<li>Is there a better formula than <a href="#eq-decay-euler" class="quarto-xref">Equation&nbsp;<span>1.5</span></a> for the same cost? (Efficiency)</li>
+</ul>
+</section>
+<section id="a-first-analysis" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="a-first-analysis"><span class="header-section-number">1.2.2</span> A first analysis</h3>
+<p>For this simple model the first two questions can be answered on paper. <a href="#eq-decay-euler" class="quarto-xref">Equation&nbsp;<span>1.5</span></a> multiplies the solution by the same factor in every step, <span class="math inline">\(u_{n+1} = (1 - k \Delta t) \, u_n\)</span>. Applying it <span class="math inline">\(n\)</span> times,</p>
+<p><span id="eq-decay-euler-solution"><span class="math display">\[
+u_1 = (1 - k \Delta t) \, u_0, \quad
+u_2 = (1 - k \Delta t)^2 \, u_0, \quad \dots, \quad
+u_n = (1 - k \Delta t)^n \, u_0 .
+\tag{1.6}\]</span></span></p>
+<p>The exact solution is multiplied in every step by <span class="math inline">\(e^{-k \Delta t}\)</span>, since <span class="math inline">\(u(t + \Delta t) = u_0 e^{-k (t + \Delta t)} = e^{-k \Delta t} \, u(t)\)</span>. The Taylor series of this factor is</p>
+<p><span class="math display">\[
+e^{-k \Delta t} = 1 - k \Delta t + \frac{(k \Delta t)^2}{2} - \dots
+\]</span></p>
+<p>The numerical factor <span class="math inline">\(1 - k \Delta t\)</span> consists of its first two terms.</p>
+<p><strong>Accuracy.</strong> In one step the numerical and the exact factor differ by <span class="math inline">\((k \Delta t)^2 / 2\)</span>. To reach a fixed time <span class="math inline">\(t\)</span> we need <span class="math inline">\(n = t / \Delta t\)</span> steps, so the errors add up to something proportional to <span class="math inline">\(n \, (k \Delta t)^2 \propto \Delta t\)</span>. The error at a fixed time is proportional to the time step: halving <span class="math inline">\(\Delta t\)</span> halves the error.</p>
+<p><strong>Stability.</strong> The behaviour of <span class="math inline">\(u_n = (1 - k \Delta t)^n u_0\)</span> depends only on the size of the factor.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Time step</th>
+<th>Factor <span class="math inline">\(1 - k \Delta t\)</span></th>
+<th>Numerical solution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(k \Delta t &lt; 1\)</span></td>
+<td>between 0 and 1</td>
+<td>decays monotonically, as the exact solution</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(k \Delta t = 1\)</span></td>
+<td>0</td>
+<td>zero after one step</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(1 &lt; k \Delta t &lt; 2\)</span></td>
+<td>between <span class="math inline">\(-1\)</span> and 0</td>
+<td>decays, but changes sign in every step</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(k \Delta t &gt; 2\)</span></td>
+<td>below <span class="math inline">\(-1\)</span></td>
+<td>oscillates and grows without bound</td>
+</tr>
+</tbody>
+</table>
+<p>For <span class="math inline">\(k \Delta t &gt; 2\)</span> the numerical solution has nothing in common with the exact one. The scheme is unstable. The time step of this scheme is therefore limited by the fastest process in the model, not by the accuracy we want. This observation, generalised to systems and to partial differential equations, is one of the main themes of the lecture (Chapter 6).</p>
+</section>
+</section>
+<section id="sources-of-error-and-uncertainty" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="sources-of-error-and-uncertainty"><span class="header-section-number">1.3</span> Sources of error and uncertainty</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Think first: which errors occur when a numerical model is developed and applied?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Collect your own list before reading on, and sort it by the step of the modelling chain at which the error arises.</p>
+</div>
+</div>
+</div>
+<p>The following table sorts the errors by their origin <span class="citation" data-cites="wick2020">(after <a href="references.html#ref-wick2020" role="doc-biblioref">Wick 2020</a>)</span>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Origin</th>
+<th>Error</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Conceptual and mathematical model</td>
+<td>Model error</td>
+<td>Processes are missing or simplified, for example a linear equation replaces a nonlinear one. Found only by comparison with observations and by careful reasoning.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Homogenization error</td>
+<td>A model at full resolution is replaced by an averaged one; processes smaller than the grid are represented by parameters (parametrization, Chapter 18).</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Regularization error</td>
+<td>An ill-posed problem is modified so that it becomes well-posed.</td>
+</tr>
+<tr class="even">
+<td>Data</td>
+<td>Data error</td>
+<td>Initial conditions, boundary conditions and parameters come from measurements and are uncertain and incomplete.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Reference error</td>
+<td>The observations used for evaluation are themselves inaccurate.</td>
+</tr>
+<tr class="even">
+<td>Discretization</td>
+<td>Discretization error</td>
+<td>Continuous functions are represented by a finite number of values.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Interpolation error</td>
+<td>Values between grid points are obtained from simpler functions.</td>
+</tr>
+<tr class="even">
+<td>Solution algorithm</td>
+<td>Iteration error</td>
+<td>Iterative algorithms are stopped after a finite number of steps.</td>
+</tr>
+<tr class="odd">
+<td>Computer</td>
+<td>Round-off error</td>
+<td>A computer represents only a finite set of numbers.</td>
+</tr>
+<tr class="even">
+<td>Implementation</td>
+<td>Bugs</td>
+<td>Some make the program abort, which is the harmless case. Others produce results that look plausible and are wrong.</td>
+</tr>
+</tbody>
+</table>
+<p>Two remarks help to keep this list in proportion.</p>
+<p>First, the errors are of very different size, and the total error is dominated by the largest contribution. If the parameters of a groundwater model are known only within a factor of ten, it is pointless to reduce the discretization error to 0.01 %. Deciding which error dominates is a central task of numerical modelling.</p>
+<p>Second, errors in the data are of two kinds. <strong>Epistemic</strong> uncertainty comes from lack of knowledge and can in principle be reduced by more measurements. <strong>Aleatoric</strong> uncertainty comes from variability that is random for all practical purposes. Both are treated by running the model many times (Chapter 8).</p>
+<p>Of all these errors, the discretization, iteration and round-off errors and the bugs are the ones that numerical methods control. The rest of this unit treats round-off; the discretization error is the subject of most of the following units.</p>
+</section>
+<section id="floating-point-arithmetic-and-round-off" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="floating-point-arithmetic-and-round-off"><span class="header-section-number">1.4</span> Floating point arithmetic and round-off</h2>
+<section id="how-a-computer-stores-real-numbers" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="how-a-computer-stores-real-numbers"><span class="header-section-number">1.4.1</span> How a computer stores real numbers</h3>
+<p>A computer stores a real number as a <strong>floating point number</strong></p>
+<p><span class="math display">\[
+x = \pm \, m \cdot 2^{e},
+\]</span></p>
+<p>with a significand <span class="math inline">\(m\)</span> and an exponent <span class="math inline">\(e\)</span> that each occupy a fixed number of bits. Python and NumPy use by default the <em>double precision</em> format of the IEEE 754 standard with 64 bits, of which 53 hold the significand. This has three consequences <span class="citation" data-cites="goldberg1991">(<a href="references.html#ref-goldberg1991" role="doc-biblioref">Goldberg 1991</a>)</span>.</p>
+<ol type="1">
+<li><strong>Finite precision.</strong> A double carries about 16 significant decimal digits. The distance between 1 and the next larger floating point number is the <strong>machine epsilon</strong>, <span class="math inline">\(\varepsilon = 2^{-52} \approx 2.2 \times 10^{-16}\)</span>.</li>
+<li><strong>Finite range.</strong> The largest double is about <span class="math inline">\(1.8 \times 10^{308}\)</span>. Larger results overflow to <code>inf</code>.</li>
+<li><strong>Most decimal fractions are not representable.</strong> In base 2 the number 0.1 has infinitely many digits, as 1/3 has in base 10, and is rounded when it is stored.</li>
+</ol>
+<div id="596f18c1" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"machine epsilon:        "</span>, np.finfo(<span class="bu">float</span>).eps)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"1 + eps/2 == 1:         "</span>, <span class="fl">1.0</span> <span class="op">+</span> np.finfo(<span class="bu">float</span>).eps <span class="op">/</span> <span class="dv">2</span> <span class="op">==</span> <span class="fl">1.0</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"0.1 + 0.2 == 0.3:       "</span>, <span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">==</span> <span class="fl">0.3</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"0.1 + 0.2 =             "</span>, <span class="bu">repr</span>(<span class="fl">0.1</span> <span class="op">+</span> <span class="fl">0.2</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"largest double:         "</span>, np.finfo(<span class="bu">float</span>).<span class="bu">max</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"single precision epsilon:"</span>, np.finfo(np.float32).eps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>machine epsilon:         2.220446049250313e-16
+1 + eps/2 == 1:          True
+0.1 + 0.2 == 0.3:        False
+0.1 + 0.2 =              0.30000000000000004
+largest double:          1.7976931348623157e+308
+single precision epsilon: 1.1920929e-07</code></pre>
+</div>
+</div>
+<p>Every arithmetic operation therefore returns the exact result rounded to the nearest floating point number, with a relative error of at most <span class="math inline">\(\varepsilon / 2\)</span>. Two rules follow immediately.</p>
+<ul>
+<li>Never test floating point numbers for equality. Test whether their difference is small, for example with <code>np.isclose</code>.</li>
+<li>Single precision has only about 7 significant digits. Weather and climate models nevertheless increasingly use it, because it halves memory and data transfer. Whether this is safe has to be shown for each algorithm.</li>
+</ul>
+</section>
+<section id="loss-of-significance" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="loss-of-significance"><span class="header-section-number">1.4.2</span> Loss of significance</h3>
+<p>A relative error of <span class="math inline">\(10^{-16}\)</span> sounds harmless, and for a single operation it is. It becomes dangerous when two nearly equal numbers are subtracted. The leading digits cancel, and the result consists mostly of the rounding errors of the operands. Consider</p>
+<p><span class="math display">\[
+f(x) = \frac{1 - \cos x}{x^2} \;\to\; \frac{1}{2} \quad \text{for } x \to 0 .
+\]</span></p>
+<div id="77117f5d" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f_naive(x):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (<span class="dv">1</span> <span class="op">-</span> np.cos(x)) <span class="op">/</span> x<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f_stable(x):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span> <span class="op">*</span> np.sin(x <span class="op">/</span> <span class="dv">2</span>) <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> x<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> [<span class="fl">1e-2</span>, <span class="fl">1e-4</span>, <span class="fl">1e-6</span>, <span class="fl">1e-8</span>]:</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"x = </span><span class="sc">{</span>x<span class="sc">:.0e}</span><span class="ss">:  naive </span><span class="sc">{</span>f_naive(x)<span class="sc">:.10f}</span><span class="ss">   stable </span><span class="sc">{</span>f_stable(x)<span class="sc">:.10f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>x = 1e-02:  naive 0.4999958333   stable 0.4999958333
+x = 1e-04:  naive 0.4999999970   stable 0.4999999996
+x = 1e-06:  naive 0.5000444503   stable 0.5000000000
+x = 1e-08:  naive 0.0000000000   stable 0.5000000000</code></pre>
+</div>
+</div>
+<p>For <span class="math inline">\(x = 10^{-8}\)</span> the first formula returns 0 instead of 0.5: <span class="math inline">\(\cos x\)</span> differs from 1 by <span class="math inline">\(5 \times 10^{-17}\)</span>, which is less than the machine epsilon, so it is stored as exactly 1. The second formula uses the identity <span class="math inline">\(1 - \cos x = 2 \sin^2(x/2)\)</span>, is mathematically identical and avoids the subtraction.</p>
+<p>This has a direct consequence for our central idea. The difference quotient <a href="#eq-forward-difference" class="quarto-xref">Equation&nbsp;<span>1.3</span></a> subtracts two numbers that become more and more equal as the step decreases. Making the step ever smaller therefore does not make a finite difference ever more accurate. We quantify this in <a href="03-numerical-toolbox.html" class="quarto-xref"><span>Chapter 3</span></a>.</p>
+</section>
+<section id="conditioning" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="conditioning"><span class="header-section-number">1.4.3</span> Conditioning</h3>
+<p>Loss of significance is an example of a more general notion. A problem is <strong>well-conditioned</strong> if small relative changes of the input cause small relative changes of the result, and <strong>ill-conditioned</strong> if they cause large ones. The amplification factor is the <strong>condition number</strong> <span class="math inline">\(\kappa\)</span>.</p>
+<p>For the evaluation of a function <span class="math inline">\(f(x)\)</span> it follows from the Taylor series. A small change <span class="math inline">\(\delta x\)</span> of the input changes the result by <span class="math inline">\(\delta f \approx f'(x) \, \delta x\)</span>. We divide by <span class="math inline">\(f\)</span> and expand with <span class="math inline">\(x\)</span> to obtain relative changes on both sides:</p>
+<p><span class="math display">\[
+\frac{\delta f}{f} \approx \frac{f'(x) \, \delta x}{f(x)}
+= \underbrace{\frac{x \, f'(x)}{f(x)}}_{\pm \kappa} \; \frac{\delta x}{x} ,
+\qquad
+\kappa = \left| \frac{x \, f'(x)}{f(x)} \right| .
+\]</span></p>
+<p><strong>The problem.</strong> We apply this to the example above, <span class="math inline">\(f(x) = (1 - \cos x)/x^2\)</span>. For small <span class="math inline">\(x\)</span> the Taylor series of the cosine gives</p>
+<p><span class="math display">\[
+f(x) = \frac{1}{2} - \frac{x^2}{24} + \dots, \qquad
+f'(x) \approx -\frac{x}{12},
+\]</span></p>
+<p>and therefore</p>
+<p><span class="math display">\[
+\kappa_f = \left| \frac{x \, f'(x)}{f(x)} \right| \approx \frac{x^2 / 12}{1/2} = \frac{x^2}{6} .
+\]</span></p>
+<p>For <span class="math inline">\(x = 10^{-8}\)</span> this is about <span class="math inline">\(10^{-17}\)</span>. The problem is extremely well-conditioned: a small relative error in <span class="math inline">\(x\)</span> has almost no effect on <span class="math inline">\(f\)</span>. The failure of <code>f_naive</code> therefore cannot be blamed on the problem.</p>
+<p><strong>The algorithm.</strong> <code>f_naive</code> computes <span class="math inline">\(f\)</span> in steps, and each step is a problem of its own with its own condition number. First it computes <span class="math inline">\(c = \cos x\)</span>. The result is rounded, so <span class="math inline">\(c\)</span> carries a relative error of up to <span class="math inline">\(\varepsilon\)</span>. Then it computes <span class="math inline">\(h(c) = 1 - c\)</span>. With the same formula, now for the input <span class="math inline">\(c\)</span>,</p>
+<p><span class="math display">\[
+\kappa_h = \left| \frac{c \, h'(c)}{h(c)} \right| = \frac{|c|}{|1 - c|} .
+\]</span></p>
+<p>For small <span class="math inline">\(x\)</span> the Taylor series <span class="math inline">\(\cos x = 1 - x^2/2 + x^4/24 - \dots\)</span> gives <span class="math inline">\(c \approx 1\)</span> and <span class="math inline">\(1 - c = x^2/2 - x^4/24 + \dots \approx x^2/2\)</span>, hence</p>
+<p><span class="math display">\[
+\kappa_h \approx \frac{1}{x^2 / 2} = \frac{2}{x^2} .
+\]</span></p>
+<p>For <span class="math inline">\(x = 10^{-8}\)</span> this is <span class="math inline">\(2 \times 10^{16}\)</span>. The rounding error <span class="math inline">\(\varepsilon \approx 10^{-16}\)</span> of <span class="math inline">\(c\)</span> is amplified to a relative error of order one: no correct digit remains. <code>f_stable</code> computes <span class="math inline">\(\sin(x/2)\)</span>, squares it and divides by <span class="math inline">\(x^2\)</span>. These steps have condition numbers of about 1 and 2, so the rounding errors stay at the level of <span class="math inline">\(\varepsilon\)</span>.</p>
+<div id="6b818725" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>eps <span class="op">=</span> np.finfo(<span class="bu">float</span>).eps</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"     x   kappa problem   kappa step 1-cos x   predicted error   actual error"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> [<span class="fl">1e-2</span>, <span class="fl">1e-4</span>, <span class="fl">1e-6</span>, <span class="fl">1e-8</span>]:</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    kappa_f <span class="op">=</span> x<span class="op">**</span><span class="dv">2</span> <span class="op">/</span> <span class="dv">6</span>                                     <span class="co"># the problem f</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> np.cos(x)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    kappa_h <span class="op">=</span> <span class="bu">abs</span>(c) <span class="op">/</span> <span class="bu">abs</span>(<span class="dv">1</span> <span class="op">-</span> c) <span class="cf">if</span> c <span class="op">!=</span> <span class="dv">1</span> <span class="cf">else</span> np.inf    <span class="co"># the step 1 - c in f_naive</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    predicted <span class="op">=</span> kappa_h <span class="op">*</span> eps                              <span class="co"># bound for the relative error of f_naive</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    actual <span class="op">=</span> <span class="bu">abs</span>(f_naive(x) <span class="op">-</span> f_stable(x)) <span class="op">/</span> f_stable(x)   <span class="co"># f_stable serves as the exact value</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:6.0e}</span><span class="ss">   </span><span class="sc">{</span>kappa_f<span class="sc">:13.1e}</span><span class="ss">   </span><span class="sc">{</span>kappa_h<span class="sc">:18.1e}</span><span class="ss">   </span><span class="sc">{</span>predicted<span class="sc">:15.1e}</span><span class="ss">   </span><span class="sc">{</span>actual<span class="sc">:12.1e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     x   kappa problem   kappa step 1-cos x   predicted error   actual error
+ 1e-02         1.7e-05              2.0e+04           4.4e-12        2.9e-13
+ 1e-04         1.7e-09              2.0e+08           4.4e-08        5.2e-09
+ 1e-06         1.7e-13              2.0e+12           4.4e-04        8.9e-05
+ 1e-08         1.7e-17                  inf               inf        1.0e+00</code></pre>
+</div>
+</div>
+<p>The last two columns compare the error predicted by the condition number of the step <span class="math inline">\(1 - c\)</span>, <span class="math inline">\(\kappa_h \, \varepsilon\)</span>, with the actual relative error of <code>f_naive</code>, for which the result of <code>f_stable</code> serves as the exact value. The prediction is an upper bound, since the rounding error of <span class="math inline">\(\cos x\)</span> is usually smaller than <span class="math inline">\(\varepsilon\)</span>; it lies within a factor of about 10 of the actual error. Above all, it explains why the error grows by a factor of <span class="math inline">\(10^4\)</span> each time <span class="math inline">\(x\)</span> shrinks by a factor of 100. For <span class="math inline">\(x = 10^{-8}\)</span> the stored value of <span class="math inline">\(\cos x\)</span> is exactly 1: the step <span class="math inline">\(1 - c\)</span> has lost all information, which the infinite condition number expresses, and the relative error is 100 %.</p>
+<p><strong>Conditioning and stability.</strong> Conditioning is a property of the problem. It must be distinguished from the <strong>stability</strong> of an algorithm. An algorithm is unstable if it amplifies errors more than the problem itself does, typically because it contains an ill-conditioned intermediate step that the problem does not need. Here the problem is well-conditioned, <code>f_naive</code> is unstable because of the step <span class="math inline">\(1 - \cos x\)</span>, and <code>f_stable</code> is stable. For an ill-conditioned problem, in contrast, no algorithm helps; the problem itself has to be reformulated.</p>
+<p>We meet the condition number again for linear systems of equations, where the same definition leads to the condition number of a matrix (<a href="04-matrices-waves.html" class="quarto-xref"><span>Chapter 4</span></a>, Chapter 11), and ill-conditioning in its most famous geophysical form, the limited predictability of weather (Chapter 8).</p>
+</section>
+</section>
+<section id="concepts-that-return-in-every-unit" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="concepts-that-return-in-every-unit"><span class="header-section-number">1.5</span> Concepts that return in every unit</h2>
+<p>A few concepts apply to all numerical methods of this lecture. We introduce them informally here and make them precise in Chapter 6.</p>
+<dl>
+<dt>Approximation</dt>
+<dd>
+The exact solution <span class="math inline">\(u\)</span> is not available. We compute an approximation <span class="math inline">\(\tilde u\)</span> and need to know how far it is from <span class="math inline">\(u\)</span>.
+</dd>
+<dt>Consistency</dt>
+<dd>
+A method is consistent if the discrete equations approach the differential equation when the grid spacing and the time step go to zero.
+</dd>
+<dt>Stability</dt>
+<dd>
+A method is stable if errors, for example round-off errors, do not grow without bound during the computation. Unstable methods typically show oscillations that grow in time. It is therefore important to know from the physics whether oscillations are to be expected.
+</dd>
+<dt>Convergence</dt>
+<dd>
+A method converges if the numerical solution approaches the exact solution when the grid spacing and the time step go to zero. The rate at which it does so is the <strong>order</strong> of the method.
+</dd>
+<dt>Efficiency</dt>
+<dd>
+The accuracy reached for a given amount of computing time, memory and energy. A method of higher order is often, but not always, more efficient.
+</dd>
+<dt>Well-posedness</dt>
+<dd>
+A property of the mathematical problem: a solution exists, it is unique, and it depends continuously on the data (<a href="02-governing-equations.html" class="quarto-xref"><span>Chapter 2</span></a>). A numerical method cannot repair a problem that is not well-posed.
+</dd>
+</dl>
+</section>
+<section id="verification-and-validation" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="verification-and-validation"><span class="header-section-number">1.6</span> Verification and validation</h2>
+<p>Two questions must be asked of every model <span class="citation" data-cites="oberkampf2010">(<a href="references.html#ref-oberkampf2010" role="doc-biblioref">Oberkampf and Roy 2010</a>)</span>.</p>
+<p><strong>Verification: are we solving the equations right?</strong> This is a mathematical question. It is answered by comparing the numerical solution with exact solutions and by checking that the error decreases at the expected rate when the grid is refined. Verification concerns discretization, algorithm and code, and it can be completed.</p>
+<p><strong>Validation: are we solving the right equations?</strong> This is a physical question. It is answered by comparing the simulation with observations. Validation concerns the conceptual and mathematical model and the data, and it is never complete, because a model can only be shown to agree with the observations available so far.</p>
+<p>The order matters. A model that has not been verified cannot be validated, because agreement with observations may result from errors that compensate each other. In this lecture you verify every program you write.</p>
+</section>
+<section id="working-practice" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="working-practice"><span class="header-section-number">1.7</span> Working practice</h2>
+<p>Numerical modelling is to a large part work on paper. Classifying the problem, deriving the discrete equations, and writing down the grid, the indices and the boundary conditions come first. Programming, debugging and plotting are the smaller part, and they go quickly when the paper work is complete.</p>
+<p>The following habits save most of the time that is usually lost.</p>
+<ul>
+<li><strong>Simplify.</strong> Start with the lowest resolution, the simplest boundary and initial conditions and constant coefficients. Add one complication at a time.</li>
+<li><strong>Know the answer in advance.</strong> Test first on a problem with a known solution. For a linear system with five unknowns you can check every number by hand.</li>
+<li><strong>Write functions and test them.</strong> A function that does one thing can be tested once and then trusted: on a problem with a known answer, and again after every change. In the exercises you collect your functions in your own module <code>toolbox.py</code> and reuse them in later sheets and in the project.</li>
+<li><strong>Use version control.</strong> With <code>git</code> every working state of a program can be recovered, and every result can be attributed to the version of the code that produced it.</li>
+<li><strong>Make results reproducible.</strong> A figure should be produced by a script from the raw output, without manual steps. All figures in this script are produced by the code shown next to them.</li>
+</ul>
+</section>
+<section id="summary" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">1.8</span> Summary</h2>
+<ul>
+<li>A prognostic model predicts the future state of a system from its present state with equations that contain time derivatives. Diagnostic equations relate variables at the same time.</li>
+<li>A simulation result is separated from reality by a chain of steps: conceptual model, mathematical model, discretization, algorithm, implementation. Each contributes errors, and the largest contribution dominates.</li>
+<li>The basic idea of discretization is to replace derivatives by difference quotients. The resulting discretization error decreases with the step.</li>
+<li>Floating point numbers have about 16 significant digits. Subtracting nearly equal numbers destroys most of them.</li>
+<li>Verification checks the solution of the equations, validation checks the equations. Verification comes first.</li>
+</ul>
+</section>
+<section id="further-reading" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">1.9</span> Further reading</h2>
+<p><span class="citation" data-cites="durran2010">Durran (<a href="references.html#ref-durran2010" role="doc-biblioref">2010</a>)</span>, chapter 1, for the view from atmospheric science; <span class="citation" data-cites="goldberg1991">Goldberg (<a href="references.html#ref-goldberg1991" role="doc-biblioref">1991</a>)</span> for floating point arithmetic; <span class="citation" data-cites="oberkampf2010">Oberkampf and Roy (<a href="references.html#ref-oberkampf2010" role="doc-biblioref">2010</a>)</span> for verification and validation.</p>
+
+
+<script type="pyodide-data">
+eyJvcHRpb25zIjp7ImVudiI6eyJQTE9UTFlfUkVOREVSRVIiOiJwbG90bHlfbWltZXR5cGUifSwiaW5kZXhVUkwiOiJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvcHlvZGlkZS92MC4yOC4xL2Z1bGwvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsicHlvZGlkZV9odHRwIiwibWljcm9waXAiLCJpcHl0aG9uIiwibnVtcHkiLCJtYXRwbG90bGliIl19fQ==
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJweW9kaWRlLTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8xID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0xLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzEgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzEsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLXByZWx1ZGUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJweW9kaWRlT2pzID0ge1xuICBjb25zdCB7XG4gICAgUHlvZGlkZUV2YWx1YXRvcixcbiAgICBQeW9kaWRlRW52aXJvbm1lbnRNYW5hZ2VyLFxuICAgIHNldHVwUHl0aG9uLFxuICAgIHN0YXJ0UHlvZGlkZVdvcmtlcixcbiAgICBiNjREZWNvZGUsXG4gICAgY29sbGFwc2VQYXRoLFxuICB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcblxuICBjb25zdCBzdGF0dXNDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctc3RhdHVzXCIpO1xuICBjb25zdCBpbmRpY2F0b3JDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpbmRpY2F0b3JDb250YWluZXIuY2xhc3NMaXN0LnJlbW92ZShcImQtbm9uZVwiKTtcblxuICBsZXQgc3RhdHVzVGV4dCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIilcbiAgc3RhdHVzVGV4dC5jbGFzc0xpc3QgPSBcImV4ZXJjaXNlLWxvYWRpbmctZGV0YWlsc1wiO1xuICBzdGF0dXNUZXh0ID0gc3RhdHVzQ29udGFpbmVyLmFwcGVuZENoaWxkKHN0YXR1c1RleHQpO1xuICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYEluaXRpYWxpc2VgO1xuXG4gIC8vIEhvaXN0IGluZGljYXRvciBvdXQgZnJvbSBmaW5hbCBzbGlkZSB3aGVuIHJ1bm5pbmcgdW5kZXIgcmV2ZWFsXG4gIGNvbnN0IHJldmVhbFN0YXR1cyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsIC5leGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaWYgKHJldmVhbFN0YXR1cykge1xuICAgIHJldmVhbFN0YXR1cy5yZW1vdmUoKTtcbiAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCA+IC5zbGlkZXNcIikuYXBwZW5kQ2hpbGQocmV2ZWFsU3RhdHVzKTtcbiAgfVxuXG4gIC8vIE1ha2UgYW55IHJldmVhbCBzbGlkZXMgd2l0aCBsaXZlIGNlbGxzIHNjcm9sbGFibGVcbiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbChcIi5yZXZlYWwgLmV4ZXJjaXNlLWNlbGxcIikuZm9yRWFjaCgoZWwpID0+IHtcbiAgICBlbC5jbG9zZXN0KCdzZWN0aW9uLnNsaWRlJykuY2xhc3NMaXN0LmFkZChcInNjcm9sbGFibGVcIik7XG4gIH0pXG5cbiAgLy8gUHlvZGlkZSBzdXBwbGVtZW50YWwgZGF0YSBhbmQgb3B0aW9uc1xuICBjb25zdCBkYXRhQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLWRhdGFcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBkYXRhID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZGF0YUNvbnRlbnQpKTtcblxuICAvLyBHcmFiIGxpc3Qgb2YgcmVzb3VyY2VzIHRvIGJlIGRvd25sb2FkZWRcbiAgY29uc3QgZmlsZXNDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcInZmcy1maWxlXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZmlsZXMgPSBKU09OLnBhcnNlKGI2NERlY29kZShmaWxlc0NvbnRlbnQpKTtcblxuICBsZXQgcHlvZGlkZVByb21pc2UgPSAoYXN5bmMgKCkgPT4ge1xuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgUHlvZGlkZWA7XG4gICAgY29uc3QgcHlvZGlkZSA9IGF3YWl0IHN0YXJ0UHlvZGlkZVdvcmtlcihkYXRhLm9wdGlvbnMpO1xuXG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBwYWNrYWdlOiBtaWNyb3BpcGA7XG4gICAgYXdhaXQgcHlvZGlkZS5sb2FkUGFja2FnZShcIm1pY3JvcGlwXCIpO1xuICAgIGNvbnN0IG1pY3JvcGlwID0gYXdhaXQgcHlvZGlkZS5weWltcG9ydChcIm1pY3JvcGlwXCIpO1xuICAgIGF3YWl0IGRhdGEucGFja2FnZXMucGtncy5tYXAoKHBrZykgPT4gKCkgPT4ge1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBwYWNrYWdlOiAke3BrZ31gO1xuICAgICAgcmV0dXJuIG1pY3JvcGlwLmluc3RhbGwocGtnKTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcbiAgICBhd2FpdCBtaWNyb3BpcC5kZXN0cm95KCk7XG5cbiAgICAvLyBEb3dubG9hZCBhbmQgaW5zdGFsbCByZXNvdXJjZXNcbiAgICBhd2FpdCBmaWxlcy5tYXAoKGZpbGUpID0+IGFzeW5jICgpID0+IHtcbiAgICAgIGNvbnN0IG5hbWUgPSBmaWxlLnN1YnN0cmluZyhmaWxlLmxhc3RJbmRleE9mKCcvJykgKyAxKTtcbiAgICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcmVzb3VyY2U6ICR7bmFtZX1gO1xuICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCBmZXRjaChmaWxlKTtcbiAgICAgIGlmICghcmVzcG9uc2Uub2spIHtcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBDYW4ndCBkb3dubG9hZCBcXGAke2ZpbGV9XFxgLiBFcnJvciAke3Jlc3BvbnNlLnN0YXR1c306IFwiJHtyZXNwb25zZS5zdGF0dXNUZXh0fVwiLmApO1xuICAgICAgfVxuICAgICAgY29uc3QgZGF0YSA9IGF3YWl0IHJlc3BvbnNlLmFycmF5QnVmZmVyKCk7XG5cbiAgICAgIC8vIFN0b3JlIFVSTHMgaW4gdGhlIGN3ZCB3aXRob3V0IGFueSBzdWJkaXJlY3Rvcnkgc3RydWN0dXJlXG4gICAgICBpZiAoZmlsZS5pbmNsdWRlcyhcIjovL1wiKSkge1xuICAgICAgICBmaWxlID0gbmFtZTtcbiAgICAgIH1cblxuICAgICAgLy8gQ29sbGFwc2UgaGlnaGVyIGRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGZpbGUgPSBjb2xsYXBzZVBhdGgoZmlsZSk7XG5cbiAgICAgIC8vIENyZWF0ZSBkaXJlY3RvcnkgdHJlZSwgaWdub3JpbmcgXCJkaXJlY3RvcnkgZXhpc3RzXCIgVkZTIGVycm9yc1xuICAgICAgY29uc3QgcGFydHMgPSBmaWxlLnNwbGl0KCcvJykuc2xpY2UoMCwgLTEpO1xuICAgICAgbGV0IHBhdGggPSAnJztcbiAgICAgIHdoaWxlIChwYXJ0cy5sZW5ndGggPiAwKSB7XG4gICAgICAgIHBhdGggKz0gcGFydHMuc2hpZnQoKSArICcvJztcbiAgICAgICAgdHJ5IHtcbiAgICAgICAgICBhd2FpdCBweW9kaWRlLkZTLm1rZGlyKHBhdGgpO1xuICAgICAgICB9IGNhdGNoIChlKSB7XG4gICAgICAgICAgaWYgKGUubmFtZSAhPT0gXCJFcnJub0Vycm9yXCIpIHRocm93IGU7XG4gICAgICAgICAgaWYgKGUuZXJybm8gIT09IDIwKSB7XG4gICAgICAgICAgICBjb25zdCBlcnJvclRleHRQdHIgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuX3N0cmVycm9yKGUuZXJybm8pO1xuICAgICAgICAgICAgY29uc3QgZXJyb3JUZXh0ID0gYXdhaXQgcHlvZGlkZS5fbW9kdWxlLlVURjhUb1N0cmluZyhlcnJvclRleHRQdHIpO1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBGaWxlc3lzdGVtIEVycm9yICR7ZS5lcnJub30gXCIke2Vycm9yVGV4dH1cIi5gKTtcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH1cblxuICAgICAgLy8gV3JpdGUgdGhpcyBmaWxlIHRvIHRoZSBWRlNcbiAgICAgIHRyeSB7XG4gICAgICAgIHJldHVybiBhd2FpdCBweW9kaWRlLkZTLndyaXRlRmlsZShmaWxlLCBuZXcgVWludDhBcnJheShkYXRhKSk7XG4gICAgICB9IGNhdGNoIChlKSB7XG4gICAgICAgIGlmIChlLm5hbWUgIT09IFwiRXJybm9FcnJvclwiKSB0aHJvdyBlO1xuICAgICAgICBjb25zdCBlcnJvclRleHRQdHIgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuX3N0cmVycm9yKGUuZXJybm8pO1xuICAgICAgICBjb25zdCBlcnJvclRleHQgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuVVRGOFRvU3RyaW5nKGVycm9yVGV4dFB0cik7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcihgRmlsZXN5c3RlbSBFcnJvciAke2UuZXJybm99IFwiJHtlcnJvclRleHR9XCIuYCk7XG4gICAgICB9XG4gICAgfSkucmVkdWNlKChjdXIsIG5leHQpID0+IGN1ci50aGVuKG5leHQpLCBQcm9taXNlLnJlc29sdmUoKSk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYFB5b2RpZGUgZW52aXJvbm1lbnQgc2V0dXBgO1xuICAgIGF3YWl0IHNldHVwUHl0aG9uKHB5b2RpZGUpO1xuXG4gICAgc3RhdHVzVGV4dC5yZW1vdmUoKTtcbiAgICBpZiAoc3RhdHVzQ29udGFpbmVyLmNoaWxkcmVuLmxlbmd0aCA9PSAwKSB7XG4gICAgICBzdGF0dXNDb250YWluZXIucGFyZW50Tm9kZS5yZW1vdmUoKTtcbiAgICB9XG4gICAgcmV0dXJuIHB5b2RpZGU7XG4gIH0pKCkuY2F0Y2goKGVycikgPT4ge1xuICAgIHN0YXR1c1RleHQuc3R5bGUuY29sb3IgPSBcInZhcigtLWV4ZXJjaXNlLWVkaXRvci1obC1lciwgI0FEMDAwMClcIjtcbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gZXJyLm1lc3NhZ2U7XG4gICAgLy9pbmRpY2F0b3JDb250YWluZXIucXVlcnlTZWxlY3RvcihcIi5zcGlubmVyLWdyb3dcIikuY2xhc3NMaXN0LmFkZChcImQtbm9uZVwiKTtcbiAgICB0aHJvdyBlcnI7XG4gIH0pO1xuXG4gIC8vIEtlZXAgdHJhY2sgb2YgaW5pdGlhbCBPSlMgYmxvY2sgcmVuZGVyXG4gIGNvbnN0IHJlbmRlcmVkT2pzID0ge307XG5cbiAgY29uc3QgcHJvY2VzcyA9IGFzeW5jIChjb250ZXh0LCBpbnB1dHMpID0+IHtcbiAgICBjb25zdCBweW9kaWRlID0gYXdhaXQgcHlvZGlkZVByb21pc2U7XG4gICAgY29uc3QgZXZhbHVhdG9yID0gbmV3IFB5b2RpZGVFdmFsdWF0b3IocHlvZGlkZSwgY29udGV4dCk7XG4gICAgYXdhaXQgZXZhbHVhdG9yLnByb2Nlc3MoaW5wdXRzKTtcbiAgICByZXR1cm4gZXZhbHVhdG9yLmNvbnRhaW5lcjtcbiAgfVxuXG4gIHJldHVybiB7XG4gICAgcHlvZGlkZVByb21pc2UsXG4gICAgcmVuZGVyZWRPanMsXG4gICAgcHJvY2VzcyxcbiAgfTtcbn1cbiJ9XX0=
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-durran2010" class="csl-entry" role="listitem">
+Durran, Dale R. 2010. <em>Numerical Methods for Fluid Dynamics: With Applications to Geophysics</em>. 2nd ed. Springer.
+</div>
+<div id="ref-goldberg1991" class="csl-entry" role="listitem">
+Goldberg, David. 1991. <span>“What Every Computer Scientist Should Know about Floating-Point Arithmetic.”</span> <em>ACM Computing Surveys</em> 23 (1): 5–48.
+</div>
+<div id="ref-oberkampf2010" class="csl-entry" role="listitem">
+Oberkampf, William L., and Christopher J. Roy. 2010. <em>Verification and Validation in Scientific Computing</em>. Cambridge University Press.
+</div>
+<div id="ref-wick2020" class="csl-entry" role="listitem">
+Wick, Thomas. 2020. <em>Numerical Methods for Partial Differential Equations</em>. Leibniz Universit<span>ä</span>t Hannover.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./syllabus.html" class="pagination-link" aria-label="Syllabus">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Syllabus</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./02-governing-equations.html" class="pagination-link" aria-label="Governing equations and their classification">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

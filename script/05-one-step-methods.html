@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; One-step methods – Prognostic Modelling</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./04-matrices-waves.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3892b3adcc577e567f7e69fe50577df6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-one-step-methods.html">Time integration of ODEs</a></li><li class="breadcrumb-item"><a href="./05-one-step-methods.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Prognostic Modelling</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-governing-equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-numerical-toolbox.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-matrices-waves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Time integration of ODEs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-one-step-methods.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-initial-value-problem" id="toc-the-initial-value-problem" class="nav-link active" data-scroll-target="#the-initial-value-problem"><span class="header-section-number">5.1</span> The initial value problem</a>
+  <ul class="collapse">
+  <li><a href="#direction-fields" id="toc-direction-fields" class="nav-link" data-scroll-target="#direction-fields"><span class="header-section-number">5.1.1</span> Direction fields</a></li>
+  <li><a href="#an-exact-solution" id="toc-an-exact-solution" class="nav-link" data-scroll-target="#an-exact-solution"><span class="header-section-number">5.1.2</span> An exact solution</a></li>
+  </ul></li>
+  <li><a href="#the-forward-euler-method" id="toc-the-forward-euler-method" class="nav-link" data-scroll-target="#the-forward-euler-method"><span class="header-section-number">5.2</span> The forward Euler method</a>
+  <ul class="collapse">
+  <li><a href="#first-view-following-the-tangent" id="toc-first-view-following-the-tangent" class="nav-link" data-scroll-target="#first-view-following-the-tangent"><span class="header-section-number">5.2.1</span> First view: following the tangent</a></li>
+  <li><a href="#second-view-replacing-the-derivative" id="toc-second-view-replacing-the-derivative" class="nav-link" data-scroll-target="#second-view-replacing-the-derivative"><span class="header-section-number">5.2.2</span> Second view: replacing the derivative</a></li>
+  <li><a href="#third-view-integrating-the-tendency" id="toc-third-view-integrating-the-tendency" class="nav-link" data-scroll-target="#third-view-integrating-the-tendency"><span class="header-section-number">5.2.3</span> Third view: integrating the tendency</a></li>
+  <li><a href="#implementation" id="toc-implementation" class="nav-link" data-scroll-target="#implementation"><span class="header-section-number">5.2.4</span> Implementation</a></li>
+  </ul></li>
+  <li><a href="#the-backward-euler-method" id="toc-the-backward-euler-method" class="nav-link" data-scroll-target="#the-backward-euler-method"><span class="header-section-number">5.3</span> The backward Euler method</a></li>
+  <li><a href="#errors" id="toc-errors" class="nav-link" data-scroll-target="#errors"><span class="header-section-number">5.4</span> Errors</a>
+  <ul class="collapse">
+  <li><a href="#local-and-global-error" id="toc-local-and-global-error" class="nav-link" data-scroll-target="#local-and-global-error"><span class="header-section-number">5.4.1</span> Local and global error</a></li>
+  <li><a href="#local-truncation-error-of-the-forward-euler-method" id="toc-local-truncation-error-of-the-forward-euler-method" class="nav-link" data-scroll-target="#local-truncation-error-of-the-forward-euler-method"><span class="header-section-number">5.4.2</span> Local truncation error of the forward Euler method</a></li>
+  <li><a href="#from-the-local-to-the-global-error" id="toc-from-the-local-to-the-global-error" class="nav-link" data-scroll-target="#from-the-local-to-the-global-error"><span class="header-section-number">5.4.3</span> From the local to the global error</a></li>
+  </ul></li>
+  <li><a href="#methods-of-higher-order" id="toc-methods-of-higher-order" class="nav-link" data-scroll-target="#methods-of-higher-order"><span class="header-section-number">5.5</span> Methods of higher order</a>
+  <ul class="collapse">
+  <li><a href="#heuns-method" id="toc-heuns-method" class="nav-link" data-scroll-target="#heuns-method"><span class="header-section-number">5.5.1</span> Heun’s method</a></li>
+  <li><a href="#the-order-of-two-stage-methods" id="toc-the-order-of-two-stage-methods" class="nav-link" data-scroll-target="#the-order-of-two-stage-methods"><span class="header-section-number">5.5.2</span> The order of two-stage methods</a></li>
+  <li><a href="#rungekutta-methods" id="toc-rungekutta-methods" class="nav-link" data-scroll-target="#rungekutta-methods"><span class="header-section-number">5.5.3</span> Runge–Kutta methods</a></li>
+  <li><a href="#verification" id="toc-verification" class="nav-link" data-scroll-target="#verification"><span class="header-section-number">5.5.4</span> Verification</a></li>
+  <li><a href="#accuracy-for-a-given-amount-of-work" id="toc-accuracy-for-a-given-amount-of-work" class="nav-link" data-scroll-target="#accuracy-for-a-given-amount-of-work"><span class="header-section-number">5.5.5</span> Accuracy for a given amount of work</a></li>
+  </ul></li>
+  <li><a href="#systems-of-equations" id="toc-systems-of-equations" class="nav-link" data-scroll-target="#systems-of-equations"><span class="header-section-number">5.6</span> Systems of equations</a></li>
+  <li><a href="#adaptive-time-steps" id="toc-adaptive-time-steps" class="nav-link" data-scroll-target="#adaptive-time-steps"><span class="header-section-number">5.7</span> Adaptive time steps</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5.8</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">5.9</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-one-step-methods.html">Time integration of ODEs</a></li><li class="breadcrumb-item"><a href="./05-one-step-methods.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-one-step-methods" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning goals
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After this unit you can</p>
+<ul>
+<li>read the qualitative behaviour of an ODE from its direction field,</li>
+<li>derive the forward and backward Euler methods in three ways and implement them,</li>
+<li>derive the local truncation error of a method and explain how it determines the global error,</li>
+<li>derive the order conditions of two-stage Runge–Kutta methods and use the classical method of fourth order,</li>
+<li>compare methods by the accuracy they reach for a given amount of work,</li>
+<li>explain how adaptive methods choose the time step.</li>
+</ul>
+</div>
+</div>
+<p>Every prognostic model steps forward in time. After the spatial derivatives of a PDE have been discretized, what remains is a large system of ordinary differential equations in time. The methods of this unit are therefore the time stepping schemes of weather, ocean and groundwater models, studied here on problems small enough to be understood completely.</p>
+<section id="the-initial-value-problem" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="the-initial-value-problem"><span class="header-section-number">5.1</span> The initial value problem</h2>
+<p>We consider the initial value problem</p>
+<p><span id="eq-ivp"><span class="math display">\[
+\frac{\mathrm{d}u}{\mathrm{d}t} = f(t, u), \qquad u(t_0) = u_0 .
+\tag{5.1}\]</span></span></p>
+<p>The function <span class="math inline">\(f\)</span> is the <strong>tendency</strong>: it gives the rate of change of the state for any time and any state. In much of the literature on ODEs the unknown is called <span class="math inline">\(y\)</span> and the step <span class="math inline">\(h\)</span>; we keep <span class="math inline">\(u\)</span> and <span class="math inline">\(\Delta t\)</span>.</p>
+<p>The problem is well-posed (<a href="02-governing-equations.html" class="quarto-xref"><span>Chapter 2</span></a>) if <span class="math inline">\(f\)</span> is continuous and does not change too rapidly with <span class="math inline">\(u\)</span>. Precisely, <span class="math inline">\(f\)</span> must satisfy a <strong>Lipschitz condition</strong>: there is a constant <span class="math inline">\(L\)</span> such that</p>
+<p><span id="eq-lipschitz"><span class="math display">\[
+|f(t, a) - f(t, b)| \le L \, |a - b|
+\tag{5.2}\]</span></span></p>
+<p>for all states <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> in the region of interest. If <span class="math inline">\(f\)</span> is differentiable, <span class="math inline">\(L\)</span> is the largest value of <span class="math inline">\(|\partial f / \partial u|\)</span>. The constant <span class="math inline">\(L\)</span> has the unit of one over time: <span class="math inline">\(1/L\)</span> is the shortest time scale on which the tendency responds to a change of the state. It reappears in the error analysis below.</p>
+<section id="direction-fields" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="direction-fields"><span class="header-section-number">5.1.1</span> Direction fields</h3>
+<p>Before solving <a href="#eq-ivp" class="quarto-xref">Equation&nbsp;<span>5.1</span></a> it is useful to understand how its solutions behave. At every point of the <span class="math inline">\((t, u)\)</span> plane the equation prescribes the slope of the solution passing through it, namely <span class="math inline">\(f(t, u)\)</span>. Drawing a short line segment with this slope at many points gives the <strong>direction field</strong>. Solutions are the curves that follow the segments.</p>
+<p>As an example consider</p>
+<p><span id="eq-relaxation"><span class="math display">\[
+\frac{\mathrm{d}u}{\mathrm{d}t} = \frac{3 - u}{2} .
+\tag{5.3}\]</span></span></p>
+<div id="cell-fig-direction-field" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> t, u: (<span class="dv">3</span> <span class="op">-</span> u) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>t, u <span class="op">=</span> np.meshgrid(np.linspace(<span class="dv">0</span>, <span class="dv">8</span>, <span class="dv">21</span>), np.linspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">19</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>slope <span class="op">=</span> f(t, u)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>norm <span class="op">=</span> np.sqrt(<span class="dv">1</span> <span class="op">+</span> slope<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">3.8</span>))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>ax.quiver(t, u, <span class="dv">1</span> <span class="op">/</span> norm, slope <span class="op">/</span> norm, angles<span class="op">=</span><span class="st">"xy"</span>, headwidth<span class="op">=</span><span class="dv">1</span>, headlength<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>          pivot<span class="op">=</span><span class="st">"mid"</span>, color<span class="op">=</span><span class="st">"0.5"</span>, scale<span class="op">=</span><span class="dv">35</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>t_fine <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">8</span>, <span class="dv">200</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> u0 <span class="kw">in</span> [<span class="op">-</span><span class="dv">1</span>, <span class="fl">1.5</span>, <span class="dv">6</span>]:</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    ax.plot(t_fine, <span class="dv">3</span> <span class="op">+</span> (u0 <span class="op">-</span> <span class="dv">3</span>) <span class="op">*</span> np.exp(<span class="op">-</span>t_fine <span class="op">/</span> <span class="dv">2</span>))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$t$"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"$u$"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-direction-field" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-direction-field-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-one-step-methods_files/figure-html/fig-direction-field-output-1.png" width="551" height="341" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-direction-field-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.1: Direction field of <span class="math inline">\(\mathrm{d}u/\mathrm{d}t = (3 - u)/2\)</span> with three exact solutions. All solutions approach the equilibrium <span class="math inline">\(u = 3\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-direction-field" class="quarto-xref">Figure&nbsp;<span>5.1</span></a> shows, without any calculation, that <span class="math inline">\(u = 3\)</span> is an equilibrium, since the slope is zero there, and that it is stable: above it the slope is negative, below it positive.</p>
+</section>
+<section id="an-exact-solution" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="an-exact-solution"><span class="header-section-number">5.1.2</span> An exact solution</h3>
+<p><a href="#eq-relaxation" class="quarto-xref">Equation&nbsp;<span>5.3</span></a> is <strong>separable</strong>: all terms with <span class="math inline">\(u\)</span> can be collected on one side and all terms with <span class="math inline">\(t\)</span> on the other,</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}u}{3 - u} = \frac{\mathrm{d}t}{2} .
+\]</span></p>
+<p>Integrating both sides,</p>
+<p><span class="math display">\[
+- \ln |3 - u| = \frac{t}{2} + C
+\quad \Longrightarrow \quad
+3 - u = \tilde C \, e^{-t/2} ,
+\]</span></p>
+<p>where <span class="math inline">\(\tilde C = \pm e^{-C}\)</span>. The initial condition <span class="math inline">\(u(0) = u_0\)</span> gives <span class="math inline">\(\tilde C = 3 - u_0\)</span>, and therefore</p>
+<p><span id="eq-relaxation-solution"><span class="math display">\[
+u(t) = 3 + (u_0 - 3) \, e^{-t/2} .
+\tag{5.4}\]</span></span></p>
+<p>The distance from the equilibrium decays exponentially with the time scale 2. With <span class="math inline">\(u - 3\)</span> as the unknown this is the decay equation <a href="01-introduction.html#eq-decay" class="quarto-xref">Equation&nbsp;<span>1.4</span></a> with <span class="math inline">\(k = \tfrac12\)</span>, the equation of radioactive decay with decay constant <span class="math inline">\(k\)</span>.</p>
+<p>Exact solutions exist only for special tendencies. For the rest we need numerical methods. Exact solutions remain indispensable, because they are what numerical methods are verified against.</p>
+</section>
+</section>
+<section id="the-forward-euler-method" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="the-forward-euler-method"><span class="header-section-number">5.2</span> The forward Euler method</h2>
+<p>We look for approximations <span class="math inline">\(u_n\)</span> of the solution at the times <span class="math inline">\(t_n = t_0 + n \, \Delta t\)</span>. The simplest method can be derived in three ways. Each of them leads to its own family of better methods.</p>
+<section id="first-view-following-the-tangent" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="first-view-following-the-tangent"><span class="header-section-number">5.2.1</span> First view: following the tangent</h3>
+<p>At <span class="math inline">\(t_0\)</span> we know the solution, <span class="math inline">\(u_0\)</span>, and its slope, <span class="math inline">\(f(t_0, u_0)\)</span>. The tangent to the solution at this point is</p>
+<p><span class="math display">\[
+u = u_0 + f(t_0, u_0) \, (t - t_0) .
+\]</span></p>
+<p>If <span class="math inline">\(t_1\)</span> is close to <span class="math inline">\(t_0\)</span>, the tangent stays close to the solution, and we take its value at <span class="math inline">\(t_1\)</span> as the approximation: <span class="math inline">\(u_1 = u_0 + \Delta t \, f(t_0, u_0)\)</span>. At <span class="math inline">\(t_1\)</span> we do not know the solution, but we have <span class="math inline">\(u_1\)</span>, and we repeat the step with the slope <span class="math inline">\(f(t_1, u_1)\)</span>. In general</p>
+<p><span id="eq-euler-forward"><span class="math display">\[
+u_{n+1} = u_n + \Delta t \, f(t_n, u_n) .
+\tag{5.5}\]</span></span></p>
+<p>This is the <strong>forward Euler method</strong>. In the direction field it moves along one line segment per step (<a href="#fig-euler-tangent" class="quarto-xref">Figure&nbsp;<span>5.2</span></a>).</p>
+<div id="cell-fig-euler-tangent" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div id="fig-euler-tangent" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-euler-tangent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-one-step-methods_files/figure-html/fig-euler-tangent-output-1.png" width="552" height="319" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-euler-tangent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.2: Three steps of the forward Euler method for <span class="math inline">\(\mathrm{d}u/\mathrm{d}t = (3 - u)/2\)</span> with <span class="math inline">\(\Delta t = 1.5\)</span>. Each step follows the tangent of the solution through the current point (dashed), not the solution that started at <span class="math inline">\(u_0\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="second-view-replacing-the-derivative" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="second-view-replacing-the-derivative"><span class="header-section-number">5.2.2</span> Second view: replacing the derivative</h3>
+<p>We replace the derivative in <a href="#eq-ivp" class="quarto-xref">Equation&nbsp;<span>5.1</span></a> at time <span class="math inline">\(t_n\)</span> by the forward difference <a href="03-numerical-toolbox.html#eq-fd-forward" class="quarto-xref">Equation&nbsp;<span>3.3</span></a>,</p>
+<p><span class="math display">\[
+\frac{u_{n+1} - u_n}{\Delta t} = f(t_n, u_n) ,
+\]</span></p>
+<p>and solve for <span class="math inline">\(u_{n+1}\)</span>. This gives <a href="#eq-euler-forward" class="quarto-xref">Equation&nbsp;<span>5.5</span></a> again, and explains the name. It also tells us the accuracy to expect: the forward difference is of first order.</p>
+</section>
+<section id="third-view-integrating-the-tendency" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="third-view-integrating-the-tendency"><span class="header-section-number">5.2.3</span> Third view: integrating the tendency</h3>
+<p>Integrating <a href="#eq-ivp" class="quarto-xref">Equation&nbsp;<span>5.1</span></a> from <span class="math inline">\(t_n\)</span> to <span class="math inline">\(t_{n+1}\)</span> gives, without any approximation,</p>
+<p><span id="eq-ivp-integral"><span class="math display">\[
+u(t_{n+1}) = u(t_n) + \int_{t_n}^{t_{n+1}} f\big(t, u(t)\big) \, \mathrm{d}t .
+\tag{5.6}\]</span></span></p>
+<p>The integral cannot be evaluated, because the integrand contains the unknown solution. The forward Euler method approximates it by a rectangle whose height is the integrand at the left end, <span class="math inline">\(\Delta t \, f(t_n, u_n)\)</span>. Better time stepping schemes are better quadrature rules for this integral (<a href="03-numerical-toolbox.html" class="quarto-xref"><span>Chapter 3</span></a>).</p>
+<div id="cell-fig-euler-quadrature" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-euler-quadrature" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-euler-quadrature-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-one-step-methods_files/figure-html/fig-euler-quadrature-output-1.png" width="854" height="240" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-euler-quadrature-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.3: The tendency integrated over one time step. Forward Euler uses the value at the start of the step (left), backward Euler the value at the end (middle), the trapezoidal rule the mean of both (right).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="implementation" class="level3" data-number="5.2.4">
+<h3 data-number="5.2.4" class="anchored" data-anchor-id="implementation"><span class="header-section-number">5.2.4</span> Implementation</h3>
+<div id="8fd18639" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> euler_forward(f, u0, t_end, dt):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    n_steps <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(t_end <span class="op">/</span> dt))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> dt <span class="op">*</span> np.arange(n_steps <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> np.empty(n_steps <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    u[<span class="dv">0</span>] <span class="op">=</span> u0</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        u[n <span class="op">+</span> <span class="dv">1</span>] <span class="op">=</span> u[n] <span class="op">+</span> dt <span class="op">*</span> f(t[n], u[n])</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> t, u</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> t, u: (<span class="dv">3</span> <span class="op">-</span> u) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dt <span class="kw">in</span> [<span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.25</span>]:</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    t, u <span class="op">=</span> euler_forward(f, <span class="fl">0.0</span>, <span class="fl">4.0</span>, dt)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    exact <span class="op">=</span> <span class="dv">3</span> <span class="op">-</span> <span class="dv">3</span> <span class="op">*</span> np.exp(<span class="op">-</span><span class="dv">2</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"dt = </span><span class="sc">{</span>dt<span class="sc">:4.2f}</span><span class="ss">: u(4) = </span><span class="sc">{</span>u[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.5f}</span><span class="ss">, error = </span><span class="sc">{</span><span class="bu">abs</span>(u[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> exact)<span class="sc">:.5f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dt = 1.00: u(4) = 2.81250, error = 0.21851
+dt = 0.50: u(4) = 2.69966, error = 0.10567
+dt = 0.25: u(4) = 2.64580, error = 0.05180</code></pre>
+</div>
+</div>
+<p>Halving the time step roughly halves the error, as expected for a method of first order.</p>
+</section>
+</section>
+<section id="the-backward-euler-method" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="the-backward-euler-method"><span class="header-section-number">5.3</span> The backward Euler method</h2>
+<p>In the second view we can equally well use the backward difference <a href="03-numerical-toolbox.html#eq-fd-backward" class="quarto-xref">Equation&nbsp;<span>3.4</span></a> at the new time <span class="math inline">\(t_{n+1}\)</span>,</p>
+<p><span class="math display">\[
+\frac{u_{n+1} - u_n}{\Delta t} = f(t_{n+1}, u_{n+1}) ,
+\]</span></p>
+<p>which in the third view is the rectangle with the height of the integrand at the right end (<a href="#fig-euler-quadrature" class="quarto-xref">Figure&nbsp;<span>5.3</span></a>). This is the <strong>backward Euler method</strong></p>
+<p><span id="eq-euler-backward"><span class="math display">\[
+u_{n+1} = u_n + \Delta t \, f(t_{n+1}, u_{n+1}) .
+\tag{5.7}\]</span></span></p>
+<p>The unknown <span class="math inline">\(u_{n+1}\)</span> now appears on both sides, inside the tendency. The formula does not give <span class="math inline">\(u_{n+1}\)</span> explicitly; it is an equation that defines <span class="math inline">\(u_{n+1}\)</span> <strong>implicitly</strong> and has to be solved in every time step. Methods such as <a href="#eq-euler-forward" class="quarto-xref">Equation&nbsp;<span>5.5</span></a>, which compute the new value directly from known values, are called <strong>explicit</strong>.</p>
+<p><strong>Linear tendency.</strong> For the decay equation, <span class="math inline">\(f = -k u\)</span>, the equation is linear in <span class="math inline">\(u_{n+1}\)</span> and can be solved by hand:</p>
+<p><span id="eq-decay-euler-backward"><span class="math display">\[
+u_{n+1} = u_n - k \, \Delta t \, u_{n+1}
+\quad \Longrightarrow \quad
+u_{n+1} = \frac{u_n}{1 + k \, \Delta t} .
+\tag{5.8}\]</span></span></p>
+<p>Compare this with the forward Euler result <span class="math inline">\(u_{n+1} = (1 - k \Delta t) u_n\)</span> from <a href="01-introduction.html#eq-decay-euler-solution" class="quarto-xref">Equation&nbsp;<span>1.6</span></a>. The factor <span class="math inline">\(1 / (1 + k \Delta t)\)</span> lies between 0 and 1 for every time step: the backward Euler solution decays monotonically however large <span class="math inline">\(\Delta t\)</span> is, where the forward Euler solution oscillated and grew for <span class="math inline">\(k \Delta t &gt; 2\)</span>. This is the reason to accept the extra work of an implicit method, and the subject of Chapter 6.</p>
+<p><strong>Nonlinear tendency.</strong> In general we write <a href="#eq-euler-backward" class="quarto-xref">Equation&nbsp;<span>5.7</span></a> as a root finding problem for the unknown <span class="math inline">\(U = u_{n+1}\)</span>,</p>
+<p><span class="math display">\[
+G(U) = U - u_n - \Delta t \, f(t_{n+1}, U) = 0 ,
+\]</span></p>
+<p>and solve it with Newton’s method <a href="03-numerical-toolbox.html#eq-newton-raphson" class="quarto-xref">Equation&nbsp;<span>3.15</span></a>. The derivative is <span class="math inline">\(G'(U) = 1 - \Delta t \, \partial f / \partial u\)</span>, so that one Newton iteration reads</p>
+<p><span class="math display">\[
+U^{(m+1)} = U^{(m)} - \frac{U^{(m)} - u_n - \Delta t \, f\big(t_{n+1}, U^{(m)}\big)}{1 - \Delta t \, \dfrac{\partial f}{\partial u}\big(t_{n+1}, U^{(m)}\big)} ,
+\]</span></p>
+<p>started from <span class="math inline">\(U^{(0)} = u_n\)</span>. Because <span class="math inline">\(u_n\)</span> is already close to <span class="math inline">\(u_{n+1}\)</span>, two or three iterations usually suffice. For a system of <span class="math inline">\(N\)</span> equations the division becomes the solution of a linear system with the matrix <span class="math inline">\(I - \Delta t \, J\)</span>, where <span class="math inline">\(J\)</span> is the Jacobian of the tendency (<a href="03-numerical-toolbox.html#eq-newton-system" class="quarto-xref">Equation&nbsp;<span>3.17</span></a>). An implicit time step of a PDE model therefore costs at least one solution of a large linear system.</p>
+<div id="9ee36501" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> euler_backward(f, dfdu, u0, t_end, dt, newton_iterations<span class="op">=</span><span class="dv">4</span>):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    n_steps <span class="op">=</span> <span class="bu">int</span>(<span class="bu">round</span>(t_end <span class="op">/</span> dt))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> dt <span class="op">*</span> np.arange(n_steps <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> np.empty(n_steps <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    u[<span class="dv">0</span>] <span class="op">=</span> u0</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        U <span class="op">=</span> u[n]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(newton_iterations):</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>            G <span class="op">=</span> U <span class="op">-</span> u[n] <span class="op">-</span> dt <span class="op">*</span> f(t[n <span class="op">+</span> <span class="dv">1</span>], U)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>            U <span class="op">=</span> U <span class="op">-</span> G <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> dt <span class="op">*</span> dfdu(t[n <span class="op">+</span> <span class="dv">1</span>], U))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        u[n <span class="op">+</span> <span class="dv">1</span>] <span class="op">=</span> U</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> t, u</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># nonlinear test problem du/dt = -u^2, u(0) = 1, exact solution 1 / (1 + t)</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>f_nl <span class="op">=</span> <span class="kw">lambda</span> t, u: <span class="op">-</span>u<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>dfdu_nl <span class="op">=</span> <span class="kw">lambda</span> t, u: <span class="op">-</span><span class="dv">2</span> <span class="op">*</span> u</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dt <span class="kw">in</span> [<span class="fl">0.5</span>, <span class="fl">0.25</span>, <span class="fl">0.125</span>]:</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    t, u <span class="op">=</span> euler_backward(f_nl, dfdu_nl, <span class="fl">1.0</span>, <span class="fl">2.0</span>, dt)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"dt = </span><span class="sc">{</span>dt<span class="sc">:5.3f}</span><span class="ss">: error at t = 2 is </span><span class="sc">{</span><span class="bu">abs</span>(u[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span> <span class="op">/</span> <span class="dv">3</span>)<span class="sc">:.5f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dt = 0.500: error at t = 2 is 0.05425
+dt = 0.250: error at t = 2 is 0.02867
+dt = 0.125: error at t = 2 is 0.01477</code></pre>
+</div>
+</div>
+<p>The backward Euler method is also of first order.</p>
+</section>
+<section id="errors" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="errors"><span class="header-section-number">5.4</span> Errors</h2>
+<section id="local-and-global-error" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="local-and-global-error"><span class="header-section-number">5.4.1</span> Local and global error</h3>
+<p>Two errors must be distinguished.</p>
+<p>The <strong>global error</strong> is what we care about: the difference between the exact and the numerical solution at time <span class="math inline">\(t_n\)</span>,</p>
+<p><span class="math display">\[
+E_n = u(t_n) - u_n .
+\]</span></p>
+<p>The <strong>local truncation error</strong> <span class="math inline">\(\tau_n\)</span> is the error made in a single step that starts from the exact solution. It measures how well the exact solution satisfies the numerical formula. In <a href="#fig-euler-tangent" class="quarto-xref">Figure&nbsp;<span>5.2</span></a> it is the distance, after one step, between an Euler segment and the dashed solution through its starting point.</p>
+<p>In addition there is the round-off error of each step. For the time steps used in practice it is much smaller than the truncation error, and we neglect it here.</p>
+</section>
+<section id="local-truncation-error-of-the-forward-euler-method" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="local-truncation-error-of-the-forward-euler-method"><span class="header-section-number">5.4.2</span> Local truncation error of the forward Euler method</h3>
+<p>We expand the exact solution in a Taylor series around <span class="math inline">\(t_n\)</span>,</p>
+<p><span class="math display">\[
+u(t_{n+1}) = u(t_n) + \Delta t \, u'(t_n) + \frac{\Delta t^2}{2} u''(\xi_n) ,
+\]</span></p>
+<p>where the last term is the remainder, with <span class="math inline">\(\xi_n\)</span> somewhere between <span class="math inline">\(t_n\)</span> and <span class="math inline">\(t_{n+1}\)</span>. Since the exact solution satisfies the differential equation, <span class="math inline">\(u'(t_n) = f\big(t_n, u(t_n)\big)\)</span>, and</p>
+<p><span id="eq-euler-lte"><span class="math display">\[
+u(t_{n+1}) = \underbrace{u(t_n) + \Delta t \, f\big(t_n, u(t_n)\big)}_{\text{one Euler step from the exact solution}} + \underbrace{\frac{\Delta t^2}{2} u''(\xi_n)}_{\tau_n} .
+\tag{5.9}\]</span></span></p>
+<p>The local truncation error of the forward Euler method is proportional to <span class="math inline">\(\Delta t^2\)</span> and to the curvature of the solution. If <span class="math inline">\(|u''| \le M\)</span> on the interval of interest, then <span class="math inline">\(|\tau_n| \le M \Delta t^2 / 2\)</span>.</p>
+<p>The second derivative can be expressed by the tendency. Differentiating <span class="math inline">\(u' = f(t, u)\)</span> with the chain rule,</p>
+<p><span id="eq-second-derivative"><span class="math display">\[
+u'' = \frac{\partial f}{\partial t} + \frac{\partial f}{\partial u} \, u'
+= \frac{\partial f}{\partial t} + \frac{\partial f}{\partial u} \, f .
+\tag{5.10}\]</span></span></p>
+</section>
+<section id="from-the-local-to-the-global-error" class="level3" data-number="5.4.3">
+<h3 data-number="5.4.3" class="anchored" data-anchor-id="from-the-local-to-the-global-error"><span class="header-section-number">5.4.3</span> From the local to the global error</h3>
+<p>To reach a fixed time <span class="math inline">\(T\)</span> we need <span class="math inline">\(n = T / \Delta t\)</span> steps. If the local errors simply added up, the global error would be about <span class="math inline">\(n \cdot M \Delta t^2 / 2 = T M \Delta t / 2\)</span>: one power of <span class="math inline">\(\Delta t\)</span> is lost, and the method is of first order. This argument is incomplete, because an error made in one step is carried along and changed by all later steps. The complete argument takes three steps.</p>
+<p><strong>Step 1: a recursion for the error.</strong> We subtract the Euler formula <a href="#eq-euler-forward" class="quarto-xref">Equation&nbsp;<span>5.5</span></a> from <a href="#eq-euler-lte" class="quarto-xref">Equation&nbsp;<span>5.9</span></a>:</p>
+<p><span class="math display">\[
+\underbrace{u(t_{n+1}) - u_{n+1}}_{E_{n+1}} = \underbrace{u(t_n) - u_n}_{E_n}
++ \Delta t \left[ f\big(t_n, u(t_n)\big) - f(t_n, u_n) \right] + \tau_n .
+\]</span></p>
+<p>The bracket is the difference of the tendency at the exact and at the numerical state. By the Lipschitz condition <a href="#eq-lipschitz" class="quarto-xref">Equation&nbsp;<span>5.2</span></a> it is at most <span class="math inline">\(L \, |E_n|\)</span> in magnitude. Hence</p>
+<p><span id="eq-error-recursion"><span class="math display">\[
+|E_{n+1}| \le (1 + L \Delta t) \, |E_n| + \frac{M \Delta t^2}{2} .
+\tag{5.11}\]</span></span></p>
+<p>Each step multiplies the existing error by at most <span class="math inline">\(1 + L \Delta t\)</span> and adds a new local error.</p>
+<p><strong>Step 2: solving the recursion.</strong> We start without error, <span class="math inline">\(E_0 = 0\)</span>, and apply <a href="#eq-error-recursion" class="quarto-xref">Equation&nbsp;<span>5.11</span></a> repeatedly, writing <span class="math inline">\(q = 1 + L \Delta t\)</span> and <span class="math inline">\(\tau = M \Delta t^2 / 2\)</span>:</p>
+<p><span class="math display">\[
+|E_1| \le \tau, \qquad
+|E_2| \le q \tau + \tau, \qquad
+|E_3| \le q^2 \tau + q \tau + \tau, \qquad \dots
+\]</span></p>
+<p>After <span class="math inline">\(n\)</span> steps the bound is a geometric series,</p>
+<p><span class="math display">\[
+|E_n| \le \tau \sum_{j=0}^{n-1} q^j = \tau \, \frac{q^n - 1}{q - 1}
+= \frac{M \Delta t^2}{2} \cdot \frac{(1 + L \Delta t)^n - 1}{L \Delta t} .
+\]</span></p>
+<p><strong>Step 3: simplifying.</strong> Since <span class="math inline">\(1 + x \le e^x\)</span> for all <span class="math inline">\(x\)</span>, we have <span class="math inline">\((1 + L \Delta t)^n \le e^{n L \Delta t} = e^{L t_n}\)</span> with <span class="math inline">\(t_n = n \Delta t\)</span> measured from <span class="math inline">\(t_0 = 0\)</span>. One factor <span class="math inline">\(\Delta t\)</span> cancels:</p>
+<p><span id="eq-euler-global-error"><span class="math display">\[
+|E_n| \le \frac{M}{2L} \left( e^{L t_n} - 1 \right) \Delta t .
+\tag{5.12}\]</span></span></p>
+<p>This is the result. At any fixed time the global error of the forward Euler method is bounded by a constant times <span class="math inline">\(\Delta t\)</span>: the method <strong>converges</strong>, with <strong>order one</strong>. The rule that came out of the incomplete argument holds in general:</p>
+<blockquote class="blockquote">
+<p>A local truncation error of order <span class="math inline">\(\Delta t^{p+1}\)</span> gives a global error of order <span class="math inline">\(\Delta t^{p}\)</span>. The order of a method is <span class="math inline">\(p\)</span>.</p>
+</blockquote>
+<p>The constant in <a href="#eq-euler-global-error" class="quarto-xref">Equation&nbsp;<span>5.12</span></a> deserves a comment. It grows exponentially with <span class="math inline">\(L t_n\)</span>. For a problem whose solutions diverge from each other, this is realistic: errors grow as fast as neighbouring solutions separate, which is the predictability problem of Chapter 8. For a problem whose solutions converge, such as <a href="#eq-relaxation" class="quarto-xref">Equation&nbsp;<span>5.3</span></a>, the bound is far too pessimistic, because the Lipschitz condition ignores the sign of <span class="math inline">\(\partial f / \partial u\)</span>. Errors made early are then damped instead of amplified.</p>
+</section>
+</section>
+<section id="methods-of-higher-order" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="methods-of-higher-order"><span class="header-section-number">5.5</span> Methods of higher order</h2>
+<section id="heuns-method" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="heuns-method"><span class="header-section-number">5.5.1</span> Heun’s method</h3>
+<p>In the third view a better method needs a better quadrature rule for <a href="#eq-ivp-integral" class="quarto-xref">Equation&nbsp;<span>5.6</span></a>. The trapezoidal rule <a href="03-numerical-toolbox.html#eq-trapezoidal" class="quarto-xref">Equation&nbsp;<span>3.14</span></a> uses the mean of the integrand at both ends of the step:</p>
+<p><span id="eq-trapezoidal-method"><span class="math display">\[
+u_{n+1} = u_n + \frac{\Delta t}{2} \left[ f(t_n, u_n) + f(t_{n+1}, u_{n+1}) \right] .
+\tag{5.13}\]</span></span></p>
+<p>This is the implicit <strong>trapezoidal method</strong>. To avoid the implicit equation, we replace the unknown <span class="math inline">\(u_{n+1}\)</span> inside the tendency by a forward Euler estimate, the <strong>predictor</strong>, and then apply the trapezoidal formula as <strong>corrector</strong>:</p>
+<p><span id="eq-heun"><span class="math display">\[
+\begin{aligned}
+k_1 &amp;= f(t_n, u_n) , \\
+k_2 &amp;= f(t_n + \Delta t, \; u_n + \Delta t \, k_1) , \\
+u_{n+1} &amp;= u_n + \frac{\Delta t}{2} (k_1 + k_2) .
+\end{aligned}
+\tag{5.14}\]</span></span></p>
+<p>This is <strong>Heun’s method</strong>, also called the improved Euler method. It is explicit and needs two evaluations of the tendency per step, two <strong>stages</strong>.</p>
+</section>
+<section id="the-order-of-two-stage-methods" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="the-order-of-two-stage-methods"><span class="header-section-number">5.5.2</span> The order of two-stage methods</h3>
+<p>Is Heun’s method really of second order, although the predictor is only of first order? We check this for a whole family of methods at once. Consider</p>
+<p><span id="eq-two-stage"><span class="math display">\[
+k_1 = f(u_n), \qquad
+k_2 = f(u_n + c \, \Delta t \, k_1), \qquad
+u_{n+1} = u_n + \Delta t \, (b_1 k_1 + b_2 k_2) ,
+\tag{5.15}\]</span></span></p>
+<p>with parameters <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, <span class="math inline">\(c\)</span>. To keep the algebra short we take a tendency that depends only on the state, <span class="math inline">\(f = f(u)\)</span>, and write <span class="math inline">\(f\)</span> and <span class="math inline">\(f'\)</span> for <span class="math inline">\(f(u_n)\)</span> and its derivative with respect to <span class="math inline">\(u\)</span>. The result holds in general.</p>
+<p><em>The exact solution.</em> Starting from <span class="math inline">\(u_n\)</span>, the Taylor series is <span class="math inline">\(u(t_n + \Delta t) = u_n + \Delta t \, u' + \tfrac12 \Delta t^2 u'' + O(\Delta t^3)\)</span>. With <span class="math inline">\(u' = f\)</span> and, from <a href="#eq-second-derivative" class="quarto-xref">Equation&nbsp;<span>5.10</span></a>, <span class="math inline">\(u'' = f' f\)</span>:</p>
+<p><span class="math display">\[
+u(t_n + \Delta t) = u_n + \Delta t \, f + \frac{\Delta t^2}{2} f' f + O(\Delta t^3) .
+\]</span></p>
+<p><em>The numerical solution.</em> We expand the second stage around <span class="math inline">\(u_n\)</span>:</p>
+<p><span class="math display">\[
+k_2 = f(u_n + c \, \Delta t \, f) = f + c \, \Delta t \, f' f + O(\Delta t^2) .
+\]</span></p>
+<p>Inserting into <a href="#eq-two-stage" class="quarto-xref">Equation&nbsp;<span>5.15</span></a>,</p>
+<p><span class="math display">\[
+u_{n+1} = u_n + \Delta t \, (b_1 + b_2) \, f + \Delta t^2 \, b_2 c \, f' f + O(\Delta t^3) .
+\]</span></p>
+<p><em>Comparison.</em> The two expansions agree up to the terms with <span class="math inline">\(\Delta t^2\)</span>, leaving a local truncation error of <span class="math inline">\(O(\Delta t^3)\)</span> and hence a method of second order, if</p>
+<p><span id="eq-order-conditions"><span class="math display">\[
+b_1 + b_2 = 1 \qquad \text{and} \qquad b_2 \, c = \frac12 .
+\tag{5.16}\]</span></span></p>
+<p>These are the <strong>order conditions</strong>. They are two equations for three parameters, so there is a family of second-order methods with two stages.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th><span class="math inline">\(c\)</span></th>
+<th><span class="math inline">\(b_1\)</span></th>
+<th><span class="math inline">\(b_2\)</span></th>
+<th>Quadrature rule</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Heun</td>
+<td>1</td>
+<td><span class="math inline">\(\tfrac12\)</span></td>
+<td><span class="math inline">\(\tfrac12\)</span></td>
+<td>trapezoidal</td>
+</tr>
+<tr class="even">
+<td>Midpoint</td>
+<td><span class="math inline">\(\tfrac12\)</span></td>
+<td>0</td>
+<td>1</td>
+<td>midpoint</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>midpoint method</strong> takes half an Euler step and uses the tendency there for the full step: <span class="math inline">\(u_{n+1} = u_n + \Delta t \, f\big(t_n + \tfrac12 \Delta t, \; u_n + \tfrac12 \Delta t \, k_1\big)\)</span>. Forward Euler is the member of the family <a href="#eq-two-stage" class="quarto-xref">Equation&nbsp;<span>5.15</span></a> with <span class="math inline">\(b_2 = 0\)</span>; it violates the second condition and is of first order.</p>
+</section>
+<section id="rungekutta-methods" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="rungekutta-methods"><span class="header-section-number">5.5.3</span> Runge–Kutta methods</h3>
+<p>Methods of the form <a href="#eq-two-stage" class="quarto-xref">Equation&nbsp;<span>5.15</span></a>, with any number of stages, are <strong>Runge–Kutta methods</strong>. The most widely used one has four stages:</p>
+<p><span id="eq-rk4"><span class="math display">\[
+\begin{aligned}
+k_1 &amp;= f(t_n, u_n) , \\
+k_2 &amp;= f\big(t_n + \tfrac12 \Delta t, \; u_n + \tfrac12 \Delta t \, k_1\big) , \\
+k_3 &amp;= f\big(t_n + \tfrac12 \Delta t, \; u_n + \tfrac12 \Delta t \, k_2\big) , \\
+k_4 &amp;= f(t_n + \Delta t, \; u_n + \Delta t \, k_3) , \\
+u_{n+1} &amp;= u_n + \frac{\Delta t}{6} (k_1 + 2 k_2 + 2 k_3 + k_4) .
+\end{aligned}
+\tag{5.17}\]</span></span></p>
+<p>This <strong>classical Runge–Kutta method</strong> (RK4) is of fourth order. Its order conditions are derived as above, by matching the Taylor series up to <span class="math inline">\(\Delta t^4\)</span>; there are eight of them. If <span class="math inline">\(f\)</span> depends only on <span class="math inline">\(t\)</span>, the stages are the integrand at the left end, twice at the midpoint and at the right end, with the weights <span class="math inline">\(\tfrac16, \tfrac46, \tfrac16\)</span>: <a href="#eq-rk4" class="quarto-xref">Equation&nbsp;<span>5.17</span></a> then is Simpson’s rule.</p>
+<p>Up to order four, a method of order <span class="math inline">\(p\)</span> needs <span class="math inline">\(p\)</span> stages. Beyond that more stages than the order are needed, which is one reason why RK4 is so popular.</p>
+</section>
+<section id="verification" class="level3" data-number="5.5.4">
+<h3 data-number="5.5.4" class="anchored" data-anchor-id="verification"><span class="header-section-number">5.5.4</span> Verification</h3>
+<p>We verify the orders on the nonlinear test problem <span class="math inline">\(\mathrm{d}u/\mathrm{d}t = -u^2\)</span>, <span class="math inline">\(u(0) = 1\)</span>, with the exact solution <span class="math inline">\(u = 1 / (1 + t)\)</span>. Each method becomes a function that makes one step: it receives the tendency <code>f</code>, the time <code>t</code>, the state <code>u</code> and the time step <code>dt</code> and returns the state at <code>t + dt</code>. A second function, <code>integrate</code>, repeats such steps up to the end time. The method is handed to it as an argument, so the same loop serves all three methods.</p>
+<div id="3d3f90f9" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> euler_forward_step(f, t, u, dt):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> u <span class="op">+</span> dt <span class="op">*</span> f(t, u)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> heun_step(f, t, u, dt):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    k1 <span class="op">=</span> f(t, u)                    <span class="co"># slope at the start of the step</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    k2 <span class="op">=</span> f(t <span class="op">+</span> dt, u <span class="op">+</span> dt <span class="op">*</span> k1)     <span class="co"># slope at the end, after an Euler step</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> u <span class="op">+</span> dt <span class="op">*</span> (k1 <span class="op">+</span> k2) <span class="op">/</span> <span class="dv">2</span>   <span class="co"># step with the mean of the two slopes</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rk4_step(f, t, u, dt):</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    k1 <span class="op">=</span> f(t, u)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    k2 <span class="op">=</span> f(t <span class="op">+</span> dt <span class="op">/</span> <span class="dv">2</span>, u <span class="op">+</span> dt <span class="op">/</span> <span class="dv">2</span> <span class="op">*</span> k1)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    k3 <span class="op">=</span> f(t <span class="op">+</span> dt <span class="op">/</span> <span class="dv">2</span>, u <span class="op">+</span> dt <span class="op">/</span> <span class="dv">2</span> <span class="op">*</span> k2)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    k4 <span class="op">=</span> f(t <span class="op">+</span> dt, u <span class="op">+</span> dt <span class="op">*</span> k3)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> u <span class="op">+</span> dt <span class="op">/</span> <span class="dv">6</span> <span class="op">*</span> (k1 <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> k2 <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> k3 <span class="op">+</span> k4)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> integrate(step, f, u0, t_end, dt):</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># integrate from t = 0 to t_end with the one-step method "step"</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    n_steps <span class="op">=</span> <span class="bu">round</span>(t_end <span class="op">/</span> dt)     <span class="co"># number of steps, computed once</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    t_values <span class="op">=</span> [<span class="fl">0.0</span>]                <span class="co"># lists of the times and states</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    u_values <span class="op">=</span> [u0]</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> u0</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(n_steps):</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        u <span class="op">=</span> step(f, n <span class="op">*</span> dt, u, dt)  <span class="co"># one step from t = n dt to (n + 1) dt</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        t_values.append((n <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> dt)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        u_values.append(u)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(t_values), np.array(u_values)   <span class="co"># lists -&gt; arrays</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>As in Exercise 1, the time is computed from the step counter <code>n</code> instead of adding <code>dt</code> repeatedly. The functions work unchanged if the state <code>u</code> is a NumPy array instead of a number, because <code>+</code> and <code>*</code> act on each element of an array.</p>
+<p>For the convergence test we integrate to <span class="math inline">\(t = 2\)</span>, where the exact solution is <span class="math inline">\(u = 1/3\)</span>, with <span class="math inline">\(N = 4, 8, \dots, 128\)</span> steps.</p>
+<div id="cell-fig-convergence-ode" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f_nl(t, u):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>u<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>n_list <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">16</span>, <span class="dv">32</span>, <span class="dv">64</span>, <span class="dv">128</span>]   <span class="co"># numbers of steps</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>dt_list <span class="op">=</span> []</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> n_list:</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    dt_list.append(<span class="fl">2.0</span> <span class="op">/</span> n)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> errors_at_t2(step):</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># errors at t = 2 of the method "step" for all time steps in dt_list</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    errors <span class="op">=</span> []</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> dt <span class="kw">in</span> dt_list:</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        t, u <span class="op">=</span> integrate(step, f_nl, <span class="fl">1.0</span>, <span class="fl">2.0</span>, dt)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        errors.append(<span class="bu">abs</span>(u[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span> <span class="op">/</span> <span class="dv">3</span>))   <span class="co"># u[-1] is the last value, at t = 2</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> errors</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>error_euler <span class="op">=</span> errors_at_t2(euler_forward_step)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>error_heun <span class="op">=</span> errors_at_t2(heun_step)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>error_rk4 <span class="op">=</span> errors_at_t2(rk4_step)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"    dt   order Euler   order Heun   order RK4"</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(dt_list)):    <span class="co"># dt is halved: order = log2(error ratio)</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    p_euler <span class="op">=</span> np.log2(error_euler[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> error_euler[i])</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    p_heun <span class="op">=</span> np.log2(error_heun[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> error_heun[i])</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    p_rk4 <span class="op">=</span> np.log2(error_rk4[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> error_rk4[i])</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>dt_list[i]<span class="sc">:6.4f}</span><span class="ss">  </span><span class="sc">{</span>p_euler<span class="sc">:10.2f}</span><span class="ss">  </span><span class="sc">{</span>p_heun<span class="sc">:11.2f}</span><span class="ss">  </span><span class="sc">{</span>p_rk4<span class="sc">:10.2f}</span><span class="ss">"</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.8</span>))</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>ax.loglog(dt_list, error_euler, <span class="st">"o-"</span>, label<span class="op">=</span><span class="st">"forward Euler"</span>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>ax.loglog(dt_list, error_heun, <span class="st">"o-"</span>, label<span class="op">=</span><span class="st">"Heun"</span>)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>ax.loglog(dt_list, error_rk4, <span class="st">"o-"</span>, label<span class="op">=</span><span class="st">"RK4"</span>)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="vs">r"</span><span class="dv">$\D</span><span class="vs">elta t</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"error at $t = 2$"</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    dt   order Euler   order Heun   order RK4
+0.2500        1.19         2.06        2.00
+0.1250        1.06         2.09        3.82
+0.0625        1.03         2.06        3.97
+0.0312        1.01         2.03        3.99
+0.0156        1.01         2.01        4.00</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div id="fig-convergence-ode" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-convergence-ode-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-one-step-methods_files/figure-html/fig-convergence-ode-output-2.png" width="531" height="344" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-convergence-ode-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.4: Global error at <span class="math inline">\(t = 2\)</span> as a function of the time step for <span class="math inline">\(\mathrm{d}u/\mathrm{d}t = -u^2\)</span>. The slopes are the orders of the methods.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="accuracy-for-a-given-amount-of-work" class="level3" data-number="5.5.5">
+<h3 data-number="5.5.5" class="anchored" data-anchor-id="accuracy-for-a-given-amount-of-work"><span class="header-section-number">5.5.5</span> Accuracy for a given amount of work</h3>
+<p>A step of RK4 costs four evaluations of the tendency, a step of forward Euler one. In a weather model one evaluation of the tendency is the entire computation of all spatial derivatives and all physical processes, so the fair comparison is the error reached for a given number of evaluations. With <span class="math inline">\(N\)</span> steps, forward Euler needs <span class="math inline">\(N\)</span> evaluations, Heun <span class="math inline">\(2N\)</span> and RK4 <span class="math inline">\(4N\)</span>.</p>
+<div id="cell-fig-work-precision" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>evaluations_euler <span class="op">=</span> []</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>evaluations_heun <span class="op">=</span> []</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>evaluations_rk4 <span class="op">=</span> []</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> n_list:</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    evaluations_euler.append(<span class="dv">1</span> <span class="op">*</span> n)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    evaluations_heun.append(<span class="dv">2</span> <span class="op">*</span> n)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    evaluations_rk4.append(<span class="dv">4</span> <span class="op">*</span> n)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.8</span>))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>ax.loglog(evaluations_euler, error_euler, <span class="st">"o-"</span>, label<span class="op">=</span><span class="st">"forward Euler"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>ax.loglog(evaluations_heun, error_heun, <span class="st">"o-"</span>, label<span class="op">=</span><span class="st">"Heun"</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>ax.loglog(evaluations_rk4, error_rk4, <span class="st">"o-"</span>, label<span class="op">=</span><span class="st">"RK4"</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"evaluations of the tendency"</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"error at $t = 2$"</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-work-precision" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-work-precision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-one-step-methods_files/figure-html/fig-work-precision-output-1.png" width="531" height="344" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-work-precision-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.5: Error at <span class="math inline">\(t = 2\)</span> as a function of the number of evaluations of the tendency.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-work-precision" class="quarto-xref">Figure&nbsp;<span>5.5</span></a> the method of higher order wins as soon as more than a rough approximation is required: with about 100 evaluations RK4 is many orders of magnitude more accurate than forward Euler. Two qualifications apply in practice. The advantage exists only if the solution is smooth. And in models of the atmosphere the time step is often limited by stability rather than accuracy (Chapter 6); then the largest stable time step per evaluation decides.</p>
+</section>
+</section>
+<section id="systems-of-equations" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="systems-of-equations"><span class="header-section-number">5.6</span> Systems of equations</h2>
+<p>Nothing in the derivations above required <span class="math inline">\(u\)</span> to be a single number. For a system of <span class="math inline">\(N\)</span> equations the state is a vector <span class="math inline">\(\vec u\)</span> and the tendency a vector function,</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}\vec u}{\mathrm{d}t} = \vec f(t, \vec u) ,
+\]</span></p>
+<p>and all formulas of this unit apply unchanged with vectors in the place of numbers. Equations of higher order are first rewritten as first-order systems (<a href="02-governing-equations.html" class="quarto-xref"><span>Chapter 2</span></a>). The functions <code>rk4_step</code>, <code>euler_forward_step</code> and <code>integrate</code> defined above accept a NumPy array as the state; <code>integrate</code> then returns a two-dimensional array with one row per time and one column per variable.</p>
+<p>As an example we integrate the predator–prey equations of <a href="02-governing-equations.html" class="quarto-xref"><span>Chapter 2</span></a>,</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}x}{\mathrm{d}t} = a x - \alpha x y, \qquad
+\frac{\mathrm{d}y}{\mathrm{d}t} = -c y + \gamma x y .
+\]</span></p>
+<div id="cell-fig-predator-prey" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>a, alpha, c, gamma <span class="op">=</span> <span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.25</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tendency(t, u):</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> u</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([a <span class="op">*</span> x <span class="op">-</span> alpha <span class="op">*</span> x <span class="op">*</span> y, <span class="op">-</span>c <span class="op">*</span> y <span class="op">+</span> gamma <span class="op">*</span> x <span class="op">*</span> y])</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>u0 <span class="op">=</span> np.array([<span class="fl">2.0</span>, <span class="fl">1.0</span>])</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>t, u_rk4 <span class="op">=</span> integrate(rk4_step, tendency, u0, <span class="fl">40.0</span>, <span class="fl">0.05</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>t, u_euler <span class="op">=</span> integrate(euler_forward_step, tendency, u0, <span class="fl">40.0</span>, <span class="fl">0.05</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">3.2</span>), gridspec_kw<span class="op">=</span>{<span class="st">"width_ratios"</span>: [<span class="dv">2</span>, <span class="dv">1</span>]})</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>ax1.plot(t, u_rk4[:, <span class="dv">0</span>], label<span class="op">=</span><span class="st">"prey"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>ax1.plot(t, u_rk4[:, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"predators"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>ax1.plot(t, u_euler[:, <span class="dv">0</span>], <span class="st">"C0--"</span>, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>ax1.plot(t, u_euler[:, <span class="dv">1</span>], <span class="st">"C1--"</span>, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">"$t$"</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>ax1.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>ax2.plot(u_rk4[:, <span class="dv">0</span>], u_rk4[:, <span class="dv">1</span>], <span class="st">"k"</span>, label<span class="op">=</span><span class="st">"RK4"</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>ax2.plot(u_euler[:, <span class="dv">0</span>], u_euler[:, <span class="dv">1</span>], <span class="st">"k--"</span>, lw<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">"forward Euler"</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">"prey"</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"predators"</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>ax2.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-predator-prey" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-predator-prey-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-one-step-methods_files/figure-html/fig-predator-prey-output-1.png" width="851" height="298" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-predator-prey-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.6: Predator–prey equations integrated with RK4 (lines) and forward Euler (dashed) with the same time step <span class="math inline">\(\Delta t = 0.05\)</span>. The exact solution is periodic.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The exact solution is a closed curve in the plane of the two populations. RK4 reproduces it. The forward Euler solution spirals outward: the amplitude of the oscillation grows in every cycle. The error does not show up as random noise but as a systematic, qualitatively wrong behaviour. Why forward Euler amplifies oscillations is answered in Chapter 7.</p>
+</section>
+<section id="adaptive-time-steps" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="adaptive-time-steps"><span class="header-section-number">5.7</span> Adaptive time steps</h2>
+<p>So far the time step was constant. The local truncation error, however, depends on the solution: for forward Euler it is proportional to <span class="math inline">\(u''\)</span>. A constant step is too small where the solution is smooth and too large where it changes quickly. Adaptive methods choose the step such that the local error stays below a tolerance.</p>
+<p>This requires an estimate of the local error without knowing the exact solution. The idea is to compute each step twice, with two methods of different order, <span class="math inline">\(p\)</span> and <span class="math inline">\(p + 1\)</span>. The difference of the two results,</p>
+<p><span class="math display">\[
+\text{err} = \left| u_{n+1}^{(p+1)} - u_{n+1}^{(p)} \right| ,
+\]</span></p>
+<p>estimates the local error of the less accurate one, which is proportional to <span class="math inline">\(\Delta t^{p+1}\)</span>. If err exceeds the tolerance tol, the step is rejected and repeated with a smaller <span class="math inline">\(\Delta t\)</span>. In either case the next step size follows from the requirement that the error, scaled with <span class="math inline">\(\Delta t^{p+1}\)</span>, should equal the tolerance:</p>
+<p><span id="eq-step-control"><span class="math display">\[
+\text{tol} = \text{err} \left( \frac{\Delta t_{\text{new}}}{\Delta t} \right)^{p+1}
+\quad \Longrightarrow \quad
+\Delta t_{\text{new}} = 0.9 \; \Delta t \left( \frac{\text{tol}}{\text{err}} \right)^{1/(p+1)} ,
+\tag{5.18}\]</span></span></p>
+<p>with a safety factor of 0.9. <strong>Embedded Runge–Kutta pairs</strong> make this cheap: the two methods share the same stages and differ only in the weights <span class="math inline">\(b_i\)</span>, so the error estimate needs no additional evaluations of the tendency. The default method of <code>scipy.integrate.solve_ivp</code>, called RK45, is such a pair of orders four and five.</p>
+<div id="cell-fig-adaptive" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.integrate <span class="im">import</span> solve_ivp</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>solution <span class="op">=</span> solve_ivp(tendency, (<span class="dv">0</span>, <span class="dv">40</span>), u0, method<span class="op">=</span><span class="st">"RK45"</span>, rtol<span class="op">=</span><span class="fl">1e-6</span>, atol<span class="op">=</span><span class="fl">1e-9</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">4.2</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ax1.plot(solution.t, solution.y[<span class="dv">0</span>], <span class="st">".-"</span>, ms<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"prey"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>ax1.plot(solution.t, solution.y[<span class="dv">1</span>], <span class="st">".-"</span>, ms<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"predators"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ax1.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>ax2.semilogy(solution.t[<span class="dv">1</span>:], np.diff(solution.t), <span class="st">".-"</span>, ms<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">"$t$"</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="vs">r"</span><span class="dv">$\D</span><span class="vs">elta t</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>solution<span class="sc">.</span>t<span class="sc">.</span>size <span class="op">-</span> <span class="dv">1</span><span class="sc">}</span><span class="ss"> steps, </span><span class="sc">{</span>solution<span class="sc">.</span>nfev<span class="sc">}</span><span class="ss"> evaluations of the tendency"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-adaptive" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-adaptive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-one-step-methods_files/figure-html/fig-adaptive-output-1.png" width="662" height="394" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-adaptive-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.7: Predator–prey equations solved with the adaptive method RK45. Dots mark the time steps chosen by the method (top). The step is small where the solution changes rapidly (bottom).
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>131 steps, 950 evaluations of the tendency</code></pre>
+</div>
+</div>
+<p>Adaptive methods are the standard for ODE problems of moderate size, and for these <code>solve_ivp</code> should be preferred to a method written by hand. Large models of the atmosphere and ocean, in contrast, run with a fixed time step. Their step is dictated by stability, the cost of a rejected step is high, and a fixed step keeps the model reproducible and simple to couple with other components.</p>
+</section>
+<section id="summary" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.8</span> Summary</h2>
+<ul>
+<li>The forward Euler method follows the tangent, replaces the derivative by a forward difference, or integrates the tendency with a rectangle. It is explicit and of first order.</li>
+<li>The backward Euler method evaluates the tendency at the new time. It is implicit: every step requires the solution of an equation, for nonlinear problems with Newton’s method.</li>
+<li>The local truncation error is the error of one step from the exact solution. A local error of order <span class="math inline">\(\Delta t^{p+1}\)</span> gives a global error of order <span class="math inline">\(\Delta t^p\)</span>.</li>
+<li>Runge–Kutta methods reach higher order with several evaluations of the tendency per step. Their coefficients follow from matching the Taylor series of the exact solution. Heun’s method and the midpoint method are of second order, the classical Runge–Kutta method of fourth order.</li>
+<li>Methods are compared by the accuracy reached for a given number of evaluations of the tendency.</li>
+<li>Adaptive methods estimate the local error from two methods of different order and adjust the time step.</li>
+</ul>
+</section>
+<section id="further-reading" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">5.9</span> Further reading</h2>
+<p><span class="citation" data-cites="boyce2009">Boyce and DiPrima (<a href="references.html#ref-boyce2009" role="doc-biblioref">2009</a>)</span>, chapters 2 and 8, for direction fields, the Euler method and its errors; <span class="citation" data-cites="leveque2007">LeVeque (<a href="references.html#ref-leveque2007" role="doc-biblioref">2007</a>)</span>, chapter 5, for one-step methods and their analysis; <span class="citation" data-cites="durran2010">Durran (<a href="references.html#ref-durran2010" role="doc-biblioref">2010</a>)</span>, chapter 2, for time stepping in geophysical models.</p>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-boyce2009" class="csl-entry" role="listitem">
+Boyce, William E., and Richard C. DiPrima. 2009. <em>Elementary Differential Equations and Boundary Value Problems</em>. 9th ed. Wiley.
+</div>
+<div id="ref-durran2010" class="csl-entry" role="listitem">
+Durran, Dale R. 2010. <em>Numerical Methods for Fluid Dynamics: With Applications to Geophysics</em>. 2nd ed. Springer.
+</div>
+<div id="ref-leveque2007" class="csl-entry" role="listitem">
+LeVeque, Randall J. 2007. <em>Finite Difference Methods for Ordinary and Partial Differential Equations</em>. SIAM.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./04-matrices-waves.html" class="pagination-link" aria-label="The numerical toolbox II: matrices and waves">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

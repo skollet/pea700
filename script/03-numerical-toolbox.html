@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; The numerical toolbox I: derivatives, integrals, roots – Prognostic Modelling</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04-matrices-waves.html" rel="next">
+<link href="./02-governing-equations.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3892b3adcc577e567f7e69fe50577df6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./03-numerical-toolbox.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Prognostic Modelling</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-governing-equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-numerical-toolbox.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-matrices-waves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Time integration of ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-one-step-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#taylor-series-and-finite-differences" id="toc-taylor-series-and-finite-differences" class="nav-link active" data-scroll-target="#taylor-series-and-finite-differences"><span class="header-section-number">3.1</span> Taylor series and finite differences</a>
+  <ul class="collapse">
+  <li><a href="#the-taylor-series" id="toc-the-taylor-series" class="nav-link" data-scroll-target="#the-taylor-series"><span class="header-section-number">3.1.1</span> The Taylor series</a></li>
+  <li><a href="#forward-and-backward-difference" id="toc-forward-and-backward-difference" class="nav-link" data-scroll-target="#forward-and-backward-difference"><span class="header-section-number">3.1.2</span> Forward and backward difference</a></li>
+  <li><a href="#central-difference" id="toc-central-difference" class="nav-link" data-scroll-target="#central-difference"><span class="header-section-number">3.1.3</span> Central difference</a></li>
+  <li><a href="#second-derivative" id="toc-second-derivative" class="nav-link" data-scroll-target="#second-derivative"><span class="header-section-number">3.1.4</span> Second derivative</a></li>
+  <li><a href="#measuring-the-order-of-convergence" id="toc-measuring-the-order-of-convergence" class="nav-link" data-scroll-target="#measuring-the-order-of-convergence"><span class="header-section-number">3.1.5</span> Measuring the order of convergence</a></li>
+  <li><a href="#why-the-step-cannot-be-made-arbitrarily-small" id="toc-why-the-step-cannot-be-made-arbitrarily-small" class="nav-link" data-scroll-target="#why-the-step-cannot-be-made-arbitrarily-small"><span class="header-section-number">3.1.6</span> Why the step cannot be made arbitrarily small</a></li>
+  <li><a href="#stencils-of-any-order" id="toc-stencils-of-any-order" class="nav-link" data-scroll-target="#stencils-of-any-order"><span class="header-section-number">3.1.7</span> Stencils of any order</a></li>
+  </ul></li>
+  <li><a href="#interpolation" id="toc-interpolation" class="nav-link" data-scroll-target="#interpolation"><span class="header-section-number">3.2</span> Interpolation</a>
+  <ul class="collapse">
+  <li><a href="#linear-interpolation" id="toc-linear-interpolation" class="nav-link" data-scroll-target="#linear-interpolation"><span class="header-section-number">3.2.1</span> Linear interpolation</a></li>
+  <li><a href="#polynomials-of-high-degree-and-the-runge-phenomenon" id="toc-polynomials-of-high-degree-and-the-runge-phenomenon" class="nav-link" data-scroll-target="#polynomials-of-high-degree-and-the-runge-phenomenon"><span class="header-section-number">3.2.2</span> Polynomials of high degree and the Runge phenomenon</a></li>
+  </ul></li>
+  <li><a href="#quadrature" id="toc-quadrature" class="nav-link" data-scroll-target="#quadrature"><span class="header-section-number">3.3</span> Quadrature</a>
+  <ul class="collapse">
+  <li><a href="#midpoint-and-trapezoidal-rule" id="toc-midpoint-and-trapezoidal-rule" class="nav-link" data-scroll-target="#midpoint-and-trapezoidal-rule"><span class="header-section-number">3.3.1</span> Midpoint and trapezoidal rule</a></li>
+  <li><a href="#simpsons-rule" id="toc-simpsons-rule" class="nav-link" data-scroll-target="#simpsons-rule"><span class="header-section-number">3.3.2</span> Simpson’s rule</a></li>
+  <li><a href="#where-quadrature-enters-prognostic-models" id="toc-where-quadrature-enters-prognostic-models" class="nav-link" data-scroll-target="#where-quadrature-enters-prognostic-models"><span class="header-section-number">3.3.3</span> Where quadrature enters prognostic models</a></li>
+  </ul></li>
+  <li><a href="#root-finding" id="toc-root-finding" class="nav-link" data-scroll-target="#root-finding"><span class="header-section-number">3.4</span> Root finding</a>
+  <ul class="collapse">
+  <li><a href="#bisection" id="toc-bisection" class="nav-link" data-scroll-target="#bisection"><span class="header-section-number">3.4.1</span> Bisection</a></li>
+  <li><a href="#newtonraphson" id="toc-newtonraphson" class="nav-link" data-scroll-target="#newtonraphson"><span class="header-section-number">3.4.2</span> Newton–Raphson</a></li>
+  <li><a href="#newtons-method-for-systems" id="toc-newtons-method-for-systems" class="nav-link" data-scroll-target="#newtons-method-for-systems"><span class="header-section-number">3.4.3</span> Newton’s method for systems</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.5</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">3.6</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./03-numerical-toolbox.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-numerical-toolbox" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning goals
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After this unit you can</p>
+<ul>
+<li>derive finite difference formulas and their truncation error from the Taylor series,</li>
+<li>measure the order of convergence of a numerical method,</li>
+<li>explain why a finite difference cannot be made arbitrarily accurate, and estimate the best step,</li>
+<li>interpolate and integrate numerically and derive the error of the basic rules,</li>
+<li>find roots with bisection and Newton’s method and explain their rates of convergence.</li>
+</ul>
+</div>
+</div>
+<p>Numerical models are built from a small number of tools. This unit introduces the tools that come from calculus: approximating derivatives, interpolating, integrating and finding roots. All of them rest on the Taylor series. The next unit adds the tools from linear algebra and Fourier analysis.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>About the code in this script
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>From this unit on, each computation is shown in two tabs.</p>
+<ul>
+<li><strong>Step by step</strong> is written the way you would write it yourself after the first exercise sheets: explicit loops, one operation per line, a comment on each line. Read this version first. New Python is explained below the code where it first appears.</li>
+<li><strong>Compact</strong> does the same in the style that experienced Python programmers use: whole NumPy arrays instead of loops, and functions from libraries such as SciPy. It is shorter and faster but hides the individual steps.</li>
+</ul>
+<p>Both versions give the same results. In the PDF the two versions follow each other.</p>
+</div>
+</div>
+<section id="taylor-series-and-finite-differences" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="taylor-series-and-finite-differences"><span class="header-section-number">3.1</span> Taylor series and finite differences</h2>
+<section id="the-taylor-series" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="the-taylor-series"><span class="header-section-number">3.1.1</span> The Taylor series</h3>
+<p>The Taylor series expresses the value of a smooth function at a neighbouring point by its value and its derivatives at <span class="math inline">\(x\)</span>:</p>
+<p><span id="eq-taylor"><span class="math display">\[
+u(x + h) = u(x) + h \, u'(x) + \frac{h^2}{2} u''(x) + \frac{h^3}{6} u'''(x) + \frac{h^4}{24} u''''(x) + \dots
+\tag{3.1}\]</span></span></p>
+<p>The general term is <span class="math inline">\(\frac{h^k}{k!} u^{(k)}(x)\)</span>, with <span class="math inline">\(2! = 2\)</span>, <span class="math inline">\(3! = 6\)</span>, <span class="math inline">\(4! = 24\)</span>. If the series is stopped after the term with <span class="math inline">\(h^n\)</span>, the rest can be written as a single term,</p>
+<p><span class="math display">\[
+u(x + h) = \sum_{k=0}^{n} \frac{h^k}{k!} u^{(k)}(x) + \frac{h^{n+1}}{(n+1)!} u^{(n+1)}(\xi)
+\]</span></p>
+<p>with some <span class="math inline">\(\xi\)</span> between <span class="math inline">\(x\)</span> and <span class="math inline">\(x + h\)</span> (Lagrange form of the remainder). This is what makes the dots precise: the neglected part behaves like the first neglected term, provided <span class="math inline">\(u^{(n+1)}\)</span> is bounded. “Smooth” means that the derivatives that appear exist and are bounded.</p>
+<p>Replacing <span class="math inline">\(h\)</span> by <span class="math inline">\(-h\)</span> changes the sign of the odd terms, because <span class="math inline">\((-h)^k = -h^k\)</span> for odd <span class="math inline">\(k\)</span>:</p>
+<p><span id="eq-taylor-minus"><span class="math display">\[
+u(x - h) = u(x) - h \, u'(x) + \frac{h^2}{2} u''(x) - \frac{h^3}{6} u'''(x) + \frac{h^4}{24} u''''(x) - \dots
+\tag{3.2}\]</span></span></p>
+<p>Every finite difference formula is a combination of such series, chosen so that unwanted terms cancel.</p>
+<p><strong>Notation.</strong> We write <span class="math inline">\(e = O(h^p)\)</span>, “<span class="math inline">\(e\)</span> is of order <span class="math inline">\(h^p\)</span>”, if <span class="math inline">\(|e| \le C h^p\)</span> for all sufficiently small <span class="math inline">\(h\)</span>, with a constant <span class="math inline">\(C\)</span> that does not depend on <span class="math inline">\(h\)</span>. A method whose error is <span class="math inline">\(O(h^p)\)</span> is <strong>of order</strong> <span class="math inline">\(p\)</span>. Halving <span class="math inline">\(h\)</span> then divides the error by about <span class="math inline">\(2^p\)</span>.</p>
+</section>
+<section id="forward-and-backward-difference" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="forward-and-backward-difference"><span class="header-section-number">3.1.2</span> Forward and backward difference</h3>
+<p>We solve <a href="#eq-taylor" class="quarto-xref">Equation&nbsp;<span>3.1</span></a> for <span class="math inline">\(u'(x)\)</span>. Subtracting <span class="math inline">\(u(x)\)</span> on both sides gives</p>
+<p><span class="math display">\[
+u(x + h) - u(x) = h \, u'(x) + \frac{h^2}{2} u''(x) + \frac{h^3}{6} u'''(x) + \dots ,
+\]</span></p>
+<p>and dividing by <span class="math inline">\(h\)</span></p>
+<p><span class="math display">\[
+\frac{u(x + h) - u(x)}{h} = u'(x) + \frac{h}{2} u''(x) + \frac{h^2}{6} u'''(x) + \dots .
+\]</span></p>
+<p>Bringing everything except <span class="math inline">\(u'(x)\)</span> to the other side,</p>
+<p><span id="eq-fd-forward"><span class="math display">\[
+u'(x) = \underbrace{\frac{u(x + h) - u(x)}{h}}_{\text{forward difference}}
+\; \underbrace{- \, \frac{h}{2} u''(x) - \frac{h^2}{6} u'''(x) - \dots}_{\text{truncation error}}
+\tag{3.3}\]</span></span></p>
+<p>The terms that are dropped when only the difference quotient is kept form the <strong>truncation error</strong>. Its leading term is <span class="math inline">\(-\frac{h}{2} u''(x)\)</span>, proportional to <span class="math inline">\(h\)</span>. The forward difference is of first order: its error is <span class="math inline">\(O(h)\)</span>.</p>
+<p>The same steps applied to <a href="#eq-taylor-minus" class="quarto-xref">Equation&nbsp;<span>3.2</span></a> give</p>
+<p><span class="math display">\[
+u(x) - u(x - h) = h \, u'(x) - \frac{h^2}{2} u''(x) + \frac{h^3}{6} u'''(x) - \dots ,
+\]</span></p>
+<p>and after division by <span class="math inline">\(h\)</span> the <strong>backward difference</strong></p>
+<p><span id="eq-fd-backward"><span class="math display">\[
+u'(x) = \frac{u(x) - u(x - h)}{h} + \frac{h}{2} u''(x) - \frac{h^2}{6} u'''(x) + \dots ,
+\tag{3.4}\]</span></span></p>
+<p>which is also of first order, with the opposite sign of the leading error.</p>
+</section>
+<section id="central-difference" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="central-difference"><span class="header-section-number">3.1.3</span> Central difference</h3>
+<p>The errors of the two one-sided formulas have opposite signs, which suggests combining them. We subtract <a href="#eq-taylor-minus" class="quarto-xref">Equation&nbsp;<span>3.2</span></a> from <a href="#eq-taylor" class="quarto-xref">Equation&nbsp;<span>3.1</span></a> term by term:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>in <span class="math inline">\(u(x + h)\)</span></th>
+<th>in <span class="math inline">\(u(x - h)\)</span></th>
+<th>difference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u\)</span></td>
+<td><span class="math inline">\(u\)</span></td>
+<td><span class="math inline">\(u\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u'\)</span></td>
+<td><span class="math inline">\(h \, u'\)</span></td>
+<td><span class="math inline">\(-h \, u'\)</span></td>
+<td><span class="math inline">\(2 h \, u'\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^2}{2} u''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^2}{2} u''\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u'''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^3}{6} u'''\)</span></td>
+<td><span class="math inline">\(-\tfrac{h^3}{6} u'''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^3}{3} u'''\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u''''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^4}{24} u''''\)</span></td>
+<td><span class="math inline">\(\tfrac{h^4}{24} u''''\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>All even terms cancel:</p>
+<p><span class="math display">\[
+u(x + h) - u(x - h) = 2 h \, u'(x) + \frac{h^3}{3} u'''(x) + \dots
+\]</span></p>
+<p>Dividing by <span class="math inline">\(2h\)</span> gives <span class="math inline">\(\frac{u(x + h) - u(x - h)}{2h} = u'(x) + \frac{h^2}{6} u'''(x) + \dots\)</span>, and solving for <span class="math inline">\(u'(x)\)</span> the <strong>central difference</strong></p>
+<p><span id="eq-fd-central"><span class="math display">\[
+u'(x) = \frac{u(x + h) - u(x - h)}{2h} - \frac{h^2}{6} u'''(x) - \dots
+\tag{3.5}\]</span></span></p>
+<p>Its error is <span class="math inline">\(O(h^2)\)</span>: second order. Halving <span class="math inline">\(h\)</span> halves the error of the one-sided differences but quarters the error of the central difference, at the same cost of two function values.</p>
+</section>
+<section id="second-derivative" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="second-derivative"><span class="header-section-number">3.1.4</span> Second derivative</h3>
+<p>Adding the two series instead cancels the odd terms (last column of the table, with the signs of <span class="math inline">\(u(x - h)\)</span> reversed):</p>
+<p><span class="math display">\[
+u(x + h) + u(x - h) = 2 u(x) + h^2 u''(x) + \frac{h^4}{12} u''''(x) + \dots ,
+\]</span></p>
+<p>where <span class="math inline">\(\frac{h^4}{12} = 2 \cdot \frac{h^4}{24}\)</span>. Subtracting <span class="math inline">\(2 u(x)\)</span> gives <span class="math inline">\(u(x + h) - 2 u(x) + u(x - h) = h^2 u''(x) + \frac{h^4}{12} u''''(x) + \dots\)</span>, and dividing by <span class="math inline">\(h^2\)</span> and solving for <span class="math inline">\(u''(x)\)</span> gives the standard approximation of the second derivative,</p>
+<p><span id="eq-fd-second"><span class="math display">\[
+u''(x) = \frac{u(x + h) - 2 u(x) + u(x - h)}{h^2} - \frac{h^2}{12} u''''(x) - \dots ,
+\tag{3.6}\]</span></span></p>
+<p>which is also of second order. This formula is the core of every finite difference model of diffusion.</p>
+<p>There is a second way to obtain it, which becomes important when the diffusion coefficient varies in space. The second derivative is the derivative of the first derivative. We approximate the first derivative half-way between the grid points,</p>
+<p><span class="math display">\[
+u'\!\left(x + \tfrac{h}{2}\right) \approx \frac{u(x + h) - u(x)}{h}, \qquad
+u'\!\left(x - \tfrac{h}{2}\right) \approx \frac{u(x) - u(x - h)}{h} .
+\]</span></p>
+<p>Seen from the point <span class="math inline">\(x + \tfrac{h}{2}\)</span>, the first quotient uses the two neighbours at distance <span class="math inline">\(\tfrac{h}{2}\)</span> on either side: it is a central difference with step <span class="math inline">\(h/2\)</span> and therefore of second order. The same holds for the second quotient at <span class="math inline">\(x - \tfrac{h}{2}\)</span>. We then take the central difference of these two values, again with step <span class="math inline">\(h/2\)</span>:</p>
+<p><span class="math display">\[
+u''(x) \approx \frac{u'\!\left(x + \tfrac{h}{2}\right) - u'\!\left(x - \tfrac{h}{2}\right)}{h}
+= \frac{1}{h} \left[ \frac{u(x + h) - u(x)}{h} - \frac{u(x) - u(x - h)}{h} \right]
+= \frac{u(x + h) - 2 u(x) + u(x - h)}{h^2} .
+\]</span></p>
+<p>In this form the formula is a difference of two fluxes, as in the derivation of the divergence in <a href="02-governing-equations.html" class="quarto-xref"><span>Chapter 2</span></a>.</p>
+</section>
+<section id="measuring-the-order-of-convergence" class="level3" data-number="3.1.5">
+<h3 data-number="3.1.5" class="anchored" data-anchor-id="measuring-the-order-of-convergence"><span class="header-section-number">3.1.5</span> Measuring the order of convergence</h3>
+<p>If the error behaves as <span class="math inline">\(e(h) \approx C h^p\)</span>, then taking the logarithm gives</p>
+<p><span class="math display">\[
+\log e = \log C + p \log h .
+\]</span></p>
+<p>In a plot with logarithmic axes the error is a straight line with slope <span class="math inline">\(p\)</span>. To compute <span class="math inline">\(p\)</span> from two step sizes <span class="math inline">\(h_1\)</span> and <span class="math inline">\(h_2\)</span> we divide the two errors. The unknown constant <span class="math inline">\(C\)</span> drops out,</p>
+<p><span class="math display">\[
+\frac{e(h_1)}{e(h_2)} = \frac{C h_1^p}{C h_2^p} = \left( \frac{h_1}{h_2} \right)^p ,
+\]</span></p>
+<p>and taking the logarithm of both sides, <span class="math inline">\(\log \left( e(h_1) / e(h_2) \right) = p \log (h_1 / h_2)\)</span>, gives the <strong>observed order</strong></p>
+<p><span id="eq-observed-order"><span class="math display">\[
+p = \frac{\log \left( e(h_1) / e(h_2) \right)}{\log \left( h_1 / h_2 \right)} .
+\tag{3.7}\]</span></span></p>
+<p>If the step is halved, <span class="math inline">\(h_1 / h_2 = 2\)</span> and <span class="math inline">\(p = \log_2 \left( e(h_1) / e(h_2) \right)\)</span>: an error that falls by a factor of 4 means second order.</p>
+<p>Comparing the observed order with the theoretical one is the most important test of a numerical code. A bug almost always reduces the order. We test the forward and central difference with <span class="math inline">\(u = \sin\)</span>, whose derivative <span class="math inline">\(\cos\)</span> is known, at <span class="math inline">\(x = 1\)</span>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Step by step</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Compact</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div id="cbe5fe9c" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np                  <span class="co"># NumPy: np.sin, np.cos, np.log, ...</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">1.0</span>                             <span class="co"># point where we approximate u'(x)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>exact <span class="op">=</span> np.cos(x)                   <span class="co"># exact derivative of sin at x</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>h_list <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">0.05</span>, <span class="fl">0.025</span>, <span class="fl">0.0125</span>] <span class="co"># step sizes, each half the previous one</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>error_forward <span class="op">=</span> []                  <span class="co"># empty lists, filled in the loop</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>error_central <span class="op">=</span> []</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> h <span class="kw">in</span> h_list:                    <span class="co"># h takes the values 0.1, 0.05, ... in turn</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    forward <span class="op">=</span> (np.sin(x <span class="op">+</span> h) <span class="op">-</span> np.sin(x)) <span class="op">/</span> h</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    central <span class="op">=</span> (np.sin(x <span class="op">+</span> h) <span class="op">-</span> np.sin(x <span class="op">-</span> h)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> h)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    error_forward.append(<span class="bu">abs</span>(forward <span class="op">-</span> exact))   <span class="co"># add the error to the list</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    error_central.append(<span class="bu">abs</span>(central <span class="op">-</span> exact))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"     h    error forward  order  error central  order"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(h_list)):     <span class="co"># i = 1, 2, 3; compare step i with step i-1</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    log_ratio_h <span class="op">=</span> np.log(h_list[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> h_list[i])</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    p_forward <span class="op">=</span> np.log(error_forward[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> error_forward[i]) <span class="op">/</span> log_ratio_h</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    p_central <span class="op">=</span> np.log(error_central[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> error_central[i]) <span class="op">/</span> log_ratio_h</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>h_list[i]<span class="sc">:7.4f}</span><span class="ss"> </span><span class="sc">{</span>error_forward[i]<span class="sc">:12.2e}</span><span class="ss"> </span><span class="sc">{</span>p_forward<span class="sc">:6.2f}</span><span class="ss">"</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" </span><span class="sc">{</span>error_central[i]<span class="sc">:14.2e}</span><span class="ss"> </span><span class="sc">{</span>p_central<span class="sc">:6.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     h    error forward  order  error central  order
+ 0.0500     2.13e-02   1.01       2.25e-04   2.00
+ 0.0250     1.06e-02   1.01       5.63e-05   2.00
+ 0.0125     5.27e-03   1.00       1.41e-05   2.00</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div id="99a95de5" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> np.array([<span class="fl">0.1</span>, <span class="fl">0.05</span>, <span class="fl">0.025</span>, <span class="fl">0.0125</span>])      <span class="co"># all step sizes at once</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>error_forward <span class="op">=</span> <span class="bu">abs</span>((np.sin(x <span class="op">+</span> h) <span class="op">-</span> np.sin(x)) <span class="op">/</span> h <span class="op">-</span> np.cos(x))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>error_central <span class="op">=</span> <span class="bu">abs</span>((np.sin(x <span class="op">+</span> h) <span class="op">-</span> np.sin(x <span class="op">-</span> h)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> h) <span class="op">-</span> np.cos(x))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># e[:-1] is the array without its last, e[1:] without its first element</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> observed_order(e, h):</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.log(e[:<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> e[<span class="dv">1</span>:]) <span class="op">/</span> np.log(h[:<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> h[<span class="dv">1</span>:])</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"forward, observed order:"</span>, observed_order(error_forward, h).<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"central, observed order:"</span>, observed_order(error_central, h).<span class="bu">round</span>(<span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>forward, observed order: [1.014 1.007 1.004]
+central, observed order: [1.999 2.    2.   ]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The observed orders are 1 and 2, as derived. Moreover the forward error is close to <span class="math inline">\(\frac{h}{2} |u''(1)| = \frac{h}{2} \sin 1 \approx 0.42 \, h\)</span>, the leading term of <a href="#eq-fd-forward" class="quarto-xref">Equation&nbsp;<span>3.3</span></a>.</p>
+<p><strong>New Python in the step-by-step version.</strong></p>
+<ul>
+<li><code>[0.1, 0.05, ...]</code> is a <strong>list</strong>, <code>[]</code> an empty list. <code>error_forward.append(value)</code> adds a value at the end of the list.</li>
+<li><code>for h in h_list:</code> executes the indented lines once for each element of the list, with <code>h</code> equal to that element. It replaces the counter of a <code>while</code> loop.</li>
+<li><code>range(1, len(h_list))</code> produces the whole numbers <span class="math inline">\(1, 2, \dots\)</span> up to <code>len(h_list) - 1</code>; <code>len</code> is the number of elements. <code>h_list[i]</code> is element number <code>i</code>, counted from <strong>0</strong>: <code>h_list[0]</code> is 0.1.</li>
+<li>In <code>f"{h:7.4f}"</code> the part after the colon sets the format: 7 characters wide with 4 digits after the decimal point. <code>e</code> instead of <code>f</code> gives the exponential notation, <code>1.23e-04</code>.</li>
+</ul>
+</section>
+<section id="why-the-step-cannot-be-made-arbitrarily-small" class="level3" data-number="3.1.6">
+<h3 data-number="3.1.6" class="anchored" data-anchor-id="why-the-step-cannot-be-made-arbitrarily-small"><span class="header-section-number">3.1.6</span> Why the step cannot be made arbitrarily small</h3>
+<p>According to <a href="#eq-fd-forward" class="quarto-xref">Equation&nbsp;<span>3.3</span></a> the error vanishes for <span class="math inline">\(h \to 0\)</span>. On a computer it does not, and we can estimate why.</p>
+<p>The computer does not hold <span class="math inline">\(u(x)\)</span> and <span class="math inline">\(u(x + h)\)</span> but rounded values <span class="math inline">\(u(x)(1 + \delta_1)\)</span> and <span class="math inline">\(u(x + h)(1 + \delta_2)\)</span> with <span class="math inline">\(|\delta_{1,2}| \le \varepsilon\)</span>, the machine epsilon (<a href="01-introduction.html" class="quarto-xref"><span>Chapter 1</span></a>). The computed numerator is</p>
+<p><span class="math display">\[
+u(x + h)(1 + \delta_2) - u(x)(1 + \delta_1)
+= \big[ u(x + h) - u(x) \big] + u(x + h) \, \delta_2 - u(x) \, \delta_1 ,
+\]</span></p>
+<p>so it differs from the exact numerator by</p>
+<p><span class="math display">\[
+|u(x + h) \, \delta_2 - u(x) \, \delta_1| \le \varepsilon \, \big( |u(x + h)| + |u(x)| \big) \approx 2 \varepsilon |u| ,
+\]</span></p>
+<p>where we used <span class="math inline">\(u(x + h) \approx u(x)\)</span> for small <span class="math inline">\(h\)</span> and wrote <span class="math inline">\(|u|\)</span> for <span class="math inline">\(|u(x)|\)</span>. The division by <span class="math inline">\(h\)</span> is itself accurate to <span class="math inline">\(\varepsilon\)</span>, but it turns this absolute error of the numerator into an error of <span class="math inline">\(2 \varepsilon |u| / h\)</span> in the difference quotient: the smaller <span class="math inline">\(h\)</span>, the larger the error. Together with the leading truncation error from <a href="#eq-fd-forward" class="quarto-xref">Equation&nbsp;<span>3.3</span></a> the total error of the forward difference is bounded by</p>
+<p><span id="eq-total-error"><span class="math display">\[
+e(h) = \underbrace{\frac{h}{2} |u''|}_{\text{truncation}} +
+\underbrace{\frac{2 \varepsilon |u|}{h}}_{\text{round-off}} .
+\tag{3.8}\]</span></span></p>
+<p>The first term decreases with <span class="math inline">\(h\)</span>, the second increases. The minimum is where the derivative with respect to <span class="math inline">\(h\)</span> vanishes:</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}e}{\mathrm{d}h} = \frac{|u''|}{2} - \frac{2 \varepsilon |u|}{h^2} = 0
+\quad \Longrightarrow \quad
+h^2 = \frac{4 \varepsilon |u|}{|u''|}
+\quad \Longrightarrow \quad
+h_{\text{opt}} = 2 \sqrt{\frac{\varepsilon |u|}{|u''|}} .
+\]</span></p>
+<p>Inserting <span class="math inline">\(h_{\text{opt}}\)</span> into <a href="#eq-total-error" class="quarto-xref">Equation&nbsp;<span>3.8</span></a>, both terms become equal,</p>
+<p><span class="math display">\[
+\frac{h_{\text{opt}}}{2} |u''| = \sqrt{\frac{\varepsilon |u|}{|u''|}} \, |u''| = \sqrt{\varepsilon |u| |u''|},
+\qquad
+\frac{2 \varepsilon |u|}{h_{\text{opt}}} = \varepsilon |u| \sqrt{\frac{|u''|}{\varepsilon |u|}} = \sqrt{\varepsilon |u| |u''|},
+\]</span></p>
+<p>and the smallest error is their sum,</p>
+<p><span class="math display">\[
+e(h_{\text{opt}}) = 2 \sqrt{\varepsilon \, |u| \, |u''|} .
+\]</span></p>
+<p>If <span class="math inline">\(u\)</span> and <span class="math inline">\(u''\)</span> are of order one, the best step is of the order <span class="math inline">\(\sqrt{\varepsilon} \approx 10^{-8}\)</span>, and the smallest error that can be reached is also about <span class="math inline">\(10^{-8}\)</span>: half of the 16 digits are lost.</p>
+<p>For the central difference the numerator has the same round-off error <span class="math inline">\(2 \varepsilon |u|\)</span>, but it is divided by <span class="math inline">\(2h\)</span>, which gives <span class="math inline">\(\varepsilon |u| / h\)</span>. With the truncation error <span class="math inline">\(\frac{h^2}{6} |u'''|\)</span> from <a href="#eq-fd-central" class="quarto-xref">Equation&nbsp;<span>3.5</span></a>,</p>
+<p><span class="math display">\[
+e(h) = \frac{h^2}{6} |u'''| + \frac{\varepsilon |u|}{h}, \qquad
+\frac{\mathrm{d}e}{\mathrm{d}h} = \frac{h}{3} |u'''| - \frac{\varepsilon |u|}{h^2} = 0
+\quad \Longrightarrow \quad
+h_{\text{opt}} = \left( \frac{3 \varepsilon |u|}{|u'''|} \right)^{1/3} .
+\]</span></p>
+<p>At <span class="math inline">\(h_{\text{opt}}\)</span> we have <span class="math inline">\(\varepsilon |u| = \frac13 h_{\text{opt}}^3 |u'''|\)</span>, so the round-off term is <span class="math inline">\(\frac13 h_{\text{opt}}^2 |u'''|\)</span>, twice the truncation term, and</p>
+<p><span class="math display">\[
+e(h_{\text{opt}}) = \frac{h_{\text{opt}}^2}{6} |u'''| + \frac{h_{\text{opt}}^2}{3} |u'''|
+= \frac{h_{\text{opt}}^2}{2} |u'''| .
+\]</span></p>
+<p>For <span class="math inline">\(u\)</span> and <span class="math inline">\(u'''\)</span> of order one, <span class="math inline">\(h_{\text{opt}} \sim \varepsilon^{1/3} \approx 10^{-5}\)</span> and <span class="math inline">\(e(h_{\text{opt}}) \sim \varepsilon^{2/3} \approx 10^{-11}\)</span>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Step by step</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Compact</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div id="cell-fig-roundoff" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt     <span class="co"># the plotting library</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>exact <span class="op">=</span> np.cos(x)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>h_values <span class="op">=</span> []                       <span class="co"># step sizes</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>error_forward <span class="op">=</span> []                  <span class="co"># errors of the two formulas</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>error_central <span class="op">=</span> []</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>slope_1 <span class="op">=</span> []                        <span class="co"># reference lines h/2 and h^2/6</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>slope_2 <span class="op">=</span> []</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>):                 <span class="co"># k = 0, 1, ..., 59</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> <span class="fl">10.0</span> <span class="op">**</span> (<span class="op">-</span><span class="dv">15</span> <span class="op">+</span> <span class="fl">0.25</span> <span class="op">*</span> k)    <span class="co"># h = 10^-15, 10^-14.75, ..., 10^-0.25</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    forward <span class="op">=</span> (np.sin(x <span class="op">+</span> h) <span class="op">-</span> np.sin(x)) <span class="op">/</span> h</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    central <span class="op">=</span> (np.sin(x <span class="op">+</span> h) <span class="op">-</span> np.sin(x <span class="op">-</span> h)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> h)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    h_values.append(h)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    error_forward.append(<span class="bu">abs</span>(forward <span class="op">-</span> exact))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    error_central.append(<span class="bu">abs</span>(central <span class="op">-</span> exact))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    slope_1.append(h <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    slope_2.append(h<span class="op">**</span><span class="dv">2</span> <span class="op">/</span> <span class="dv">6</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.8</span>))     <span class="co"># a figure with one set of axes</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>ax.loglog(h_values, error_forward, <span class="st">"."</span>, label<span class="op">=</span><span class="st">"forward difference"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>ax.loglog(h_values, error_central, <span class="st">"."</span>, label<span class="op">=</span><span class="st">"central difference"</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>ax.loglog(h_values, slope_1, <span class="st">"k--"</span>, lw<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">"slope 1 and 2"</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>ax.loglog(h_values, slope_2, <span class="st">"k--"</span>, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="fl">1e-13</span>, <span class="dv">1</span>)               <span class="co"># show errors between 1e-13 and 1</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$h$"</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"error"</span>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>ax.legend()                         <span class="co"># the box with the labels</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-roundoff" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-roundoff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-numerical-toolbox_files/figure-html/fig-roundoff-output-1.png" width="531" height="350" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-roundoff-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: Error of the forward and central difference for the derivative of <span class="math inline">\(\sin x\)</span> at <span class="math inline">\(x = 1\)</span>. The error decreases with the theoretical slope until round-off takes over.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div id="4f0ecc16" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="fl">10.0</span> <span class="op">**</span> np.arange(<span class="op">-</span><span class="dv">15</span>, <span class="dv">0</span>, <span class="fl">0.25</span>)          <span class="co"># all 60 step sizes as one array</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>forward <span class="op">=</span> <span class="bu">abs</span>((np.sin(x <span class="op">+</span> h) <span class="op">-</span> np.sin(x)) <span class="op">/</span> h <span class="op">-</span> np.cos(x))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>central <span class="op">=</span> <span class="bu">abs</span>((np.sin(x <span class="op">+</span> h) <span class="op">-</span> np.sin(x <span class="op">-</span> h)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> h) <span class="op">-</span> np.cos(x))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.8</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>ax.loglog(h, forward, <span class="st">"."</span>, label<span class="op">=</span><span class="st">"forward difference"</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>ax.loglog(h, central, <span class="st">"."</span>, label<span class="op">=</span><span class="st">"central difference"</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ax.loglog(h, h <span class="op">/</span> <span class="dv">2</span>, <span class="st">"k--"</span>, lw<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">"slope 1 and 2"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>ax.loglog(h, h<span class="op">**</span><span class="dv">2</span> <span class="op">/</span> <span class="dv">6</span>, <span class="st">"k--"</span>, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(ylim<span class="op">=</span>(<span class="fl">1e-13</span>, <span class="dv">1</span>), xlabel<span class="op">=</span><span class="st">"$h$"</span>, ylabel<span class="op">=</span><span class="st">"error"</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p>The exponents are computed from the integer counter <code>k</code>, as in the time loop of Exercise 1, instead of adding 0.25 repeatedly. <code>ax.loglog</code> plots with logarithmic axes; <code>"."</code> draws dots, <code>"k--"</code> a black (k) dashed line, <code>lw</code> is the line width.</p>
+<p><a href="#fig-roundoff" class="quarto-xref">Figure&nbsp;<span>3.1</span></a> confirms the estimates: the error of the forward difference stops decreasing near <span class="math inline">\(h = 10^{-8}\)</span>, at about <span class="math inline">\(10^{-8}\)</span>, that of the central difference near <span class="math inline">\(h = 10^{-5}\)</span>, at about <span class="math inline">\(10^{-11}\)</span>. Single points can lie lower, where the rounding errors happen to cancel; the estimates are bounds for the typical error. Left of the optimum the error grows like <span class="math inline">\(1/h\)</span> and scatters, because the rounding errors <span class="math inline">\(\delta_1\)</span>, <span class="math inline">\(\delta_2\)</span> vary irregularly from one <span class="math inline">\(h\)</span> to the next. The figure has two lessons. First, a higher order gives a smaller error for the same step and is less affected by round-off. Second, in a convergence test the step must be neither so large that higher-order terms disturb the slope nor so small that round-off dominates.</p>
+</section>
+<section id="stencils-of-any-order" class="level3" data-number="3.1.7">
+<h3 data-number="3.1.7" class="anchored" data-anchor-id="stencils-of-any-order"><span class="header-section-number">3.1.7</span> Stencils of any order</h3>
+<p>The points used by a difference formula form its <strong>stencil</strong>. Formulas for any stencil and any derivative follow from one recipe, the method of undetermined coefficients. We look for weights <span class="math inline">\(w_j\)</span> such that</p>
+<p><span class="math display">\[
+\sum_j w_j \, u(x + s_j h) \approx u^{(m)}(x),
+\]</span></p>
+<p>where the offsets <span class="math inline">\(s_j\)</span> define the stencil.</p>
+<p><strong>Worked example.</strong> We want the first derivative at a boundary point <span class="math inline">\(x\)</span>, where only the points <span class="math inline">\(x\)</span>, <span class="math inline">\(x + h\)</span> and <span class="math inline">\(x + 2h\)</span> are available: offsets <span class="math inline">\(s = (0, 1, 2)\)</span>. We write the Taylor series of the three values,</p>
+<p><span class="math display">\[
+\begin{aligned}
+u(x) &amp;= u(x), \\
+u(x + h) &amp;= u(x) + h \, u'(x) + \tfrac12 h^2 u''(x) + \tfrac16 h^3 u'''(x) + \dots, \\
+u(x + 2h) &amp;= u(x) + 2h \, u'(x) + \tfrac{(2h)^2}{2} u''(x) + \tfrac{(2h)^3}{6} u'''(x) + \dots \\
+&amp;= u(x) + 2h \, u'(x) + 2 h^2 u''(x) + \tfrac86 h^3 u'''(x) + \dots ,
+\end{aligned}
+\]</span></p>
+<p>and collect, for each derivative of <span class="math inline">\(u\)</span>, the factor with which it appears:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><span class="math inline">\(u(x)\)</span></th>
+<th><span class="math inline">\(h \, u'(x)\)</span></th>
+<th><span class="math inline">\(h^2 u''(x)\)</span></th>
+<th><span class="math inline">\(h^3 u'''(x)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(u(x)\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u(x + h)\)</span></td>
+<td>1</td>
+<td>1</td>
+<td><span class="math inline">\(\tfrac12\)</span></td>
+<td><span class="math inline">\(\tfrac16\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u(x + 2h)\)</span></td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+<td><span class="math inline">\(\tfrac86\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The combination <span class="math inline">\(w_0 u(x) + w_1 u(x + h) + w_2 u(x + 2h)\)</span> therefore contains <span class="math inline">\(u\)</span> with the factor <span class="math inline">\(w_0 + w_1 + w_2\)</span>, <span class="math inline">\(h u'\)</span> with the factor <span class="math inline">\(w_1 + 2 w_2\)</span>, and so on: each column, multiplied by the weights and summed. With three weights we can impose three conditions. The sum shall contain <span class="math inline">\(u'(x)\)</span> exactly once and neither <span class="math inline">\(u\)</span> nor <span class="math inline">\(u''\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+w_0 + w_1 + w_2 &amp;= 0 &amp;&amp; \text{(no } u \text{)} \\
+w_1 + 2 w_2 &amp;= \tfrac{1}{h} &amp;&amp; \text{(} h u' \text{ with factor } \tfrac1h \text{, that is } u' \text{ once)} \\
+\tfrac12 w_1 + 2 w_2 &amp;= 0 &amp;&amp; \text{(no } u'' \text{)}
+\end{aligned}
+\]</span></p>
+<p>Subtracting the third equation from the second gives <span class="math inline">\(\tfrac12 w_1 = \tfrac1h\)</span>, hence <span class="math inline">\(w_1 = \tfrac{2}{h}\)</span>. The third equation then gives <span class="math inline">\(2 w_2 = -\tfrac12 w_1 = -\tfrac1h\)</span>, hence <span class="math inline">\(w_2 = -\tfrac{1}{2h}\)</span>, and the first <span class="math inline">\(w_0 = -w_1 - w_2 = -\tfrac{3}{2h}\)</span>.</p>
+<p>The leading error comes from the last column, which was not controlled:</p>
+<p><span class="math display">\[
+\left( \tfrac16 w_1 + \tfrac86 w_2 \right) h^3 u'''
+= \left( \tfrac{1}{3h} - \tfrac{2}{3h} \right) h^3 u'''
+= -\tfrac13 h^2 u''' .
+\]</span></p>
+<p>The weighted sum is thus <span class="math inline">\(u'(x) - \tfrac13 h^2 u'''(x) + \dots\)</span>. Solving for <span class="math inline">\(u'(x)\)</span> gives the one-sided formula of second order,</p>
+<p><span id="eq-fd-onesided"><span class="math display">\[
+u'(x) = \frac{-3 u(x) + 4 u(x + h) - u(x + 2h)}{2h} + \frac{h^2}{3} u'''(x) + \dots
+\tag{3.9}\]</span></span></p>
+<p>It is needed at boundaries, where no neighbour exists on one side (Chapter 9). Its error constant, <span class="math inline">\(\tfrac13\)</span>, is twice that of the central difference: one-sided formulas are less accurate than central ones of the same order.</p>
+<p><strong>The general recipe.</strong> For offsets <span class="math inline">\(s_0, \dots, s_{n-1}\)</span> the Taylor series of each value is <span class="math inline">\(u(x + s_j h) = \sum_k \frac{(s_j h)^k}{k!} u^{(k)}(x)\)</span>. The weighted sum is</p>
+<p><span class="math display">\[
+\sum_j w_j \, u(x + s_j h) = \sum_k \left( \sum_j w_j \, s_j^k \right) \frac{h^k}{k!} u^{(k)}(x) .
+\]</span></p>
+<p>It equals <span class="math inline">\(u^{(m)}(x)\)</span> up to terms with <span class="math inline">\(k \ge n\)</span> if the bracket is <span class="math inline">\(m! / h^m\)</span> for <span class="math inline">\(k = m\)</span> and zero for all other <span class="math inline">\(k = 0, \dots, n - 1\)</span>. These are <span class="math inline">\(n\)</span> linear equations for the <span class="math inline">\(n\)</span> weights,</p>
+<p><span id="eq-stencil-system"><span class="math display">\[
+\sum_{j=0}^{n-1} s_j^k \, w_j = \begin{cases} m! / h^m, &amp; k = m, \\ 0, &amp; k \ne m, \end{cases}
+\qquad k = 0, \dots, n - 1 .
+\tag{3.10}\]</span></span></p>
+<p>For <span class="math inline">\(s = (0, 1, 2)\)</span> and <span class="math inline">\(m = 1\)</span> these are exactly the three equations of the worked example. The weights scale with <span class="math inline">\(1 / h^m\)</span>, so it suffices to compute them for <span class="math inline">\(h = 1\)</span> and divide by <span class="math inline">\(h^m\)</span>. A more efficient algorithm for the same task is due to <span class="citation" data-cites="fornberg1988">Fornberg (<a href="references.html#ref-fornberg1988" role="doc-biblioref">1988</a>)</span>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Step by step</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Compact</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div id="19737cb7" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> factorial          <span class="co"># factorial(3) = 3 * 2 * 1 = 6</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stencil_weights(offsets, m):</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># weights for the m-th derivative on the given offsets, for h = 1</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(offsets)                <span class="co"># number of stencil points</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> np.zeros((n, n))            <span class="co"># n x n matrix filled with zeros</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> np.zeros(n)                 <span class="co"># right hand side, n zeros</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(n):              <span class="co"># row k: condition for the k-th derivative</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n):          <span class="co"># column j: stencil point j</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>            A[k, j] <span class="op">=</span> offsets[j] <span class="op">**</span> k</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> k <span class="op">==</span> m:</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>            b[k] <span class="op">=</span> factorial(m)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    w <span class="op">=</span> np.linalg.solve(A, b)       <span class="co"># solve the linear system A w = b</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> w</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"central, 1st derivative:  "</span>, stencil_weights([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], <span class="dv">1</span>))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"central, 2nd derivative:  "</span>, stencil_weights([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], <span class="dv">2</span>))</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"one-sided, 1st derivative:"</span>, stencil_weights([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], <span class="dv">1</span>))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> stencil_weights([<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], <span class="dv">1</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"5 points, 1st derivative: "</span>, w.<span class="bu">round</span>(<span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>central, 1st derivative:   [-0.5  0.   0.5]
+central, 2nd derivative:   [ 1. -2.  1.]
+one-sided, 1st derivative: [-1.5  2.  -0.5]
+5 points, 1st derivative:  [ 0.0833 -0.6667  0.      0.6667 -0.0833]</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div id="9e6d7a02" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> math <span class="im">import</span> factorial</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stencil_weights(offsets, m):</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> np.asarray(offsets, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> np.vander(s, increasing<span class="op">=</span><span class="va">True</span>).T          <span class="co"># A[k, j] = s[j]**k</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> np.zeros(s.size)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    b[m] <span class="op">=</span> factorial(m)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.linalg.solve(A, b)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>cases <span class="op">=</span> [([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], <span class="dv">1</span>), ([<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], <span class="dv">2</span>), ([<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], <span class="dv">1</span>), ([<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], <span class="dv">1</span>)]</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> offsets, m <span class="kw">in</span> cases:</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>offsets<span class="sc">}</span><span class="ss">, derivative </span><span class="sc">{</span>m<span class="sc">}</span><span class="ss">:"</span>, stencil_weights(offsets, m).<span class="bu">round</span>(<span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[-1, 0, 1], derivative 1: [-0.5  0.   0.5]
+[-1, 0, 1], derivative 2: [ 1. -2.  1.]
+[0, 1, 2], derivative 1: [-1.5  2.  -0.5]
+[-2, -1, 0, 1, 2], derivative 1: [ 0.0833 -0.6667  0.      0.6667 -0.0833]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The first three results reproduce <a href="#eq-fd-central" class="quarto-xref">Equation&nbsp;<span>3.5</span></a>, <a href="#eq-fd-second" class="quarto-xref">Equation&nbsp;<span>3.6</span></a> and <a href="#eq-fd-onesided" class="quarto-xref">Equation&nbsp;<span>3.9</span></a> (weights <span class="math inline">\(-\tfrac12, 0, \tfrac12\)</span>; <span class="math inline">\(1, -2, 1\)</span>; <span class="math inline">\(-\tfrac32, 2, -\tfrac12\)</span>). The fourth, <span class="math inline">\(\tfrac{1}{12}(1, -8, 0, 8, -1)\)</span>, cancels one more pair of terms and has order four. Wider stencils give higher order, at the price of more work per point and of difficulties near boundaries.</p>
+<p><strong>New Python.</strong> <code>def name(arguments):</code> defines a <strong>function</strong>: the indented lines are executed when the function is called, and <code>return</code> hands back the result. <code>np.zeros((n, n))</code> creates an <span class="math inline">\(n \times n\)</span> array of zeros, and <code>A[k, j]</code> is its entry in row <code>k</code> and column <code>j</code>, both counted from 0. The two <code>for</code> loops are <strong>nested</strong>: for each <code>k</code> the inner loop runs through all <code>j</code>. <code>np.linalg.solve(A, b)</code> solves the linear system <span class="math inline">\(A \vec w = \vec b\)</span>; how this is done is the subject of the next unit. Note that Python computes <code>0 ** 0</code> as 1, as the first row of <a href="#eq-stencil-system" class="quarto-xref">Equation&nbsp;<span>3.10</span></a> requires.</p>
+</section>
+</section>
+<section id="interpolation" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="interpolation"><span class="header-section-number">3.2</span> Interpolation</h2>
+<p>Interpolation constructs a function that passes through given data points <span class="math inline">\((x_j, u_j)\)</span>. Models need it all the time: to obtain a value between grid points, to transfer fields between different grids, to find the value at the departure point of an air parcel (Chapter 14).</p>
+<section id="linear-interpolation" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="linear-interpolation"><span class="header-section-number">3.2.1</span> Linear interpolation</h3>
+<p>Between two neighbours <span class="math inline">\(x_j\)</span> and <span class="math inline">\(x_{j+1} = x_j + h\)</span> the straight line through the two data points is</p>
+<p><span id="eq-linear-interpolation"><span class="math display">\[
+p(x) = u_j + \frac{u_{j+1} - u_j}{h} (x - x_j) .
+\tag{3.11}\]</span></span></p>
+<p>At <span class="math inline">\(x = x_j\)</span> it gives <span class="math inline">\(u_j\)</span>, at <span class="math inline">\(x = x_{j+1}\)</span> it gives <span class="math inline">\(u_j + (u_{j+1} - u_j) = u_{j+1}\)</span>. The special case at the midpoint, <span class="math inline">\(x - x_j = h/2\)</span>, is the average <span class="math inline">\(\tfrac12 (u_j + u_{j+1})\)</span>, which is used whenever a value is needed half-way between grid points.</p>
+<p>How large is the error? For a polynomial <span class="math inline">\(p\)</span> of degree <span class="math inline">\(n\)</span> through <span class="math inline">\(n + 1\)</span> points <span class="math inline">\(x_0, \dots, x_n\)</span> the interpolation error is</p>
+<p><span id="eq-interpolation-error"><span class="math display">\[
+u(x) - p(x) = \frac{u^{(n+1)}(\xi)}{(n + 1)!} \prod_{j=0}^{n} (x - x_j)
+\tag{3.12}\]</span></span></p>
+<p>for some <span class="math inline">\(\xi\)</span> in the interval that contains <span class="math inline">\(x\)</span> and the data points.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Derivation of the interpolation error
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>At a data point both sides are zero. Fix an <span class="math inline">\(x\)</span> that is not a data point and write <span class="math inline">\(w(t) = \prod_{j=0}^{n} (t - x_j)\)</span>, a polynomial of degree <span class="math inline">\(n + 1\)</span> with leading term <span class="math inline">\(t^{n+1}\)</span>. The function</p>
+<p><span class="math display">\[
+g(t) = u(t) - p(t) - \frac{u(x) - p(x)}{w(x)} \, w(t)
+\]</span></p>
+<p>is zero at the <span class="math inline">\(n + 1\)</span> data points, because there <span class="math inline">\(u = p\)</span> and <span class="math inline">\(w = 0\)</span>, and also at <span class="math inline">\(t = x\)</span>, where the last term equals <span class="math inline">\(u(x) - p(x)\)</span>. It has <span class="math inline">\(n + 2\)</span> zeros. Between two zeros of a smooth function its derivative has a zero (Rolle’s theorem). Hence <span class="math inline">\(g'\)</span> has at least <span class="math inline">\(n + 1\)</span> zeros, <span class="math inline">\(g''\)</span> at least <span class="math inline">\(n\)</span>, and <span class="math inline">\(g^{(n+1)}\)</span> at least one, at some point <span class="math inline">\(\xi\)</span>. Now <span class="math inline">\(p^{(n+1)} = 0\)</span>, because <span class="math inline">\(p\)</span> has degree <span class="math inline">\(n\)</span>, and <span class="math inline">\(w^{(n+1)} = (n + 1)!\)</span>, because only the leading term <span class="math inline">\(t^{n+1}\)</span> survives <span class="math inline">\(n + 1\)</span> differentiations. Therefore</p>
+<p><span class="math display">\[
+0 = g^{(n+1)}(\xi) = u^{(n+1)}(\xi) - \frac{u(x) - p(x)}{w(x)} \, (n + 1)! ,
+\]</span></p>
+<p>which, solved for <span class="math inline">\(u(x) - p(x)\)</span>, is <a href="#eq-interpolation-error" class="quarto-xref">Equation&nbsp;<span>3.12</span></a>.</p>
+</div>
+</div>
+</div>
+<p>For the straight line, <span class="math inline">\(n = 1\)</span>, the error is <span class="math inline">\(\tfrac12 u''(\xi) \, (x - x_j)(x - x_{j+1})\)</span>. Writing <span class="math inline">\(t = x - x_j\)</span>, the product is <span class="math inline">\(t \, (t - h)\)</span> for <span class="math inline">\(0 \le t \le h\)</span>. Its derivative <span class="math inline">\(2t - h\)</span> vanishes at <span class="math inline">\(t = h/2\)</span>, the midpoint, where the product equals <span class="math inline">\(\tfrac{h}{2} \cdot \left( -\tfrac{h}{2} \right) = -\tfrac{h^2}{4}\)</span>. Hence</p>
+<p><span class="math display">\[
+|u(x) - p(x)| \le \frac12 \cdot \frac{h^2}{4} \max |u''| = \frac{h^2}{8} \max |u''| .
+\]</span></p>
+<p>Linear interpolation is of second order, and it is exact where the function has no curvature.</p>
+</section>
+<section id="polynomials-of-high-degree-and-the-runge-phenomenon" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="polynomials-of-high-degree-and-the-runge-phenomenon"><span class="header-section-number">3.2.2</span> Polynomials of high degree and the Runge phenomenon</h3>
+<p><strong>Polynomial interpolation</strong> passes a single polynomial of degree <span class="math inline">\(n\)</span> through <span class="math inline">\(n + 1\)</span> points. It can be written down directly in the Lagrange form</p>
+<p><span class="math display">\[
+p(x) = \sum_{j=0}^{n} u_j \, L_j(x), \qquad
+L_j(x) = \prod_{i \ne j} \frac{x - x_i}{x_j - x_i} .
+\]</span></p>
+<p>Each <span class="math inline">\(L_j\)</span> is a product of <span class="math inline">\(n\)</span> linear factors, a polynomial of degree <span class="math inline">\(n\)</span>. At <span class="math inline">\(x = x_j\)</span> every factor equals one, so <span class="math inline">\(L_j(x_j) = 1\)</span>. At any other data point <span class="math inline">\(x_i\)</span> the factor <span class="math inline">\((x - x_i)\)</span> is zero, so <span class="math inline">\(L_j(x_i) = 0\)</span>. In the sum for <span class="math inline">\(p(x_i)\)</span> therefore only the term <span class="math inline">\(j = i\)</span> survives, and <span class="math inline">\(p(x_i) = u_i\)</span>. For <span class="math inline">\(n = 1\)</span> the Lagrange form is <span class="math inline">\(p(x) = u_0 \frac{x - x_1}{x_0 - x_1} + u_1 \frac{x - x_0}{x_1 - x_0}\)</span>, which is <a href="#eq-linear-interpolation" class="quarto-xref">Equation&nbsp;<span>3.11</span></a> written differently.</p>
+<p>From <a href="#eq-interpolation-error" class="quarto-xref">Equation&nbsp;<span>3.12</span></a> one would expect the accuracy to improve with <span class="math inline">\(n\)</span>, because of the factor <span class="math inline">\(1 / (n + 1)!\)</span>. On equidistant points it does not. The product <span class="math inline">\(\prod (x - x_j)\)</span> is much larger near the ends of the interval than in the middle, and for many functions the derivatives <span class="math inline">\(u^{(n+1)}\)</span> grow faster than the factorial. The polynomial oscillates near the ends, and the oscillations grow with <span class="math inline">\(n\)</span>. This is the <strong>Runge phenomenon</strong>.</p>
+<p>There are two remedies. <strong>Piecewise interpolation</strong> uses polynomials of low degree between neighbouring points. <strong>Cubic splines</strong> are piecewise cubic polynomials that in addition make the first and second derivative continuous at the data points. Alternatively, the data points can be placed more densely near the ends, for example at the Chebyshev points <span class="math inline">\(x_j = \cos(j \pi / n)\)</span>; this keeps the product <span class="math inline">\(\prod (x - x_j)\)</span> small everywhere. Models rarely have this freedom: the grid is given.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Step by step</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Compact</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div id="cell-fig-runge" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.interpolate <span class="im">import</span> CubicSpline   <span class="co"># cubic splines from SciPy</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> runge(x):</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> <span class="dv">25</span> <span class="op">*</span> x<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lagrange(x_data, u_data, x):</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># value at x of the polynomial through the points (x_data, u_data)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    n_points <span class="op">=</span> <span class="bu">len</span>(x_data)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n_points):</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        L <span class="op">=</span> <span class="fl">1.0</span>                     <span class="co"># L_j(x), built up factor by factor</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_points):</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> i <span class="op">!=</span> j:              <span class="co"># != means "not equal"</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                L <span class="op">=</span> L <span class="op">*</span> (x <span class="op">-</span> x_data[i]) <span class="op">/</span> (x_data[j] <span class="op">-</span> x_data[i])</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> p <span class="op">+</span> u_data[j] <span class="op">*</span> L</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>x_data <span class="op">=</span> []                         <span class="co"># 11 equidistant data points in [-1, 1]</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>u_data <span class="op">=</span> []</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">11</span>):</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    x_data.append(<span class="op">-</span><span class="dv">1</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">*</span> j)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    u_data.append(runge(<span class="op">-</span><span class="dv">1</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">*</span> j))</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>spline <span class="op">=</span> CubicSpline(x_data, u_data)        <span class="co"># the spline through the data</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>x_fine <span class="op">=</span> []                         <span class="co"># 401 points for drawing the curves</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>u_exact <span class="op">=</span> []</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>u_polynomial <span class="op">=</span> []</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>u_spline <span class="op">=</span> []</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">401</span>):</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="op">-</span><span class="dv">1</span> <span class="op">+</span> <span class="fl">0.005</span> <span class="op">*</span> k</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    x_fine.append(x)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    u_exact.append(runge(x))</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    u_polynomial.append(lagrange(x_data, u_data, x))</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    u_spline.append(spline(x))</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.5</span>))</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>ax.plot(x_fine, u_exact, <span class="st">"k"</span>, label<span class="op">=</span><span class="st">"function"</span>)</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>ax.plot(x_fine, u_polynomial, label<span class="op">=</span><span class="st">"polynomial, degree 10"</span>)</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>ax.plot(x_fine, u_spline, <span class="st">"--"</span>, label<span class="op">=</span><span class="st">"cubic spline"</span>)</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>ax.plot(x_data, u_data, <span class="st">"ko"</span>, ms<span class="op">=</span><span class="dv">4</span>)         <span class="co"># data points as black circles</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$x$"</span>)</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-runge" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-runge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-numerical-toolbox_files/figure-html/fig-runge-output-1.png" width="496" height="319" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-runge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.2: Interpolation of <span class="math inline">\(1 / (1 + 25 x^2)\)</span> through 11 equidistant points. The polynomial of degree 10 oscillates near the ends; the cubic spline does not.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div id="6da76c97" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.interpolate <span class="im">import</span> BarycentricInterpolator, CubicSpline</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>runge <span class="op">=</span> <span class="kw">lambda</span> x: <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> <span class="dv">25</span> <span class="op">*</span> x<span class="op">**</span><span class="dv">2</span>)       <span class="co"># a function in one line</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>x_data <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">11</span>)             <span class="co"># 11 equidistant points</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>x_fine <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">401</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>polynomial <span class="op">=</span> BarycentricInterpolator(x_data, runge(x_data))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>spline <span class="op">=</span> CubicSpline(x_data, runge(x_data))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="fl">3.5</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>ax.plot(x_fine, runge(x_fine), <span class="st">"k"</span>, label<span class="op">=</span><span class="st">"function"</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>ax.plot(x_fine, polynomial(x_fine), label<span class="op">=</span><span class="st">"polynomial, degree 10"</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>ax.plot(x_fine, spline(x_fine), <span class="st">"--"</span>, label<span class="op">=</span><span class="st">"cubic spline"</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>ax.plot(x_data, runge(x_data), <span class="st">"ko"</span>, ms<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"$x$"</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p>The step-by-step function <code>lagrange</code> is a direct transcription of the Lagrange form. The cubic spline requires solving a linear system for the second derivatives at the data points; we take it from the library SciPy. <code>CubicSpline(x_data, u_data)</code> returns an object that can be called like a function. The compact version uses <code>BarycentricInterpolator</code>, a numerically more stable way to evaluate the same polynomial.</p>
+<p>The lesson reaches beyond interpolation. Accuracy is improved reliably by refining the grid with a method of fixed, moderate order. Raising the order on a fixed grid works only under special conditions (Chapter 20).</p>
+</section>
+</section>
+<section id="quadrature" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="quadrature"><span class="header-section-number">3.3</span> Quadrature</h2>
+<p>Quadrature approximates an integral by a weighted sum of function values. The interval <span class="math inline">\([a, b]\)</span> is divided into <span class="math inline">\(N\)</span> subintervals of width <span class="math inline">\(h = (b - a)/N\)</span>, and on each the integrand is replaced by a polynomial.</p>
+<section id="midpoint-and-trapezoidal-rule" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="midpoint-and-trapezoidal-rule"><span class="header-section-number">3.3.1</span> Midpoint and trapezoidal rule</h3>
+<p>Consider one subinterval of width <span class="math inline">\(h\)</span> with midpoint <span class="math inline">\(m\)</span>. We expand the integrand around the midpoint, <span class="math inline">\(f(m + s) = f(m) + s f'(m) + \tfrac12 s^2 f''(m) + \tfrac16 s^3 f'''(m) + \dots\)</span>, and integrate term by term from <span class="math inline">\(s = -h/2\)</span> to <span class="math inline">\(s = h/2\)</span>. The terms with odd powers of <span class="math inline">\(s\)</span> are odd functions and integrate to zero over the symmetric interval. For the others,</p>
+<p><span class="math display">\[
+\int_{-h/2}^{h/2} 1 \, \mathrm{d}s = h, \qquad
+\int_{-h/2}^{h/2} s^2 \, \mathrm{d}s = \left[ \frac{s^3}{3} \right]_{-h/2}^{h/2} = \frac{2}{3} \left( \frac{h}{2} \right)^3 = \frac{h^3}{12} .
+\]</span></p>
+<p>Hence</p>
+<p><span id="eq-midpoint"><span class="math display">\[
+\int_{m - h/2}^{m + h/2} f(x) \, \mathrm{d}x
+= h \, f(m) + \frac{f''(m)}{2} \cdot \frac{h^3}{12} + O(h^5)
+= \underbrace{h \, f(m)}_{\text{midpoint rule}} + \frac{h^3}{24} f''(m) + O(h^5) .
+\tag{3.13}\]</span></span></p>
+<p>The <strong>trapezoidal rule</strong> uses the two end points instead. From the same expansion at <span class="math inline">\(s = \pm h/2\)</span>, <span class="math inline">\(f(m \pm \tfrac{h}{2}) = f(m) \pm \tfrac{h}{2} f'(m) + \tfrac{h^2}{8} f''(m) \pm \dots\)</span>, so that in the sum of the two the <span class="math inline">\(f'\)</span> terms cancel:</p>
+<p><span class="math display">\[
+f\!\left(m - \tfrac{h}{2}\right) + f\!\left(m + \tfrac{h}{2}\right) = 2 f(m) + \frac{h^2}{4} f''(m) + O(h^4),
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\frac{h}{2} \left[ f\!\left(m - \tfrac{h}{2}\right) + f\!\left(m + \tfrac{h}{2}\right) \right]
+= h \, f(m) + \frac{h^3}{8} f''(m) + O(h^5) .
+\]</span></p>
+<p>We replace <span class="math inline">\(h f(m)\)</span> with <a href="#eq-midpoint" class="quarto-xref">Equation&nbsp;<span>3.13</span></a>, <span class="math inline">\(h f(m) = \int f \, \mathrm{d}x - \tfrac{h^3}{24} f''(m)\)</span>:</p>
+<p><span class="math display">\[
+\frac{h}{2} \left[ \dots \right] = \int f \, \mathrm{d}x - \frac{h^3}{24} f''(m) + \frac{h^3}{8} f''(m)
+= \int f \, \mathrm{d}x + \frac{h^3}{12} f''(m) ,
+\]</span></p>
+<p>since <span class="math inline">\(\tfrac18 - \tfrac1{24} = \tfrac{3 - 1}{24} = \tfrac1{12}\)</span>. Solved for the integral,</p>
+<p><span id="eq-trapezoidal"><span class="math display">\[
+\int_{m - h/2}^{m + h/2} f(x) \, \mathrm{d}x
+= \underbrace{\frac{h}{2} \left[ f\!\left(m - \tfrac{h}{2}\right) + f\!\left(m + \tfrac{h}{2}\right) \right]}_{\text{trapezoidal rule}} - \frac{h^3}{12} f''(m) + O(h^5) .
+\tag{3.14}\]</span></span></p>
+<p><strong>Composite rules.</strong> On the whole interval we sum over the <span class="math inline">\(N\)</span> subintervals with midpoints <span class="math inline">\(m_i = a + (i + \tfrac12) h\)</span>, <span class="math inline">\(i = 0, \dots, N - 1\)</span>, and end points <span class="math inline">\(x_i = a + i h\)</span>, <span class="math inline">\(i = 0, \dots, N\)</span>. The composite midpoint rule is <span class="math inline">\(h \sum_i f(m_i)\)</span>. In the composite trapezoidal rule every interior point <span class="math inline">\(x_1, \dots, x_{N-1}\)</span> is the end point of two subintervals and appears twice with the weight <span class="math inline">\(h/2\)</span>:</p>
+<p><span class="math display">\[
+T_N = h \left[ \tfrac12 f(x_0) + f(x_1) + \dots + f(x_{N-1}) + \tfrac12 f(x_N) \right] .
+\]</span></p>
+<p>The local errors add up. For the midpoint rule</p>
+<p><span class="math display">\[
+\sum_{i=0}^{N-1} \frac{h^3}{24} f''(m_i) = \frac{h^2}{24} \sum_{i=0}^{N-1} h \, f''(m_i)
+\approx \frac{h^2}{24} \int_a^b f''(x) \, \mathrm{d}x = \frac{h^2}{24} \big[ f'(b) - f'(a) \big] ,
+\]</span></p>
+<p>because <span class="math inline">\(\sum_i h f''(m_i)\)</span> is itself the midpoint rule for <span class="math inline">\(\int f''\)</span>. The same argument for the trapezoidal rule gives <span class="math inline">\(-\tfrac{h^2}{12} \big[ f'(b) - f'(a) \big]\)</span>. Each subinterval contributes <span class="math inline">\(O(h^3)\)</span>, but there are <span class="math inline">\(N = (b - a)/h\)</span> of them, so the composite error is <span class="math inline">\(O(h^2)\)</span>: both composite rules are of <strong>second order</strong>. The error of the trapezoidal rule is twice that of the midpoint rule and has the opposite sign.</p>
+<p>The composite error depends only on the derivative of <span class="math inline">\(f\)</span> at the two end points. If <span class="math inline">\(f\)</span> is periodic and the interval is one period, <span class="math inline">\(f'(b) = f'(a)\)</span> and the <span class="math inline">\(h^2\)</span> term vanishes. A more complete analysis (the Euler–Maclaurin formula) shows that the same holds for all higher terms, which contain <span class="math inline">\(f'''(b) - f'''(a)\)</span>, <span class="math inline">\(f^{(5)}(b) - f^{(5)}(a)\)</span>, and so on. For smooth periodic functions the trapezoidal rule is therefore extremely accurate.</p>
+</section>
+<section id="simpsons-rule" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="simpsons-rule"><span class="header-section-number">3.3.2</span> Simpson’s rule</h3>
+<p>Opposite signs again invite a combination. Taking two thirds of <a href="#eq-midpoint" class="quarto-xref">Equation&nbsp;<span>3.13</span></a> and one third of <a href="#eq-trapezoidal" class="quarto-xref">Equation&nbsp;<span>3.14</span></a>,</p>
+<p><span class="math display">\[
+\tfrac23 \left( \int f - \tfrac{h^3}{24} f'' \right) + \tfrac13 \left( \int f + \tfrac{h^3}{12} f'' \right)
+= \int f + \left( -\tfrac{2}{72} + \tfrac{1}{36} \right) h^3 f'' = \int f ,
+\]</span></p>
+<p>the <span class="math inline">\(h^3\)</span> terms cancel. In function values, the combination is</p>
+<p><span class="math display">\[
+\tfrac23 h \, f(m) + \tfrac13 \cdot \tfrac{h}{2} \left[ f\!\left(m - \tfrac{h}{2}\right) + f\!\left(m + \tfrac{h}{2}\right) \right]
+= \frac{h}{6} \left[ f\!\left(m - \tfrac{h}{2}\right) + 4 f(m) + f\!\left(m + \tfrac{h}{2}\right) \right] ,
+\]</span></p>
+<p>which is <strong>Simpson’s rule</strong>:</p>
+<p><span class="math display">\[
+\int_{m - h/2}^{m + h/2} f(x) \, \mathrm{d}x \approx
+\frac{h}{6} \left[ f\!\left(m - \tfrac{h}{2}\right) + 4 f(m) + f\!\left(m + \tfrac{h}{2}\right) \right] .
+\]</span></p>
+<p>The next terms of both rules are odd powers of <span class="math inline">\(s\)</span>, which vanish, and terms with <span class="math inline">\(h^5\)</span>. The local error of Simpson’s rule is therefore <span class="math inline">\(O(h^5)\)</span>, and its composite form is of <strong>fourth order</strong>. Many textbooks write Simpson’s rule with the distance <span class="math inline">\(\hat h = h/2\)</span> between neighbouring points, <span class="math inline">\(\tfrac{\hat h}{3} [f_0 + 4 f_1 + f_2]\)</span>; this is the same formula.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Rule</th>
+<th>On one subinterval</th>
+<th>Error of the composite rule</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Midpoint</td>
+<td><span class="math inline">\(h \, f(m)\)</span></td>
+<td><span class="math inline">\(O(h^2)\)</span></td>
+</tr>
+<tr class="even">
+<td>Trapezoidal</td>
+<td><span class="math inline">\(\tfrac{h}{2} \left[ f(m - \tfrac{h}{2}) + f(m + \tfrac{h}{2}) \right]\)</span></td>
+<td><span class="math inline">\(O(h^2)\)</span></td>
+</tr>
+<tr class="odd">
+<td>Simpson</td>
+<td><span class="math inline">\(\tfrac{h}{6} \left[ f(m - \tfrac{h}{2}) + 4 f(m) + f(m + \tfrac{h}{2}) \right]\)</span></td>
+<td><span class="math inline">\(O(h^4)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>We test the three rules on <span class="math inline">\(\int_0^1 e^x \, \mathrm{d}x = e - 1\)</span> with <span class="math inline">\(N = 4, 8, 16, 32\)</span>. Since <span class="math inline">\(N\)</span> doubles, <span class="math inline">\(h\)</span> halves, and the observed order is <span class="math inline">\(\log_2\)</span> of the ratio of successive errors.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Step by step</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Compact</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div id="849e81ec" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> midpoint(f, a, b, n):</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> (b <span class="op">-</span> a) <span class="op">/</span> n                 <span class="co"># width of a subinterval</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):              <span class="co"># subintervals i = 0, ..., n-1</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        m <span class="op">=</span> a <span class="op">+</span> (i <span class="op">+</span> <span class="fl">0.5</span>) <span class="op">*</span> h       <span class="co"># midpoint of subinterval i</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        total <span class="op">=</span> total <span class="op">+</span> f(m)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">*</span> total</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> trapezoidal(f, a, b, n):</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> (b <span class="op">-</span> a) <span class="op">/</span> n</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> f(a) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> f(b) <span class="co"># the two end points count half</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):           <span class="co"># interior points i = 1, ..., n-1</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        total <span class="op">=</span> total <span class="op">+</span> f(a <span class="op">+</span> i <span class="op">*</span> h)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">*</span> total</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simpson(f, a, b, n):</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (<span class="dv">2</span> <span class="op">*</span> midpoint(f, a, b, n) <span class="op">+</span> trapezoidal(f, a, b, n)) <span class="op">/</span> <span class="dv">3</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>exact <span class="op">=</span> np.e <span class="op">-</span> <span class="dv">1</span>                    <span class="co"># integral of exp(x) from 0 to 1</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>n_list <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">16</span>, <span class="dv">32</span>]</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>error_m <span class="op">=</span> []</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>error_t <span class="op">=</span> []</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>error_s <span class="op">=</span> []</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> n_list:</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    error_m.append(<span class="bu">abs</span>(midpoint(np.exp, <span class="dv">0</span>, <span class="dv">1</span>, n) <span class="op">-</span> exact))</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    error_t.append(<span class="bu">abs</span>(trapezoidal(np.exp, <span class="dv">0</span>, <span class="dv">1</span>, n) <span class="op">-</span> exact))</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    error_s.append(<span class="bu">abs</span>(simpson(np.exp, <span class="dv">0</span>, <span class="dv">1</span>, n) <span class="op">-</span> exact))</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" N   midpoint  order   trapezoid  order   Simpson   order"</span>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(n_list)):</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>    p_m <span class="op">=</span> np.log2(error_m[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> error_m[i])  <span class="co"># h halved: order = log2(ratio)</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>    p_t <span class="op">=</span> np.log2(error_t[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> error_t[i])</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>    p_s <span class="op">=</span> np.log2(error_s[i <span class="op">-</span> <span class="dv">1</span>] <span class="op">/</span> error_s[i])</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>n_list[i]<span class="sc">:2d}</span><span class="ss"> </span><span class="sc">{</span>error_m[i]<span class="sc">:9.2e}</span><span class="ss"> </span><span class="sc">{</span>p_m<span class="sc">:5.2f}</span><span class="ss">"</span>,</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>error_t[i]<span class="sc">:9.2e}</span><span class="ss"> </span><span class="sc">{</span>p_t<span class="sc">:5.2f}</span><span class="ss">  </span><span class="sc">{</span>error_s[i]<span class="sc">:9.2e}</span><span class="ss"> </span><span class="sc">{</span>p_s<span class="sc">:5.2f}</span><span class="ss">"</span>)</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>ratio <span class="op">=</span> error_t[<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> error_m[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"error trapezoidal / error midpoint for N = 32:"</span>, <span class="bu">round</span>(ratio, <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> N   midpoint  order   trapezoid  order   Simpson   order
+ 8  1.12e-03  2.00  2.24e-03  2.00   1.46e-07  4.00
+16  2.80e-04  2.00  5.59e-04  2.00   9.10e-09  4.00
+32  6.99e-05  2.00  1.40e-04  2.00   5.69e-10  4.00
+error trapezoidal / error midpoint for N = 32: 2.0</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div id="bdd3f893" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> midpoint(f, a, b, n):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> (b <span class="op">-</span> a) <span class="op">/</span> n</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h <span class="op">*</span> np.<span class="bu">sum</span>(f(a <span class="op">+</span> h <span class="op">*</span> (np.arange(n) <span class="op">+</span> <span class="fl">0.5</span>)))   <span class="co"># all midpoints at once</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> trapezoidal(f, a, b, n):</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(a, b, n <span class="op">+</span> <span class="dv">1</span>)                         <span class="co"># all n+1 end points</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (b <span class="op">-</span> a) <span class="op">/</span> n <span class="op">*</span> (<span class="fl">0.5</span> <span class="op">*</span> f(x[<span class="dv">0</span>]) <span class="op">+</span> np.<span class="bu">sum</span>(f(x[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>])) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> f(x[<span class="op">-</span><span class="dv">1</span>]))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simpson(f, a, b, n):</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (<span class="dv">2</span> <span class="op">*</span> midpoint(f, a, b, n) <span class="op">+</span> trapezoidal(f, a, b, n)) <span class="op">/</span> <span class="dv">3</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> np.array([<span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">16</span>, <span class="dv">32</span>])</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> rule <span class="kw">in</span> [midpoint, trapezoidal, simpson]:</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    errors <span class="op">=</span> np.array([<span class="bu">abs</span>(rule(np.exp, <span class="dv">0</span>, <span class="dv">1</span>, k) <span class="op">-</span> np.e <span class="op">+</span> <span class="dv">1</span>) <span class="cf">for</span> k <span class="kw">in</span> n])</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>rule<span class="sc">.</span><span class="va">__name__</span><span class="sc">:12s}</span><span class="ss"> error for N = 32: </span><span class="sc">{</span>errors[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.2e}</span><span class="ss">,"</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" observed order: </span><span class="sc">{</span>np<span class="sc">.</span>log2(errors[:<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> errors[<span class="dv">1</span>:])<span class="sc">.</span><span class="bu">round</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>midpoint     error for N = 32: 6.99e-05, observed order: [2. 2. 2.]
+trapezoidal  error for N = 32: 1.40e-04, observed order: [2. 2. 2.]
+simpson      error for N = 32: 5.69e-10, observed order: [4. 4. 4.]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The output confirms the orders, and also that the trapezoidal error is twice the midpoint error. A function can be handed to another function like a number: <code>midpoint(np.exp, 0, 1, n)</code> integrates <code>np.exp</code>, and inside <code>midpoint</code> it is called as <code>f(m)</code>. <code>np.log2</code> is the logarithm to base 2, and <code>error_t[-1]</code> is the last element of the list.</p>
+</section>
+<section id="where-quadrature-enters-prognostic-models" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="where-quadrature-enters-prognostic-models"><span class="header-section-number">3.3.3</span> Where quadrature enters prognostic models</h3>
+<ul>
+<li><strong>Time stepping.</strong> Integrating <span class="math inline">\(\mathrm{d}u / \mathrm{d}t = f(t, u)\)</span> over one time step gives <span class="math inline">\(u(t + \Delta t) = u(t) + \int_t^{t + \Delta t} f \, \mathrm{d}t\)</span>. Every time stepping scheme is a quadrature rule for this integral. Evaluating <span class="math inline">\(f\)</span> only at the start of the step, <span class="math inline">\(\int \approx \Delta t \, f(t, u(t))\)</span> (the left rectangle rule, of first order), gives the forward Euler scheme <a href="01-introduction.html#eq-decay-euler" class="quarto-xref">Equation&nbsp;<span>1.5</span></a>; the trapezoidal rule gives a scheme of second order (<a href="05-one-step-methods.html" class="quarto-xref"><span>Chapter 5</span></a>).</li>
+<li><strong>Finite volumes.</strong> The fluxes through the faces of a grid cell and the sources inside it are integrals (Chapter 9).</li>
+<li><strong>Finite elements.</strong> The entries of the system matrix are integrals over elements, evaluated with Gauss quadrature, which chooses the positions of the points as well as the weights (Chapter 19).</li>
+</ul>
+</section>
+</section>
+<section id="root-finding" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="root-finding"><span class="header-section-number">3.4</span> Root finding</h2>
+<p>Many steps of a model require the solution of a nonlinear equation <span class="math inline">\(f(x) = 0\)</span>: every step of an implicit time stepping scheme for a nonlinear problem, the saturation temperature of an air parcel, the water table in a soil column.</p>
+<p>As an example we take</p>
+<p><span class="math display">\[
+\tan \lambda + 2 \lambda = 0 .
+\]</span></p>
+<p>Equations of this kind determine the eigenvalues of diffusion problems with Robin boundary conditions. The tangent has poles at <span class="math inline">\(\lambda = \pi/2, 3\pi/2, \dots\)</span>, where it jumps from <span class="math inline">\(+\infty\)</span> to <span class="math inline">\(-\infty\)</span>; a root finder would take such a sign change for a root. We therefore multiply by <span class="math inline">\(\cos \lambda\)</span> and solve the equivalent smooth equation</p>
+<p><span class="math display">\[
+f(\lambda) = \sin \lambda + 2 \lambda \cos \lambda = 0 .
+\]</span></p>
+<p>Its roots are those of the original equation, because at the poles, <span class="math inline">\(\cos \lambda = 0\)</span>, the new function equals <span class="math inline">\(\sin \lambda = \pm 1 \ne 0\)</span>. Reformulating a problem before solving it numerically is often the most effective step.</p>
+<p>The first positive root lies between <span class="math inline">\(\pi/2\)</span> and <span class="math inline">\(\pi\)</span>: there <span class="math inline">\(f(\pi/2) = \sin(\pi/2) = 1 &gt; 0\)</span> and <span class="math inline">\(f(\pi) = 2 \pi \cos \pi = -2\pi &lt; 0\)</span>. Newton’s method below also needs the derivative, which by the product rule is</p>
+<p><span class="math display">\[
+f'(\lambda) = \cos \lambda + 2 \cos \lambda - 2 \lambda \sin \lambda
+= 3 \cos \lambda - 2 \lambda \sin \lambda .
+\]</span></p>
+<section id="bisection" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="bisection"><span class="header-section-number">3.4.1</span> Bisection</h3>
+<p>If <span class="math inline">\(f\)</span> is continuous and <span class="math inline">\(f(a)\)</span> and <span class="math inline">\(f(b)\)</span> have opposite signs, there is a root in <span class="math inline">\([a, b]\)</span> (intermediate value theorem). Bisection evaluates <span class="math inline">\(f\)</span> at the midpoint <span class="math inline">\(c = (a + b)/2\)</span>. If <span class="math inline">\(f(a)\)</span> and <span class="math inline">\(f(c)\)</span> have opposite signs, the root lies in <span class="math inline">\([a, c]\)</span>, otherwise in <span class="math inline">\([c, b]\)</span>, and the method continues with that half.</p>
+<p>After <span class="math inline">\(k\)</span> iterations the interval that contains the root has the length <span class="math inline">\((b - a)/2^k\)</span>. Its midpoint, our estimate, is at most half of this length away from the root:</p>
+<p><span class="math display">\[
+e_k \le \frac{b - a}{2^{k+1}} .
+\]</span></p>
+<p>To reach a tolerance <span class="math inline">\(\tau\)</span> we need <span class="math inline">\((b - a)/2^{k+1} \le \tau\)</span>, that is <span class="math inline">\(2^{k+1} \ge (b - a)/\tau\)</span>, or after taking the logarithm to base 2,</p>
+<p><span class="math display">\[
+k \ge \log_2 \frac{b - a}{\tau} - 1 .
+\]</span></p>
+<p>For <span class="math inline">\(b - a = \pi/2\)</span> and <span class="math inline">\(\tau = 10^{-12}\)</span> this is <span class="math inline">\(k \ge 40.5 - 1\)</span>, that is 40 iterations. Each iteration gains one binary digit, and <span class="math inline">\(\log_2 10 \approx 3.3\)</span> iterations gain one decimal digit. This is <strong>linear convergence</strong>: the error bound is multiplied by a fixed factor, here <span class="math inline">\(\tfrac12\)</span>, in every iteration. The method cannot fail, but it is slow, and it does not extend to systems of equations.</p>
+</section>
+<section id="newtonraphson" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="newtonraphson"><span class="header-section-number">3.4.2</span> Newton–Raphson</h3>
+<p>Newton’s method uses the Taylor series <a href="#eq-taylor" class="quarto-xref">Equation&nbsp;<span>3.1</span></a>. At the current estimate <span class="math inline">\(x_k\)</span> we keep the first two terms,</p>
+<p><span class="math display">\[
+f(x_k + \delta) \approx f(x_k) + \delta \, f'(x_k) ,
+\]</span></p>
+<p>which is the tangent to <span class="math inline">\(f\)</span> at <span class="math inline">\(x_k\)</span>, and choose <span class="math inline">\(\delta\)</span> such that the right hand side is zero: <span class="math inline">\(\delta = -f(x_k) / f'(x_k)\)</span>. The next estimate is <span class="math inline">\(x_{k+1} = x_k + \delta\)</span>:</p>
+<p><span id="eq-newton-raphson"><span class="math display">\[
+x_{k+1} = x_k - \frac{f(x_k)}{f'(x_k)} .
+\tag{3.15}\]</span></span></p>
+<p>Geometrically, <span class="math inline">\(x_{k+1}\)</span> is the point where the tangent at <span class="math inline">\(x_k\)</span> crosses zero.</p>
+<p>How fast does it converge? Let <span class="math inline">\(r\)</span> be the root and <span class="math inline">\(e_k = x_k - r\)</span> the error. We expand <span class="math inline">\(f\)</span> around <span class="math inline">\(x_k\)</span> and evaluate at the root, now keeping the next term in the Lagrange form. The step from <span class="math inline">\(x_k\)</span> to <span class="math inline">\(r\)</span> is <span class="math inline">\(r - x_k = -e_k\)</span>:</p>
+<p><span class="math display">\[
+0 = f(r) = f(x_k) - e_k \, f'(x_k) + \frac{e_k^2}{2} f''(\xi) ,
+\]</span></p>
+<p>with <span class="math inline">\(\xi\)</span> between <span class="math inline">\(x_k\)</span> and <span class="math inline">\(r\)</span>. Dividing by <span class="math inline">\(f'(x_k)\)</span>,</p>
+<p><span class="math display">\[
+0 = \frac{f(x_k)}{f'(x_k)} - e_k + \frac{f''(\xi)}{2 f'(x_k)} \, e_k^2 ,
+\]</span></p>
+<p>and rearranging,</p>
+<p><span class="math display">\[
+e_k - \frac{f(x_k)}{f'(x_k)} = \frac{f''(\xi)}{2 f'(x_k)} \, e_k^2 .
+\]</span></p>
+<p>The left hand side is <span class="math inline">\(x_k - r - f(x_k)/f'(x_k) = x_{k+1} - r = e_{k+1}\)</span> by <a href="#eq-newton-raphson" class="quarto-xref">Equation&nbsp;<span>3.15</span></a>. Hence</p>
+<p><span id="eq-newton-convergence"><span class="math display">\[
+e_{k+1} = \frac{f''(\xi)}{2 f'(x_k)} \, e_k^2
+\approx \frac{f''(r)}{2 f'(r)} \, e_k^2 .
+\tag{3.16}\]</span></span></p>
+<p>The new error is proportional to the <em>square</em> of the old one: <strong>quadratic convergence</strong>. An error of <span class="math inline">\(10^{-3}\)</span> becomes <span class="math inline">\(10^{-6}\)</span> and then <span class="math inline">\(10^{-12}\)</span>; the number of correct digits doubles in every iteration. The argument requires <span class="math inline">\(f'(r) \ne 0\)</span>, a simple root. At a double root, where <span class="math inline">\(f\)</span> touches zero without crossing, <span class="math inline">\(f'(r) = 0\)</span> and Newton’s method converges only linearly.</p>
+<p>The code finds the first root with both methods. It then repeats five Newton steps from <span class="math inline">\(\lambda_0 = 2\)</span> and prints the error and the ratio <span class="math inline">\(e_{k+1} / e_k^2\)</span>, which according to <a href="#eq-newton-convergence" class="quarto-xref">Equation&nbsp;<span>3.16</span></a> should approach <span class="math inline">\(f''(r) / (2 f'(r))\)</span>, with <span class="math inline">\(f''(\lambda) = -5 \sin \lambda - 2 \lambda \cos \lambda\)</span>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">Step by step</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Compact</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div id="dc41e56c" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(lam):</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sin(lam) <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> lam <span class="op">*</span> np.cos(lam)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dfdlam(lam):                    <span class="co"># derivative of f</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">3</span> <span class="op">*</span> np.cos(lam) <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> lam <span class="op">*</span> np.sin(lam)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bisection(f, a, b, tol):</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    fa <span class="op">=</span> f(a)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> <span class="dv">0</span>                           <span class="co"># counts the iterations</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (b <span class="op">-</span> a) <span class="op">/</span> <span class="dv">2</span> <span class="op">&gt;</span> tol:        <span class="co"># midpoint not yet within tol of the root</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        c <span class="op">=</span> (a <span class="op">+</span> b) <span class="op">/</span> <span class="dv">2</span>             <span class="co"># midpoint</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        fc <span class="op">=</span> f(c)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> k <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> fa <span class="op">*</span> fc <span class="op">&lt;=</span> <span class="dv">0</span>:            <span class="co"># different signs: the root is in [a, c]</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>            b <span class="op">=</span> c</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:                       <span class="co"># same sign: the root is in [c, b]</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>            a <span class="op">=</span> c</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>            fa <span class="op">=</span> fc</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (a <span class="op">+</span> b) <span class="op">/</span> <span class="dv">2</span>, k           <span class="co"># return two values: the root and k</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> newton(f, dfdx, x, tol):</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    step <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> tol                  <span class="co"># any value &gt; tol, so that the loop starts</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="bu">abs</span>(step) <span class="op">&gt;</span> tol <span class="kw">and</span> k <span class="op">&lt;</span> <span class="dv">50</span>:   <span class="co"># stop after 50 iterations at most</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>        step <span class="op">=</span> <span class="op">-</span>f(x) <span class="op">/</span> dfdx(x)      <span class="co"># Newton step</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x <span class="op">+</span> step</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> k <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x, k</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>root_b, k_b <span class="op">=</span> bisection(f, np.pi <span class="op">/</span> <span class="dv">2</span>, np.pi, <span class="fl">1e-12</span>)   <span class="co"># receive both values</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>root_n, k_n <span class="op">=</span> newton(f, dfdlam, <span class="fl">2.0</span>, <span class="fl">1e-12</span>)</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"bisection: root = </span><span class="sc">{</span>root_b<span class="sc">:.12f}</span><span class="ss"> after </span><span class="sc">{</span>k_b<span class="sc">}</span><span class="ss"> iterations"</span>)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Newton:    root = </span><span class="sc">{</span>root_n<span class="sc">:.12f}</span><span class="ss"> after </span><span class="sc">{</span>k_n<span class="sc">}</span><span class="ss"> iterations"</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> root_n                          <span class="co"># the root, as reference</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>d2f <span class="op">=</span> <span class="op">-</span><span class="dv">5</span> <span class="op">*</span> np.sin(r) <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> r <span class="op">*</span> np.cos(r)   <span class="co"># second derivative f''(r)</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> d2f <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> dfdlam(r))</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>lam <span class="op">=</span> <span class="fl">2.0</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>error_old <span class="op">=</span> <span class="bu">abs</span>(lam <span class="op">-</span> r)</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">5</span>):</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>    lam <span class="op">=</span> lam <span class="op">-</span> f(lam) <span class="op">/</span> dfdlam(lam)</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>    error <span class="op">=</span> <span class="bu">abs</span>(lam <span class="op">-</span> r)</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>    ratio <span class="op">=</span> error <span class="op">/</span> error_old<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"iteration </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: error = </span><span class="sc">{</span>error<span class="sc">:.1e}</span><span class="ss">,  error / old error^2 = </span><span class="sc">{</span>ratio<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    error_old <span class="op">=</span> error</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"predicted ratio |f''(r) / (2 f'(r))| = </span><span class="sc">{</span><span class="bu">abs</span>(C)<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>bisection: root = 1.836597203152 after 40 iterations
+Newton:    root = 1.836597203152 after 5 iterations
+iteration 1: error = 8.8e-03,  error / old error^2 = 0.330
+iteration 2: error = 3.4e-05,  error / old error^2 = 0.438
+iteration 3: error = 5.2e-10,  error / old error^2 = 0.445
+iteration 4: error = 2.2e-16,  error / old error^2 = 836.237
+predicted ratio |f''(r) / (2 f'(r))| = 0.445</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div id="7839ad1c" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> root_scalar</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> lam: np.sin(lam) <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> lam <span class="op">*</span> np.cos(lam)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>dfdlam <span class="op">=</span> <span class="kw">lambda</span> lam: <span class="dv">3</span> <span class="op">*</span> np.cos(lam) <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> lam <span class="op">*</span> np.sin(lam)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> root_scalar(f, bracket<span class="op">=</span>[np.pi <span class="op">/</span> <span class="dv">2</span>, np.pi], method<span class="op">=</span><span class="st">"bisect"</span>, xtol<span class="op">=</span><span class="fl">1e-12</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> root_scalar(f, fprime<span class="op">=</span>dfdlam, x0<span class="op">=</span><span class="fl">2.0</span>, method<span class="op">=</span><span class="st">"newton"</span>, xtol<span class="op">=</span><span class="fl">1e-12</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"bisection: root = </span><span class="sc">{</span>b<span class="sc">.</span>root<span class="sc">:.12f}</span><span class="ss"> after </span><span class="sc">{</span>b<span class="sc">.</span>iterations<span class="sc">}</span><span class="ss"> iterations"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Newton:    root = </span><span class="sc">{</span>n<span class="sc">.</span>root<span class="sc">:.12f}</span><span class="ss"> after </span><span class="sc">{</span>n<span class="sc">.</span>iterations<span class="sc">}</span><span class="ss"> iterations"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>bisection: root = 1.836597203152 after 41 iterations
+Newton:    root = 1.836597203152 after 5 iterations</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The errors of the Newton iteration show the squaring predicted by <a href="#eq-newton-convergence" class="quarto-xref">Equation&nbsp;<span>3.16</span></a>: the exponent roughly doubles from one iteration to the next, and the ratio <span class="math inline">\(e_{k+1}/e_k^2\)</span> approaches the predicted value. Once the error reaches the round-off level of about <span class="math inline">\(10^{-16}\)</span> it cannot decrease further, and the ratio loses its meaning, as in the fourth iteration. SciPy’s bisection counts one iteration more than ours because it uses a slightly different stopping test. <code>while</code> conditions can be combined with <code>and</code>: the loop continues only while both are true. The second condition protects against an endless loop if the iteration does not converge. A function can <code>return</code> several values separated by commas; they are received as <code>root_b, k_b = ...</code>.</p>
+<p>The speed has a price, which is also visible in <a href="#eq-newton-convergence" class="quarto-xref">Equation&nbsp;<span>3.16</span></a>. Newton’s method needs the derivative. And it needs a starting value that is close enough: the argument assumed that <span class="math inline">\(e_k\)</span> is small, and where <span class="math inline">\(f'(x_k) \approx 0\)</span> the tangent is nearly horizontal and the next estimate is thrown far away. In practice the two methods are combined: bisection until the interval is small, then Newton. <code>scipy.optimize.root_scalar</code> offers such safeguarded methods, for example <code>method="brentq"</code>.</p>
+</section>
+<section id="newtons-method-for-systems" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="newtons-method-for-systems"><span class="header-section-number">3.4.3</span> Newton’s method for systems</h3>
+<p>Newton’s method is important for a further reason: it generalises to systems. For <span class="math inline">\(N\)</span> equations <span class="math inline">\(\vec F(\vec x) = 0\)</span> in <span class="math inline">\(N\)</span> unknowns, the Taylor series of each component <span class="math inline">\(F_i\)</span> to first order is</p>
+<p><span class="math display">\[
+F_i(\vec x_k + \delta \vec x) \approx F_i(\vec x_k) + \sum_{j=1}^{N} \frac{\partial F_i}{\partial x_j}(\vec x_k) \, \delta x_j ,
+\]</span></p>
+<p>or, in matrix form,</p>
+<p><span class="math display">\[
+\vec F(\vec x_k + \delta \vec x) \approx \vec F(\vec x_k) + J(\vec x_k) \, \delta \vec x ,
+\qquad J_{ij} = \frac{\partial F_i}{\partial x_j} ,
+\]</span></p>
+<p>with the <strong>Jacobian matrix</strong> <span class="math inline">\(J\)</span> in the place of the derivative. Setting the right hand side to zero gives a linear system for the update:</p>
+<p><span id="eq-newton-system"><span class="math display">\[
+J(\vec x_k) \, \delta \vec x = - \vec F(\vec x_k), \qquad \vec x_{k+1} = \vec x_k + \delta \vec x .
+\tag{3.17}\]</span></span></p>
+<p><strong>Example.</strong> The circle <span class="math inline">\(x^2 + y^2 = 4\)</span> and the hyperbola <span class="math inline">\(x y = 1\)</span> intersect in four points. With</p>
+<p><span class="math display">\[
+\vec F(x, y) = \begin{pmatrix} x^2 + y^2 - 4 \\ x y - 1 \end{pmatrix}, \qquad
+J(x, y) = \begin{pmatrix} 2x &amp; 2y \\ y &amp; x \end{pmatrix}
+\]</span></p>
+<p>and the starting point <span class="math inline">\((2, 0.5)\)</span>, Newton’s method finds the intersection near it. The exact value is <span class="math inline">\(x = \sqrt{2 + \sqrt 3} \approx 1.9319\)</span>, <span class="math inline">\(y = 1/x \approx 0.5176\)</span>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true" href="">Step by step</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false" href="">Compact</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div id="5748a96b" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>x, y <span class="op">=</span> <span class="fl">2.0</span>, <span class="fl">0.5</span>                     <span class="co"># starting point</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">6</span>):</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    F <span class="op">=</span> np.array([x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> y<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">4</span>,  <span class="co"># the two equations</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                  x <span class="op">*</span> y <span class="op">-</span> <span class="dv">1</span>])</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    J <span class="op">=</span> np.array([[<span class="dv">2</span> <span class="op">*</span> x, <span class="dv">2</span> <span class="op">*</span> y],   <span class="co"># the Jacobian matrix, row by row</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                  [y,     x    ]])</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> np.linalg.solve(J, <span class="op">-</span>F)  <span class="co"># solve J delta = -F</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">+</span> delta[<span class="dv">0</span>]</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> y <span class="op">+</span> delta[<span class="dv">1</span>]</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    error <span class="op">=</span> <span class="bu">abs</span>(x <span class="op">-</span> np.sqrt(<span class="dv">2</span> <span class="op">+</span> np.sqrt(<span class="dv">3</span>)))   <span class="co"># distance from the exact x</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"iteration </span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: x = </span><span class="sc">{</span>x<span class="sc">:.12f}</span><span class="ss">, y = </span><span class="sc">{</span>y<span class="sc">:.12f}</span><span class="ss">, error in x = </span><span class="sc">{</span>error<span class="sc">:.1e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>iteration 1: x = 1.933333333333, y = 0.516666666667, error in x = 1.5e-03
+iteration 2: x = 1.931852741096, y = 0.517637054822, error in x = 1.1e-06
+iteration 3: x = 1.931851652579, y = 0.517638090204, error in x = 8.0e-13
+iteration 4: x = 1.931851652578, y = 0.517638090205, error in x = 2.2e-16
+iteration 5: x = 1.931851652578, y = 0.517638090205, error in x = 0.0e+00</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div id="c4624531" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> root</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>F <span class="op">=</span> <span class="kw">lambda</span> v: [v[<span class="dv">0</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> v[<span class="dv">1</span>]<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">4</span>, v[<span class="dv">0</span>] <span class="op">*</span> v[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>J <span class="op">=</span> <span class="kw">lambda</span> v: [[<span class="dv">2</span> <span class="op">*</span> v[<span class="dv">0</span>], <span class="dv">2</span> <span class="op">*</span> v[<span class="dv">1</span>]], [v[<span class="dv">1</span>], v[<span class="dv">0</span>]]]</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(root(F, [<span class="fl">2.0</span>, <span class="fl">0.5</span>], jac<span class="op">=</span>J).x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1.93185165 0.51763809]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Again the number of correct digits doubles in every iteration, until the round-off level is reached.</p>
+<p>A nonlinear problem is thus replaced by a sequence of linear ones. This is how nonlinear PDEs such as the Richards equation are solved (Chapter 17), and it is one reason why the solution of linear systems, the subject of the next unit, is so central.</p>
+</section>
+</section>
+<section id="summary" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="summary"><span class="header-section-number">3.5</span> Summary</h2>
+<ul>
+<li>Finite difference formulas and their truncation errors follow from the Taylor series by combining series so that unwanted terms cancel. The forward and backward differences are of first order, the central differences for the first and second derivative of second order. For any stencil, the weights follow from a linear system.</li>
+<li>The order of a method is measured as the slope of the error in a log–log plot, or from the ratio of the errors for two step sizes. This is the basic verification test.</li>
+<li>Round-off limits the accuracy of a finite difference. The optimal step balances truncation and round-off error and is far larger than the machine epsilon: about <span class="math inline">\(\sqrt\varepsilon\)</span> for the forward and <span class="math inline">\(\varepsilon^{1/3}\)</span> for the central difference.</li>
+<li>Linear interpolation and the midpoint and trapezoidal rules are of second order. Polynomials of high degree on equidistant points oscillate (Runge). Combining two rules whose errors have opposite signs gives a rule of higher order, such as Simpson’s rule.</li>
+<li>Bisection converges linearly and always. Newton’s method converges quadratically near a simple root and generalises to systems, where each iteration solves a linear system with the Jacobian.</li>
+</ul>
+</section>
+<section id="further-reading" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">3.6</span> Further reading</h2>
+<p><span class="citation" data-cites="leveque2007">LeVeque (<a href="references.html#ref-leveque2007" role="doc-biblioref">2007</a>)</span>, chapter 1, for finite difference approximations; <span class="citation" data-cites="fornberg1988">Fornberg (<a href="references.html#ref-fornberg1988" role="doc-biblioref">1988</a>)</span> for stencils on arbitrary grids.</p>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-fornberg1988" class="csl-entry" role="listitem">
+Fornberg, Bengt. 1988. <span>“Generation of Finite Difference Formulas on Arbitrarily Spaced Grids.”</span> <em>Mathematics of Computation</em> 51 (184): 699–706.
+</div>
+<div id="ref-leveque2007" class="csl-entry" role="listitem">
+LeVeque, Randall J. 2007. <em>Finite Difference Methods for Ordinary and Partial Differential Equations</em>. SIAM.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./02-governing-equations.html" class="pagination-link" aria-label="Governing equations and their classification">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04-matrices-waves.html" class="pagination-link" aria-label="The numerical toolbox II: matrices and waves">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
