@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; The numerical toolbox II: matrices and waves – Prognostic Modelling</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05-one-step-methods.html" rel="next">
+<link href="./03-numerical-toolbox.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3892b3adcc577e567f7e69fe50577df6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./04-matrices-waves.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Prognostic Modelling</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-governing-equations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-numerical-toolbox.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-matrices-waves.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Time integration of ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-one-step-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#from-a-differential-equation-to-a-matrix" id="toc-from-a-differential-equation-to-a-matrix" class="nav-link active" data-scroll-target="#from-a-differential-equation-to-a-matrix"><span class="header-section-number">4.1</span> From a differential equation to a matrix</a>
+  <ul class="collapse">
+  <li><a href="#sec-model-problem" id="toc-sec-model-problem" class="nav-link" data-scroll-target="#sec-model-problem"><span class="header-section-number">4.1.1</span> A model problem</a></li>
+  <li><a href="#sec-sparsity" id="toc-sec-sparsity" class="nav-link" data-scroll-target="#sec-sparsity"><span class="header-section-number">4.1.2</span> Sparsity</a></li>
+  <li><a href="#sec-definiteness" id="toc-sec-definiteness" class="nav-link" data-scroll-target="#sec-definiteness"><span class="header-section-number">4.1.3</span> Symmetry and definiteness</a></li>
+  <li><a href="#sec-model-eigen" id="toc-sec-model-eigen" class="nav-link" data-scroll-target="#sec-model-eigen"><span class="header-section-number">4.1.4</span> Eigenvalues and eigenvectors</a></li>
+  </ul></li>
+  <li><a href="#sec-norms-condition" id="toc-sec-norms-condition" class="nav-link" data-scroll-target="#sec-norms-condition"><span class="header-section-number">4.2</span> Norms and the condition number</a>
+  <ul class="collapse">
+  <li><a href="#sec-norms" id="toc-sec-norms" class="nav-link" data-scroll-target="#sec-norms"><span class="header-section-number">4.2.1</span> Norms</a></li>
+  <li><a href="#sec-condition" id="toc-sec-condition" class="nav-link" data-scroll-target="#sec-condition"><span class="header-section-number">4.2.2</span> The condition number</a></li>
+  <li><a href="#sec-model-condition" id="toc-sec-model-condition" class="nav-link" data-scroll-target="#sec-model-condition"><span class="header-section-number">4.2.3</span> The condition number of the model matrix</a></li>
+  </ul></li>
+  <li><a href="#sec-fourier" id="toc-sec-fourier" class="nav-link" data-scroll-target="#sec-fourier"><span class="header-section-number">4.3</span> Fourier analysis</a>
+  <ul class="collapse">
+  <li><a href="#sec-complex-exponential" id="toc-sec-complex-exponential" class="nav-link" data-scroll-target="#sec-complex-exponential"><span class="header-section-number">4.3.1</span> The complex exponential</a></li>
+  <li><a href="#sec-waves-grid" id="toc-sec-waves-grid" class="nav-link" data-scroll-target="#sec-waves-grid"><span class="header-section-number">4.3.2</span> Waves on a grid</a></li>
+  <li><a href="#sec-dft" id="toc-sec-dft" class="nav-link" data-scroll-target="#sec-dft"><span class="header-section-number">4.3.3</span> The discrete Fourier transform</a></li>
+  <li><a href="#sec-aliasing" id="toc-sec-aliasing" class="nav-link" data-scroll-target="#sec-aliasing"><span class="header-section-number">4.3.4</span> The shortest wave and aliasing</a></li>
+  <li><a href="#sec-waves-test" id="toc-sec-waves-test" class="nav-link" data-scroll-target="#sec-waves-test"><span class="header-section-number">4.3.5</span> Why waves are the natural test for a numerical method</a></li>
+  <li><a href="#sec-second-difference" id="toc-sec-second-difference" class="nav-link" data-scroll-target="#sec-second-difference"><span class="header-section-number">4.3.6</span> The second difference and the model matrix</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4.4</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">4.5</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./04-matrices-waves.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-matrices-waves" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning goals
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After this unit you can</p>
+<ul>
+<li>set up the matrix of a finite difference discretization and describe its structure,</li>
+<li>derive the eigenvalues of the model matrix and its condition number,</li>
+<li>explain what the condition number says about the solution of a linear system,</li>
+<li>decompose a signal on a grid into waves with the discrete Fourier transform,</li>
+<li>explain the shortest resolvable wave, aliasing and the effective resolution of a grid.</li>
+</ul>
+</div>
+</div>
+<p>Two more tools are needed before we turn to differential equations. Matrices describe what a discretization does to all grid points at once. Waves describe what it does to each spatial scale. The two views are closely related: the eigenvectors of the most important matrix of this lecture are waves.</p>
+<section id="from-a-differential-equation-to-a-matrix" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="from-a-differential-equation-to-a-matrix"><span class="header-section-number">4.1</span> From a differential equation to a matrix</h2>
+<section id="sec-model-problem" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="sec-model-problem"><span class="header-section-number">4.1.1</span> A model problem</h3>
+<p>Consider the one-dimensional Poisson equation with homogeneous Dirichlet conditions,</p>
+<p><span id="eq-model-problem"><span class="math display">\[
+- \frac{\mathrm{d}^2 u}{\mathrm{d}x^2} = f(x), \qquad u(0) = u(L) = 0 .
+\tag{4.1}\]</span></span></p>
+<p>We divide <span class="math inline">\([0, L]\)</span> into <span class="math inline">\(N + 1\)</span> intervals of width <span class="math inline">\(h = L / (N + 1)\)</span> with grid points <span class="math inline">\(x_j = j h\)</span>. The values <span class="math inline">\(u_0 = u_{N+1} = 0\)</span> are known; the unknowns are <span class="math inline">\(u_1, \dots, u_N\)</span>. At each interior point we replace the second derivative by the central difference <a href="03-numerical-toolbox.html#eq-fd-second" class="quarto-xref">Equation&nbsp;<span>3.6</span></a>:</p>
+<p><span class="math display">\[
+\frac{-u_{j-1} + 2 u_j - u_{j+1}}{h^2} = f_j, \qquad j = 1, \dots, N .
+\]</span></p>
+<p>These are <span class="math inline">\(N\)</span> linear equations for <span class="math inline">\(N\)</span> unknowns. We write them out for <span class="math inline">\(N = 4\)</span>, using <span class="math inline">\(u_0 = u_5 = 0\)</span> in the first and the last equation:</p>
+<p><span class="math display">\[
+\begin{aligned}
+2 u_1 - u_2 &amp;= h^2 f_1 \\
+-u_1 + 2 u_2 - u_3 &amp;= h^2 f_2 \\
+-u_2 + 2 u_3 - u_4 &amp;= h^2 f_3 \\
+-u_3 + 2 u_4 &amp;= h^2 f_4
+\end{aligned}
+\qquad \Longleftrightarrow \qquad
+\begin{pmatrix}
+2 &amp; -1 &amp;  0 &amp;  0 \\
+-1 &amp;  2 &amp; -1 &amp;  0 \\
+0 &amp; -1 &amp;  2 &amp; -1 \\
+0 &amp;  0 &amp; -1 &amp;  2
+\end{pmatrix}
+\begin{pmatrix} u_1 \\ u_2 \\ u_3 \\ u_4 \end{pmatrix}
+= h^2 \begin{pmatrix} f_1 \\ f_2 \\ f_3 \\ f_4 \end{pmatrix} .
+\]</span></p>
+<p>In general, discretizing a linear differential equation leads to a linear system</p>
+<p><span class="math display">\[
+A \vec x = \vec b
+\]</span></p>
+<p>with as many unknowns as grid points. Because we multiplied each equation by <span class="math inline">\(h^2\)</span>, the factor <span class="math inline">\(h^2\)</span> now stands on the right hand side: here <span class="math inline">\(\vec x = (u_1, \dots, u_N)^T\)</span>, <span class="math inline">\(\vec b = h^2 (f_1, \dots, f_N)^T\)</span>, and <span class="math inline">\(A\)</span> is the <strong>model matrix</strong></p>
+<p><span id="eq-model-matrix"><span class="math display">\[
+A = \begin{pmatrix}
+2 &amp; -1 &amp;        &amp;        &amp;    \\
+-1 &amp;  2 &amp; -1     &amp;        &amp;    \\
+   &amp; \ddots &amp; \ddots &amp; \ddots &amp;    \\
+   &amp;        &amp; -1     &amp; 2      &amp; -1 \\
+   &amp;        &amp;        &amp; -1     &amp; 2
+\end{pmatrix} .
+\tag{4.2}\]</span></span></p>
+<p>Row <span class="math inline">\(j\)</span> of the matrix is the stencil of the difference formula, centred on the diagonal. <span class="math inline">\(A\)</span> accompanies us through the units on elliptic and parabolic problems. The rest of this section works out three of its properties, each of which matters later:</p>
+<ol type="1">
+<li><strong>Sparsity</strong> (<a href="#sec-sparsity" class="quarto-xref"><span>Section 4.1.2</span></a>): how much memory and work a solver needs.</li>
+<li><strong>Symmetry and definiteness</strong> (<a href="#sec-definiteness" class="quarto-xref"><span>Section 4.1.3</span></a>): whether <span class="math inline">\(A \vec x = \vec b\)</span> has exactly one solution, and which solvers we may use.</li>
+<li><strong>Eigenvalues and eigenvectors</strong> (<a href="#sec-model-eigen" class="quarto-xref"><span>Section 4.1.4</span></a>): explicit formulas for all <span class="math inline">\(N\)</span> of them. They give the definiteness, the matrix norm and the condition number (<a href="#sec-norms-condition" class="quarto-xref"><span>Section 4.2</span></a>), and they connect the matrix to waves (<a href="#sec-fourier" class="quarto-xref"><span>Section 4.3</span></a>).</li>
+</ol>
+</section>
+<section id="sec-sparsity" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="sec-sparsity"><span class="header-section-number">4.1.2</span> Sparsity</h3>
+<p>Each row has at most three non-zero entries, because each grid point is coupled only to its neighbours. Of the <span class="math inline">\(N^2\)</span> entries only <span class="math inline">\(3N - 2\)</span> are non-zero. Such a matrix is <strong>sparse</strong>. Sparse matrices are stored and processed without their zeros, for example with <code>scipy.sparse</code>. For a model with <span class="math inline">\(10^8\)</span> grid points this is the difference between possible and impossible: the full matrix would have <span class="math inline">\(10^{16}\)</span> entries.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(A\)</span> has <span class="math inline">\(3N - 2\)</span> non-zero entries out of <span class="math inline">\(N^2\)</span>. Memory and work grow like <span class="math inline">\(N\)</span>, not like <span class="math inline">\(N^2\)</span>, as long as a solver does not fill in the zeros (Chapter 10).</p>
+</div>
+</div>
+</section>
+<section id="sec-definiteness" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="sec-definiteness"><span class="header-section-number">4.1.3</span> Symmetry and definiteness</h3>
+<p>The goal of this subsection: show that <span class="math inline">\(A\)</span> is symmetric and positive definite, and see what this means. The definiteness tells us whether <span class="math inline">\(A \vec x = \vec b\)</span> has exactly one solution, and the fastest solvers for large systems only work for such matrices (Chapter 11).</p>
+<p><span class="math inline">\(A\)</span> is <strong>symmetric</strong>, <span class="math inline">\(A = A^T\)</span>: the entry in row <span class="math inline">\(i\)</span> and column <span class="math inline">\(j\)</span> equals the entry in row <span class="math inline">\(j\)</span> and column <span class="math inline">\(i\)</span>. The reason is that the stencil is symmetric: point <span class="math inline">\(j\)</span> couples to its left neighbour with the same weight, <span class="math inline">\(-1\)</span>, as to its right neighbour.</p>
+<p>The <strong>definiteness</strong> of a symmetric matrix is the sign of its <strong>quadratic form</strong>, the number</p>
+<p><span class="math display">\[
+q(\vec x) = \vec x^T A \vec x = \sum_{i=1}^{N} \sum_{j=1}^{N} x_i \, a_{ij} \, x_j
+\]</span></p>
+<p>that the matrix assigns to every vector <span class="math inline">\(\vec x\)</span>. There are five cases:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(q(\vec x)\)</span> for all <span class="math inline">\(\vec x \ne 0\)</span></th>
+<th>the matrix is</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(&gt; 0\)</span></td>
+<td>positive definite</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\ge 0\)</span>, and <span class="math inline">\(= 0\)</span> for some <span class="math inline">\(\vec x \ne 0\)</span></td>
+<td>positive semidefinite</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(&lt; 0\)</span></td>
+<td>negative definite</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\le 0\)</span>, and <span class="math inline">\(= 0\)</span> for some <span class="math inline">\(\vec x \ne 0\)</span></td>
+<td>negative semidefinite</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(&gt; 0\)</span> for some <span class="math inline">\(\vec x\)</span>, <span class="math inline">\(&lt; 0\)</span> for others</td>
+<td>indefinite</td>
+</tr>
+</tbody>
+</table>
+<p>For <span class="math inline">\(N = 2\)</span> the quadratic form is a surface over the <span class="math inline">\((x_1, x_2)\)</span> plane, and the cases can be seen (<a href="#fig-definiteness" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>). A positive definite matrix gives a bowl with its only minimum at the origin, a negative definite matrix an upside-down bowl, an indefinite matrix a saddle. A semidefinite matrix gives a trough: along one direction the surface stays at zero.</p>
+<div id="cell-fig-definiteness" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div id="fig-definiteness" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-definiteness-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-definiteness-output-1.png" width="732" height="705" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-definiteness-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: The quadratic form <span class="math inline">\(q = \vec x^T A \vec x\)</span> of four symmetric <span class="math inline">\(2 \times 2\)</span> matrices, with their eigenvalues <span class="math inline">\(\lambda\)</span>; the grey plane is <span class="math inline">\(q = 0\)</span>. Top left: the model matrix for <span class="math inline">\(N = 2\)</span>. Bottom right: <span class="math inline">\(q = (x_1 - x_2)^2\)</span> is zero along the line <span class="math inline">\(x_1 = x_2\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>How do we determine the definiteness? There are two ways.</p>
+<p><strong>By rewriting the quadratic form as a sum of squares.</strong> For the model matrix with <span class="math inline">\(N = 3\)</span> we first multiply out, row by row,</p>
+<p><span class="math display">\[
+\vec x^T A \vec x
+= x_1 (2 x_1 - x_2) + x_2 (-x_1 + 2 x_2 - x_3) + x_3 (-x_2 + 2 x_3)
+= 2 x_1^2 + 2 x_2^2 + 2 x_3^2 - 2 x_1 x_2 - 2 x_2 x_3 .
+\]</span></p>
+<p>Now we split each <span class="math inline">\(2 x_j^2\)</span> into <span class="math inline">\(x_j^2 + x_j^2\)</span> and group the terms so that each mixed term <span class="math inline">\(-2 x_j x_{j+1}\)</span> completes a binomial, <span class="math inline">\(x_j^2 - 2 x_j x_{j+1} + x_{j+1}^2 = (x_j - x_{j+1})^2\)</span>:</p>
+<p><span class="math display">\[
+\vec x^T A \vec x
+= x_1^2 + \underbrace{(x_1^2 - 2 x_1 x_2 + x_2^2)}_{(x_1 - x_2)^2}
++ \underbrace{(x_2^2 - 2 x_2 x_3 + x_3^2)}_{(x_2 - x_3)^2} + x_3^2 .
+\]</span></p>
+<p>The same works for every <span class="math inline">\(N\)</span>:</p>
+<p><span id="eq-model-quadratic-form"><span class="math display">\[
+\vec x^T A \vec x = x_1^2 + \sum_{j=1}^{N-1} (x_j - x_{j+1})^2 + x_N^2 .
+\tag{4.3}\]</span></span></p>
+<p>A sum of squares cannot be negative. It is zero only if every square is zero: <span class="math inline">\(x_1 = 0\)</span>, then <span class="math inline">\(x_2 = x_1 = 0\)</span>, and so on, so <span class="math inline">\(\vec x = 0\)</span>. Hence <span class="math inline">\(A\)</span> is positive definite.</p>
+<p><a href="#eq-model-quadratic-form" class="quarto-xref">Equation&nbsp;<span>4.3</span></a> also shows <em>why</em>. The squares are differences of neighbouring values, the discrete version of <span class="math inline">\(\int (u')^2 \, \mathrm{d}x\)</span>. The two single squares <span class="math inline">\(x_1^2\)</span> and <span class="math inline">\(x_N^2\)</span> come from the first and last rows, where the Dirichlet values <span class="math inline">\(u_0 = u_{N+1} = 0\)</span> were used. Without them, as for Neumann or periodic boundaries, a constant vector <span class="math inline">\(x_1 = \dots = x_N\)</span> gives <span class="math inline">\(q = 0\)</span>: the matrix is then only positive semidefinite, like the trough in <a href="#fig-definiteness" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>.</p>
+<p><strong>By the eigenvalues.</strong> For a symmetric matrix the signs of the eigenvalues decide: positive definite means all eigenvalues are positive, negative definite all negative, semidefinite that some are zero, and indefinite that there are eigenvalues of both signs. <a href="#fig-definiteness" class="quarto-xref">Figure&nbsp;<span>4.1</span></a> gives the eigenvalues for each case. Why this works is shown in <a href="#sec-model-eigen" class="quarto-xref"><span>Section 4.1.4</span></a> (<a href="#eq-quadratic-form-eigen" class="quarto-xref">Equation&nbsp;<span>4.5</span></a>), where we also confirm the result for <span class="math inline">\(A\)</span> with its eigenvalues. For large matrices this is the practical test, because eigenvalues can be computed even when the quadratic form cannot be rearranged by hand.</p>
+<p><strong>Why we want positive definite.</strong> A positive definite matrix is invertible. If <span class="math inline">\(A \vec x = \vec 0\)</span> for some <span class="math inline">\(\vec x \ne \vec 0\)</span>, then <span class="math inline">\(\vec x^T A \vec x = 0\)</span>, which a positive definite matrix does not allow. So <span class="math inline">\(A \vec x = \vec b\)</span> has exactly one solution for every <span class="math inline">\(\vec b\)</span>: the discrete problem is well-posed in the sense of <a href="01-introduction.html" class="quarto-xref"><span>Chapter 1</span></a>. For Neumann or periodic boundaries the constant vector gives <span class="math inline">\(A \vec x = \vec 0\)</span>, and the solution is fixed only up to a constant.</p>
+<p><strong>The sign matters.</strong> The second difference itself, <span class="math inline">\((u_{j-1} - 2 u_j + u_{j+1}) / h^2\)</span>, has the matrix <span class="math inline">\(-A / h^2\)</span>, which is negative definite. This is why we wrote the Poisson equation with a minus sign, <span class="math inline">\(-u'' = f\)</span>: then the matrix is positive definite. Matrices from diffusion problems have this property, and the most efficient solvers rely on it (Chapter 11).</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The model matrix <span class="math inline">\(A\)</span> is symmetric and positive definite (SPD): its quadratic form is the sum of squares <a href="#eq-model-quadratic-form" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>, and it is positive for every <span class="math inline">\(\vec x \ne \vec 0\)</span>. Therefore <span class="math inline">\(A \vec x = \vec b\)</span> has exactly one solution. Without Dirichlet values the matrix would be only positive semidefinite and singular.</p>
+</div>
+</div>
+</section>
+<section id="sec-model-eigen" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="sec-model-eigen"><span class="header-section-number">4.1.4</span> Eigenvalues and eigenvectors</h3>
+<p>The goal of this subsection: formulas for all <span class="math inline">\(N\)</span> eigenvalues <span class="math inline">\(\lambda_m\)</span> and eigenvectors <span class="math inline">\(\vec v_m\)</span> of the model matrix. The result is <a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.6</span></a> at the end. We use it three times: to confirm that <span class="math inline">\(A\)</span> is positive definite (below), to compute the norm and the condition number of <span class="math inline">\(A\)</span> (<a href="#sec-norms-condition" class="quarto-xref"><span>Section 4.2</span></a>), and to connect the matrix to waves (<a href="#sec-fourier" class="quarto-xref"><span>Section 4.3</span></a>).</p>
+<p><strong>Eigenvalues of symmetric matrices.</strong> An <strong>eigenvector</strong> <span class="math inline">\(\vec v \ne \vec 0\)</span> of a matrix <span class="math inline">\(A\)</span> is a vector that <span class="math inline">\(A\)</span> only stretches,</p>
+<p><span class="math display">\[
+A \vec v = \lambda \vec v ,
+\]</span></p>
+<p>with the <strong>eigenvalue</strong> <span class="math inline">\(\lambda\)</span>. For a symmetric <span class="math inline">\(N \times N\)</span> matrix all eigenvalues are real, and there are <span class="math inline">\(N\)</span> eigenvectors that are orthogonal to each other. We number them <span class="math inline">\(m = 1, \dots, N\)</span> and scale them to length 1, so that</p>
+<p><span id="eq-orthonormal"><span class="math display">\[
+\vec v_m^T \vec v_n = \begin{cases} 1 &amp; \text{if } m = n , \\ 0 &amp; \text{otherwise.} \end{cases}
+\tag{4.4}\]</span></span></p>
+<p>Such vectors are called <strong>orthonormal</strong>. Any vector can be written as a combination <span class="math inline">\(\vec x = \sum_m c_m \vec v_m\)</span>, and by <a href="#eq-orthonormal" class="quarto-xref">Equation&nbsp;<span>4.4</span></a> the coefficients are <span class="math inline">\(c_m = \vec v_m^T \vec x\)</span> and the length is <span class="math inline">\(\|\vec x\|_2^2 = \vec x^T \vec x = \sum_m c_m^2\)</span>. Applying <span class="math inline">\(A\)</span> multiplies each part by its eigenvalue, <span class="math inline">\(A \vec x = \sum_m \lambda_m c_m \vec v_m\)</span>. This is the one property of eigenvectors that everything below uses.</p>
+<p><strong>The eigenvalue test for definiteness.</strong> In the product <span class="math inline">\(\vec x^T A \vec x\)</span> only the terms with <span class="math inline">\(m = n\)</span> survive, by <a href="#eq-orthonormal" class="quarto-xref">Equation&nbsp;<span>4.4</span></a>:</p>
+<p><span id="eq-quadratic-form-eigen"><span class="math display">\[
+\vec x^T A \vec x
+= \sum_m \sum_n c_m c_n \lambda_n \, \vec v_m^T \vec v_n
+= \sum_m \lambda_m c_m^2 .
+\tag{4.5}\]</span></span></p>
+<p>If all <span class="math inline">\(\lambda_m &gt; 0\)</span>, this is positive for every <span class="math inline">\(\vec x \ne \vec 0\)</span>. If one <span class="math inline">\(\lambda_m &lt; 0\)</span>, the choice <span class="math inline">\(\vec x = \vec v_m\)</span> gives <span class="math inline">\(q = \lambda_m &lt; 0\)</span>. For example, <span class="math inline">\(\begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \end{pmatrix}\)</span> has the eigenvalues <span class="math inline">\(3\)</span> and <span class="math inline">\(-1\)</span>: for <span class="math inline">\(\vec x = (1, 1)\)</span> the quadratic form is <span class="math inline">\(1 + 4 + 1 = 6 &gt; 0\)</span>, for <span class="math inline">\(\vec x = (1, -1)\)</span> it is <span class="math inline">\(1 - 4 + 1 = -2 &lt; 0\)</span>, the saddle in <a href="#fig-definiteness" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>.</p>
+<p>Now to the eigenvalues of <span class="math inline">\(A\)</span> itself. We find them in three steps.</p>
+<p><strong>Step 1: a guess from the continuous problem.</strong> Note that we now solve a different problem than <a href="#eq-model-problem" class="quarto-xref">Equation&nbsp;<span>4.1</span></a>. The solution <span class="math inline">\(u\)</span> of the Poisson equation depends on <span class="math inline">\(f\)</span>; an eigenvector does not involve <span class="math inline">\(f\)</span> at all. The continuous counterpart of <span class="math inline">\(A \vec v = \lambda \vec v\)</span> is the eigenvalue problem</p>
+<p><span class="math display">\[
+- \frac{\mathrm{d}^2 v}{\mathrm{d}x^2} = \mu \, v, \qquad v(0) = v(L) = 0 .
+\]</span></p>
+<p>Its solutions are sines: for <span class="math inline">\(v(x) = \sin (k x)\)</span>, differentiating twice gives <span class="math inline">\(-v'' = k^2 \sin (k x)\)</span>, so <span class="math inline">\(\mu = k^2\)</span>, and <span class="math inline">\(v(L) = 0\)</span> requires <span class="math inline">\(k = m \pi / L\)</span> with an integer <span class="math inline">\(m\)</span>: <span class="math inline">\(m\)</span> half waves fit into the domain. Since <span class="math inline">\(A\)</span> is <span class="math inline">\(-\mathrm{d}^2/\mathrm{d}x^2\)</span> multiplied by <span class="math inline">\(h^2\)</span>, we expect its eigenvectors to be the same sines sampled on the grid, and try</p>
+<p><span class="math display">\[
+v_j = \sin (j \theta), \qquad j = 1, \dots, N .
+\]</span></p>
+<p><span class="math inline">\(\theta\)</span> is an angle, the phase by which the sine advances from one grid point to the next. At the grid points <span class="math inline">\(x_j = j h\)</span> a sine wave <span class="math inline">\(\sin (k x)\)</span> takes the values <span class="math inline">\(\sin (k \, j h) = \sin (j \theta)\)</span>, so</p>
+<p><span class="math display">\[
+\theta = k h ,
+\]</span></p>
+<p>the wavenumber times the grid spacing, a number without unit. A long wave advances little from point to point, <span class="math inline">\(\theta\)</span> small; the shortest wave that the grid can show advances by almost <span class="math inline">\(\pi\)</span>. Which values of <span class="math inline">\(\theta\)</span> are allowed is decided in step 3.</p>
+<p><strong>Step 2: the interior rows give the eigenvalue.</strong> Row <span class="math inline">\(j\)</span> of <span class="math inline">\(A \vec v\)</span> is</p>
+<p><span class="math display">\[
+(A \vec v)_j = -\sin \big( (j - 1) \theta \big) + 2 \sin (j \theta) - \sin \big( (j + 1) \theta \big) .
+\]</span></p>
+<p>The addition theorems <span class="math inline">\(\sin(a \mp b) = \sin a \cos b \mp \cos a \sin b\)</span> give, when added, <span class="math inline">\(\sin(a - b) + \sin(a + b) = 2 \sin a \cos b\)</span>. With <span class="math inline">\(a = j \theta\)</span> and <span class="math inline">\(b = \theta\)</span> the two outer terms combine to <span class="math inline">\(-2 \sin (j \theta) \cos \theta\)</span>, and</p>
+<p><span class="math display">\[
+(A \vec v)_j = 2 \sin (j \theta) - 2 \sin (j \theta) \cos \theta
+= (2 - 2 \cos \theta) \, v_j .
+\]</span></p>
+<p>Every row gives the same factor <span class="math inline">\(2 - 2 \cos \theta\)</span>, and this factor is the eigenvalue, for any <span class="math inline">\(\theta\)</span> so far. (<a href="#sec-complex-exponential" class="quarto-xref"><span>Section 4.3.1</span></a> repeats this step in one line with the complex exponential.)</p>
+<p><strong>Step 3: the boundary rows fix <span class="math inline">\(\theta\)</span>.</strong> The first and the last row lack one neighbour. The formula of step 2 holds for them only if the missing values vanish, like the Dirichlet values <span class="math inline">\(u_0 = u_{N+1} = 0\)</span> at the boundary nodes <span class="math inline">\(j = 0\)</span> and <span class="math inline">\(j = N + 1\)</span>. At the left, <span class="math inline">\(v_0 = \sin 0 = 0\)</span> holds automatically. At the right, <span class="math inline">\(v_{N+1} = \sin \big( (N + 1) \theta \big) = 0\)</span> requires <span class="math inline">\((N + 1) \theta = m \pi\)</span> with an integer <span class="math inline">\(m\)</span>, so <span class="math inline">\(\theta = m \pi / (N + 1)\)</span>. The values <span class="math inline">\(m = 1, \dots, N\)</span> give <span class="math inline">\(N\)</span> different eigenvectors; <span class="math inline">\(m = 0\)</span> and <span class="math inline">\(m = N + 1\)</span> give <span class="math inline">\(\vec v = \vec 0\)</span>, and larger <span class="math inline">\(m\)</span> repeat the same vectors. With <span class="math inline">\(N\)</span> eigenvectors for an <span class="math inline">\(N \times N\)</span> matrix, we have found all of them.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result: eigenvalues and eigenvectors of the model matrix
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For <span class="math inline">\(m = 1, 2, \dots, N\)</span>,</p>
+<p><span id="eq-model-eigenvalues"><span class="math display">\[
+\begin{aligned}
+\theta_m &amp;= \frac{m \pi}{N + 1} , \\
+\lambda_m &amp;= 2 - 2 \cos \theta_m = 4 \sin^2 \frac{\theta_m}{2} , \\
+(\vec v_m)_j &amp;= \sqrt{\frac{2}{N + 1}} \, \sin (j \theta_m) , \qquad j = 1, \dots, N .
+\end{aligned}
+\tag{4.6}\]</span></span></p>
+<ul>
+<li><span class="math inline">\(m\)</span> counts the <strong>half waves</strong> of eigenvector <span class="math inline">\(\vec v_m\)</span> across the domain (<a href="#fig-eigenvectors" class="quarto-xref">Figure&nbsp;<span>4.2</span></a>). <span class="math inline">\(m = 1\)</span> is the longest wave, <span class="math inline">\(m = N\)</span> the shortest, which changes sign from grid point to grid point.</li>
+<li><span class="math inline">\(\theta_m = k_m h\)</span> is the phase step per grid point of the sine with wavenumber <span class="math inline">\(k_m = m \pi / L\)</span>.</li>
+<li>Since <span class="math inline">\(0 &lt; \theta_m &lt; \pi\)</span>, the eigenvalues increase with <span class="math inline">\(m\)</span> and lie between 0 and 4: <span class="math inline">\(0 &lt; \lambda_1 &lt; \lambda_2 &lt; \dots &lt; \lambda_N &lt; 4\)</span>. The smallest is <span class="math inline">\(\lambda_{\min} = \lambda_1\)</span>, the largest <span class="math inline">\(\lambda_{\max} = \lambda_N\)</span>.</li>
+<li>All eigenvalues are positive, so <span class="math inline">\(A\)</span> is positive definite by <a href="#eq-quadratic-form-eigen" class="quarto-xref">Equation&nbsp;<span>4.5</span></a>, as found in <a href="#sec-definiteness" class="quarto-xref"><span>Section 4.1.3</span></a> with the sum of squares.</li>
+</ul>
+</div>
+</div>
+<p>Three remarks on the result. The second form of <span class="math inline">\(\lambda_m\)</span> follows from <span class="math inline">\(\cos \theta = 1 - 2 \sin^2 (\theta / 2)\)</span>. The factor <span class="math inline">\(\sqrt{2 / (N + 1)}\)</span> scales the eigenvectors to length 1, because <span class="math inline">\(\sum_{j=1}^{N} \sin^2 (j \theta_m) = (N + 1)/2\)</span>; any multiple of an eigenvector is also an eigenvector, so this factor does not change <span class="math inline">\(\lambda_m\)</span>. And the result agrees with the continuous problem: there are <span class="math inline">\(N + 1\)</span> intervals, so <span class="math inline">\(h = L / (N + 1)\)</span>, and the sine with <span class="math inline">\(k = m \pi / L\)</span> has the phase step</p>
+<p><span class="math display">\[
+\theta = k h = \frac{m \pi}{L} \cdot \frac{L}{N + 1} = \frac{m \pi}{N + 1} = \theta_m .
+\]</span></p>
+<div id="cell-fig-eigenvectors" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.sparse <span class="im">import</span> diags</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> diags([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], shape<span class="op">=</span>(N, N))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>eigenvalues, eigenvectors <span class="op">=</span> np.linalg.eigh(A.toarray())</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="dv">3</span>))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>j <span class="op">=</span> np.arange(<span class="dv">1</span>, N <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index <span class="kw">in</span> [<span class="dv">0</span>, <span class="dv">1</span>, N <span class="op">-</span> <span class="dv">1</span>]:</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> eigenvectors[:, index]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    ax.plot(j, v <span class="op">*</span> np.sign(v[<span class="dv">0</span>]), <span class="st">"o-"</span>, ms<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span><span class="vs">rf"</span><span class="dv">$</span><span class="vs">m = </span><span class="sc">{</span>index <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="dv">$</span><span class="vs">, </span><span class="dv">$</span><span class="er">\</span><span class="vs">lambda = </span><span class="sc">{</span>eigenvalues[index]<span class="sc">:.3f}</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"grid point $j$"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>ax.set_xticks([<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>])</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-eigenvectors" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-eigenvectors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-eigenvectors-output-1.png" width="545" height="283" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eigenvectors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: Eigenvectors of the model matrix for <span class="math inline">\(N = 20\)</span>: the two longest waves and the shortest wave.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>What the eigenvectors are good for.</strong> They solve <a href="#eq-model-problem" class="quarto-xref">Equation&nbsp;<span>4.1</span></a> without a solver. Write the right hand side in eigenvectors, <span class="math inline">\(\vec b = \sum_m \beta_m \vec v_m\)</span> with <span class="math inline">\(\beta_m = \vec v_m^T \vec b\)</span>. Then</p>
+<p><span id="eq-eigen-solution"><span class="math display">\[
+\vec u = \sum_{m=1}^{N} \frac{\beta_m}{\lambda_m} \, \vec v_m
+\tag{4.7}\]</span></span></p>
+<p>solves <span class="math inline">\(A \vec u = \vec b\)</span>, because <span class="math inline">\(A\)</span> multiplies each <span class="math inline">\(\vec v_m\)</span> by <span class="math inline">\(\lambda_m\)</span> and so restores <span class="math inline">\(\beta_m\)</span>. The solution of the discrete Poisson problem is therefore a sum of the sine waves, and each wave of the right hand side is divided by its eigenvalue. This is the discrete form of solving the Poisson equation with a Fourier sine series: with <span class="math inline">\(\vec b = h^2 \vec f\)</span> and, for long waves, <span class="math inline">\(\lambda_m \approx \theta_m^2 = (k h)^2\)</span>, the factor is <span class="math inline">\(h^2 / \lambda_m \approx 1 / k^2\)</span>, exactly the factor <span class="math inline">\(1 / \mu\)</span> of the continuous problem.</p>
+<p><a href="#eq-eigen-solution" class="quarto-xref">Equation&nbsp;<span>4.7</span></a> also shows where errors are amplified. An error in the right hand side is divided by <span class="math inline">\(\lambda_m\)</span> as well. In the longest wave, <span class="math inline">\(m = 1\)</span>, it is divided by the smallest eigenvalue <span class="math inline">\(\lambda_1\)</span> and amplified most; in the shortest, <span class="math inline">\(m = N\)</span>, by the largest <span class="math inline">\(\lambda_N\)</span>. The ratio of the two, <span class="math inline">\(\lambda_N / \lambda_1\)</span>, is the condition number of the next section.</p>
+</section>
+</section>
+<section id="sec-norms-condition" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-norms-condition"><span class="header-section-number">4.2</span> Norms and the condition number</h2>
+<p>The question of this section: if the right hand side <span class="math inline">\(\vec b\)</span> contains an error, for example round-off or a measurement error, how large is the resulting error in the solution of <span class="math inline">\(A \vec x = \vec b\)</span>? To answer it we need a measure for the size of vectors and of matrices (<a href="#sec-norms" class="quarto-xref"><span>Section 4.2.1</span></a>). With it we derive a bound for the error, the condition number (<a href="#sec-condition" class="quarto-xref"><span>Section 4.2.2</span></a>), and evaluate it for the model matrix (<a href="#sec-model-condition" class="quarto-xref"><span>Section 4.2.3</span></a>).</p>
+<section id="sec-norms" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-norms"><span class="header-section-number">4.2.1</span> Norms</h3>
+<p>The size of a vector is measured by a norm, for example the Euclidean norm and the maximum norm,</p>
+<p><span class="math display">\[
+\|\vec x\|_2 = \sqrt{\sum_j x_j^2}, \qquad \|\vec x\|_\infty = \max_j |x_j| .
+\]</span></p>
+<p>Norms are what we mean by “the error” of a solution on a grid. The norm of a matrix is the largest factor by which it can stretch a vector,</p>
+<p><span id="eq-matrix-norm"><span class="math display">\[
+\|A\| = \max_{\vec x \ne 0} \frac{\|A \vec x\|}{\|\vec x\|} ,
+\qquad \text{so that} \qquad \|A \vec x\| \le \|A\| \, \|\vec x\| .
+\tag{4.8}\]</span></span></p>
+<p><strong>The 2-norm of a symmetric matrix.</strong> For the Euclidean norm, the matrix norm follows from the eigenvalues. We use the orthonormal eigenvectors of <a href="#sec-model-eigen" class="quarto-xref"><span>Section 4.1.4</span></a>: write <span class="math inline">\(\vec x = \sum_m c_m \vec v_m\)</span>, so that <span class="math inline">\(\|\vec x\|_2^2 = \sum_m c_m^2\)</span> and <span class="math inline">\(A \vec x = \sum_m \lambda_m c_m \vec v_m\)</span>. Then</p>
+<p><span class="math display">\[
+\|A \vec x\|_2^2 = \sum_m \lambda_m^2 c_m^2
+\le \max_m \lambda_m^2 \sum_m c_m^2 = \max_m \lambda_m^2 \, \|\vec x\|_2^2 .
+\]</span></p>
+<p>Each part of <span class="math inline">\(\vec x\)</span> is stretched by its own eigenvalue, so the stretch can be no larger than the largest <span class="math inline">\(|\lambda_m|\)</span>. It reaches that value for <span class="math inline">\(\vec x\)</span> equal to the corresponding eigenvector. The inverse matrix has the same eigenvectors and the eigenvalues <span class="math inline">\(1 / \lambda_m\)</span>, because <span class="math inline">\(A \vec v_m = \lambda_m \vec v_m\)</span> gives <span class="math inline">\(A^{-1} \vec v_m = \vec v_m / \lambda_m\)</span>; its largest stretch is <span class="math inline">\(1 / \min_m |\lambda_m|\)</span>.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a symmetric matrix,</p>
+<p><span id="eq-norm-eigen"><span class="math display">\[
+\|A\|_2 = \max_m |\lambda_m| , \qquad \|A^{-1}\|_2 = \frac{1}{\min_m |\lambda_m|} .
+\tag{4.9}\]</span></span></p>
+<p>For the model matrix all <span class="math inline">\(\lambda_m\)</span> are positive, so <span class="math inline">\(\|A\|_2 = \lambda_N\)</span> and <span class="math inline">\(\|A^{-1}\|_2 = 1/\lambda_1\)</span>, with <span class="math inline">\(\lambda_m\)</span> from <a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.6</span></a>.</p>
+</div>
+</div>
+</section>
+<section id="sec-condition" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="sec-condition"><span class="header-section-number">4.2.2</span> The condition number</h3>
+<p>Let <span class="math inline">\(\vec b\)</span> be perturbed by <span class="math inline">\(\delta \vec b\)</span>, and let <span class="math inline">\(\delta \vec x\)</span> be the resulting change of the solution. Subtracting <span class="math inline">\(A \vec x = \vec b\)</span> from <span class="math inline">\(A (\vec x + \delta \vec x) = \vec b + \delta \vec b\)</span> gives <span class="math inline">\(A \, \delta \vec x = \delta \vec b\)</span>, hence</p>
+<p><span class="math display">\[
+\delta \vec x = A^{-1} \delta \vec b
+\quad \Longrightarrow \quad
+\|\delta \vec x\| \le \|A^{-1}\| \, \|\delta \vec b\| ,
+\]</span></p>
+<p>using <a href="#eq-matrix-norm" class="quarto-xref">Equation&nbsp;<span>4.8</span></a>. The same inequality applied to <span class="math inline">\(\vec b = A \vec x\)</span> gives <span class="math inline">\(\|\vec b\| \le \|A\| \, \|\vec x\|\)</span>, or <span class="math inline">\(1 / \|\vec x\| \le \|A\| / \|\vec b\|\)</span>. Multiplying the two inequalities,</p>
+<p><span id="eq-condition-bound"><span class="math display">\[
+\frac{\|\delta \vec x\|}{\|\vec x\|} \le
+\underbrace{\|A\| \, \|A^{-1}\|}_{\kappa(A)} \, \frac{\|\delta \vec b\|}{\|\vec b\|} .
+\tag{4.10}\]</span></span></p>
+<p>The factor <span class="math inline">\(\kappa(A) = \|A\| \, \|A^{-1}\|\)</span> is the <strong>condition number</strong> of the matrix. It bounds the amplification of relative errors, and is therefore the condition number of <a href="01-introduction.html" class="quarto-xref"><span>Chapter 1</span></a> for the problem “solve a linear system”. The bound is reached: put the solution in the eigenvector with the largest eigenvalue, <span class="math inline">\(\vec x = \vec v_{\max}\)</span>, so <span class="math inline">\(\vec b = \lambda_{\max} \vec x\)</span> is large, and the error in the one with the smallest, <span class="math inline">\(\delta \vec b \propto \vec v_{\min}\)</span>, so <span class="math inline">\(\delta \vec x = \delta \vec b / \lambda_{\min}\)</span> is large.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With <a href="#eq-norm-eigen" class="quarto-xref">Equation&nbsp;<span>4.9</span></a>, a symmetric positive definite matrix has the condition number</p>
+<p><span id="eq-condition-spd"><span class="math display">\[
+\kappa(A) = \frac{\lambda_{\max}}{\lambda_{\min}} .
+\tag{4.11}\]</span></span></p>
+<p>A relative error in <span class="math inline">\(\vec b\)</span> can grow by up to this factor in <span class="math inline">\(\vec x\)</span>. Rule of thumb: with <span class="math inline">\(\kappa = 10^{p}\)</span> about <span class="math inline">\(p\)</span> of the 16 digits of double precision are lost.</p>
+</div>
+</div>
+</section>
+<section id="sec-model-condition" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="sec-model-condition"><span class="header-section-number">4.2.3</span> The condition number of the model matrix</h3>
+<p>We now insert the eigenvalues <a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.6</span></a> into <a href="#eq-condition-spd" class="quarto-xref">Equation&nbsp;<span>4.11</span></a>, for large <span class="math inline">\(N\)</span>. The largest eigenvalue is <span class="math inline">\(\lambda_N\)</span>. Its angle <span class="math inline">\(\theta_N = N \pi / (N + 1)\)</span> is close to <span class="math inline">\(\pi\)</span>, so <span class="math inline">\(\cos \theta_N \approx -1\)</span> and</p>
+<p><span class="math display">\[
+\lambda_{\max} = \lambda_N = 2 - 2 \cos \theta_N \approx 4 .
+\]</span></p>
+<p>The smallest eigenvalue is <span class="math inline">\(\lambda_1\)</span>. Its angle <span class="math inline">\(\theta_1 = \pi / (N + 1)\)</span> is small, and with the Taylor expansion <span class="math inline">\(\cos \theta \approx 1 - \theta^2 / 2\)</span>,</p>
+<p><span class="math display">\[
+\lambda_{\min} = \lambda_1 = 2 - 2 \cos \theta_1
+\approx 2 - 2 \Big( 1 - \frac{\theta_1^2}{2} \Big) = \theta_1^2
+= \frac{\pi^2}{(N + 1)^2} .
+\]</span></p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The condition number of the model matrix is</p>
+<p><span id="eq-model-condition"><span class="math display">\[
+\kappa(A) = \frac{\lambda_N}{\lambda_1} \approx \frac{4 (N + 1)^2}{\pi^2} \approx 0.4 \, N^2 .
+\tag{4.12}\]</span></span></p>
+<p>It grows as <span class="math inline">\(N^2\)</span>, that is as <span class="math inline">\(1 / h^2\)</span>. For <span class="math inline">\(N = 1000\)</span>, <span class="math inline">\(\kappa \approx 4 \times 10^5\)</span>: about 6 of 16 digits can be lost.</p>
+</div>
+</div>
+<p>The computation confirms the formulas:</p>
+<div id="5f573528" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> N <span class="kw">in</span> [<span class="dv">10</span>, <span class="dv">100</span>, <span class="dv">1000</span>]:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    A <span class="op">=</span> diags([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>], [<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>], shape<span class="op">=</span>(N, N))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    eigenvalues <span class="op">=</span> np.linalg.eigvalsh(A.toarray())</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> np.arange(<span class="dv">1</span>, N <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    exact <span class="op">=</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> np.cos(m <span class="op">*</span> np.pi <span class="op">/</span> (N <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"N = </span><span class="sc">{</span>N<span class="sc">:4d}</span><span class="ss">: max. deviation from the formula </span><span class="sc">{</span><span class="bu">abs</span>(eigenvalues <span class="op">-</span> exact)<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.1e}</span><span class="ss">,"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" condition number </span><span class="sc">{</span>eigenvalues[<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> eigenvalues[<span class="dv">0</span>]<span class="sc">:9.1f}</span><span class="ss">,"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" estimate </span><span class="sc">{</span><span class="dv">4</span> <span class="op">*</span> (N <span class="op">+</span> <span class="dv">1</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">/</span> np<span class="sc">.</span>pi<span class="op">**</span><span class="dv">2</span><span class="sc">:9.1f}</span><span class="ss">,"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" non-zeros </span><span class="sc">{</span>A<span class="sc">.</span>nnz<span class="sc">}</span><span class="ss"> of </span><span class="sc">{</span>N <span class="op">*</span> N<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>N =   10: max. deviation from the formula 4.4e-16, condition number      48.4, estimate      49.0, non-zeros 28 of 100
+N =  100: max. deviation from the formula 2.7e-15, condition number    4133.6, estimate    4134.3, non-zeros 298 of 10000
+N = 1000: max. deviation from the formula 3.6e-15, condition number  406095.0, estimate  406095.7, non-zeros 2998 of 1000000</code></pre>
+</div>
+</div>
+<p>Refining the grid makes the discretization more accurate and the linear system harder to solve. This conflict is the reason why solvers for linear systems take up two units of this lecture (Chapter 10, Chapter 11).</p>
+</section>
+</section>
+<section id="sec-fourier" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-fourier"><span class="header-section-number">4.3</span> Fourier analysis</h2>
+<p>The eigenvectors of the model matrix are sine waves (<a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.6</span></a>). This is no accident, and this section turns it into a general tool. We want to answer three questions:</p>
+<ol type="1">
+<li>How do we split any grid function into waves? (<a href="#sec-dft" class="quarto-xref"><span>Section 4.3.3</span></a>)</li>
+<li>Which waves can a grid represent at all? (<a href="#sec-aliasing" class="quarto-xref"><span>Section 4.3.4</span></a>)</li>
+<li>What does a difference formula do to each wave? The answer connects back to the eigenvalues <span class="math inline">\(\lambda_m\)</span>. (<a href="#sec-waves-test" class="quarto-xref"><span>Section 4.3.5</span></a>, <a href="#sec-second-difference" class="quarto-xref"><span>Section 4.3.6</span></a>)</li>
+</ol>
+<p>The tool for all three is the complex exponential, which we introduce first (<a href="#sec-complex-exponential" class="quarto-xref"><span>Section 4.3.1</span></a>).</p>
+<section id="sec-complex-exponential" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="sec-complex-exponential"><span class="header-section-number">4.3.1</span> The complex exponential</h3>
+<p>Fourier analysis is written with the complex exponential <span class="math inline">\(e^{i\varphi}\)</span>. It looks more difficult than sine and cosine, but it is only a compact way to handle both at once. Everything follows from one rule, <span class="math inline">\(i^2 = -1\)</span>.</p>
+<p><strong>Euler’s formula.</strong> A complex number <span class="math inline">\(z = a + i b\)</span> is a point in the plane, with the real part <span class="math inline">\(a\)</span> on the horizontal and the imaginary part <span class="math inline">\(b\)</span> on the vertical axis. The complex exponential is the point on the unit circle at angle <span class="math inline">\(\varphi\)</span> (<a href="#fig-unit-circle" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>):</p>
+<p><span id="eq-euler"><span class="math display">\[
+e^{i \varphi} = \cos \varphi + i \sin \varphi .
+\tag{4.13}\]</span></span></p>
+<p>To see why, insert <span class="math inline">\(x = i\varphi\)</span> into the Taylor series <span class="math inline">\(e^x = 1 + x + x^2/2! + x^3/3! + \dots\)</span> and use <span class="math inline">\(i^2 = -1\)</span>, <span class="math inline">\(i^3 = -i\)</span>, <span class="math inline">\(i^4 = 1\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+e^{i\varphi} &amp;= 1 + i\varphi - \frac{\varphi^2}{2!} - i \frac{\varphi^3}{3!} + \frac{\varphi^4}{4!} + \dots \\
+&amp;= \Big( 1 - \frac{\varphi^2}{2!} + \frac{\varphi^4}{4!} - \dots \Big)
++ i \Big( \varphi - \frac{\varphi^3}{3!} + \dots \Big)
+= \cos \varphi + i \sin \varphi .
+\end{aligned}
+\]</span></p>
+<p>The even powers are real and form the series of the cosine, the odd powers are imaginary and form the series of the sine. Replacing <span class="math inline">\(\varphi\)</span> by <span class="math inline">\(-\varphi\)</span> changes only the sign of the sine, <span class="math inline">\(e^{-i\varphi} = \cos \varphi - i \sin \varphi\)</span>. Adding and subtracting the two gives</p>
+<p><span id="eq-cos-sin-exp"><span class="math display">\[
+\cos \varphi = \frac{e^{i\varphi} + e^{-i\varphi}}{2} , \qquad
+\sin \varphi = \frac{e^{i\varphi} - e^{-i\varphi}}{2 i} :
+\tag{4.14}\]</span></span></p>
+<p>a real wave is the sum of two rotations in opposite directions.</p>
+<div id="cell-fig-unit-circle" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-unit-circle" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-unit-circle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-unit-circle-output-1.png" width="378" height="358" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-unit-circle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3: The complex exponential <span class="math inline">\(e^{i\varphi}\)</span> is the point on the unit circle at angle <span class="math inline">\(\varphi\)</span>. Its real part is <span class="math inline">\(\cos\varphi\)</span>, its imaginary part <span class="math inline">\(\sin\varphi\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Why it makes life easier.</strong> Three rules replace the whole collection of trigonometric identities:</p>
+<ul>
+<li><em>Multiplying adds angles</em>: <span class="math inline">\(e^{ia} \, e^{ib} = e^{i(a + b)}\)</span>. Written out with <a href="#eq-euler" class="quarto-xref">Equation&nbsp;<span>4.13</span></a>, the real and imaginary parts of this one line are the addition theorems for <span class="math inline">\(\cos(a + b)\)</span> and <span class="math inline">\(\sin(a + b)\)</span>.</li>
+<li><em>A shift is a multiplication</em>: <span class="math inline">\(e^{ik(x + \Delta x)} = e^{ikx} \, e^{ik \Delta x}\)</span>. Moving a wave by one grid point multiplies it by a fixed factor.</li>
+<li><em>A derivative is a multiplication</em>: <span class="math inline">\(\frac{\mathrm{d}}{\mathrm{d}x} e^{ikx} = ik \, e^{ikx}\)</span> and <span class="math inline">\(\frac{\mathrm{d}^2}{\mathrm{d}x^2} e^{ikx} = -k^2 \, e^{ikx}\)</span>.</li>
+</ul>
+<p>The last two rules are why waves are the natural test functions for difference formulas (<a href="#sec-waves-test" class="quarto-xref"><span>Section 4.3.5</span></a>): a difference formula is a combination of shifts, so it also just multiplies the wave by a factor.</p>
+<p><strong>The model matrix once more.</strong> As an example, we repeat step 2 of the eigenvalue computation in <a href="#sec-model-eigen" class="quarto-xref"><span>Section 4.1.4</span></a>. Instead of the sine we try <span class="math inline">\(v_j = e^{ij\theta} = \cos (j\theta) + i \sin (j\theta)\)</span>, which carries the cosine and the sine at the same time. This is a trick for the algebra, not a new eigenvector: the sine is its imaginary part. Row <span class="math inline">\(j\)</span> of <span class="math inline">\(A \vec v\)</span> is</p>
+<p><span class="math display">\[
+(A \vec v)_j = -e^{i(j-1)\theta} + 2 e^{ij\theta} - e^{i(j+1)\theta}
+= e^{ij\theta} \big( 2 - e^{-i\theta} - e^{i\theta} \big)
+= (2 - 2 \cos \theta) \, v_j ,
+\]</span></p>
+<p>using the shift rule and <a href="#eq-cos-sin-exp" class="quarto-xref">Equation&nbsp;<span>4.14</span></a>. The eigenvalue appears without any addition theorem.</p>
+<p>Why does this tell us anything about the sine? The entries of <span class="math inline">\(A\)</span> are real, so <span class="math inline">\(A\)</span> acts on the real and the imaginary part separately: <span class="math inline">\(A \vec v = A \vec{c} + i \, A \vec{s}\)</span> with <span class="math inline">\(c_j = \cos (j\theta)\)</span> and <span class="math inline">\(s_j = \sin (j\theta)\)</span>. The right hand side is <span class="math inline">\((2 - 2\cos\theta) \, (\vec c + i \vec s)\)</span>, with a real factor. Comparing real and imaginary parts gives <span class="math inline">\((A \vec c)_j = (2 - 2\cos\theta) \, c_j\)</span> and <span class="math inline">\((A \vec s)_j = (2 - 2\cos\theta) \, s_j\)</span>: one computation with the complex exponential does the work of two, one for the cosine and one for the sine.</p>
+<p>The boundary conditions come in at the end. The unknowns sit at the interior nodes <span class="math inline">\(j = 1, \dots, N\)</span>; the boundary nodes <span class="math inline">\(j = 0\)</span> (left) and <span class="math inline">\(j = N + 1\)</span> (right) carry the Dirichlet values <span class="math inline">\(u_0 = u_{N+1} = 0\)</span>, so an eigenvector must vanish there. <span class="math inline">\(e^{ij\theta}\)</span> alone does not, its modulus is one at every node. But <span class="math inline">\(e^{-ij\theta}\)</span> has the same eigenvalue, because <span class="math inline">\(\cos(-\theta) = \cos \theta\)</span>, and so has every combination of the two. By <a href="#eq-cos-sin-exp" class="quarto-xref">Equation&nbsp;<span>4.14</span></a> the combination <span class="math inline">\(\sin (j\theta) = \big( e^{ij\theta} - e^{-ij\theta} \big) / (2i)\)</span> is zero at the left boundary node, <span class="math inline">\(j = 0\)</span>; the cosine is not, since <span class="math inline">\(\cos 0 = 1\)</span>. At the right boundary node, <span class="math inline">\(j = N + 1\)</span>, we need <span class="math inline">\(\sin \big( (N + 1) \theta \big) = 0\)</span>, that is <span class="math inline">\((N + 1) \, \theta = m \pi\)</span> or <span class="math inline">\(\theta = m\pi/(N + 1)\)</span>, as in <a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.6</span></a>. Remember that <span class="math inline">\(\theta\)</span> is not a node but the phase step from one node to the next: the right boundary only admits the waves for which a whole number <span class="math inline">\(m\)</span> of half waves fits between the two boundary nodes.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+e^{i\varphi} = \cos \varphi + i \sin \varphi , \qquad
+\cos \varphi = \frac{e^{i\varphi} + e^{-i\varphi}}{2} , \qquad
+\sin \varphi = \frac{e^{i\varphi} - e^{-i\varphi}}{2i} .
+\]</span></p>
+<p>With the complex exponential, a product of waves adds the angles, and a shift or a derivative multiplies the wave by a factor. Calculations with waves then reduce to calculations with these factors. For the model matrix the factor is the eigenvalue <span class="math inline">\(2 - 2\cos\theta\)</span>, as in <a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.6</span></a>.</p>
+</div>
+</div>
+</section>
+<section id="sec-waves-grid" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="sec-waves-grid"><span class="header-section-number">4.3.2</span> Waves on a grid</h3>
+<p>The eigenvectors of <a href="#sec-model-eigen" class="quarto-xref"><span>Section 4.1.4</span></a> were sines on a domain with Dirichlet boundaries. From here on we use a <strong>periodic</strong> domain, as on a latitude circle, because waves are simplest there. Two things change compared with <a href="#sec-model-eigen" class="quarto-xref"><span>Section 4.1.4</span></a>, and it helps to keep them apart:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>model matrix (<a href="#sec-model-eigen" class="quarto-xref"><span>Section 4.1.4</span></a>)</th>
+<th>periodic grid (this section)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>grid points</td>
+<td><span class="math inline">\(x_j = j h\)</span>, <span class="math inline">\(j = 1, \dots, N\)</span>, plus two boundary nodes</td>
+<td><span class="math inline">\(x_j = j \Delta x\)</span>, <span class="math inline">\(j = 0, \dots, N - 1\)</span>, no boundary</td>
+</tr>
+<tr class="even">
+<td>waves</td>
+<td>sines, <span class="math inline">\(m\)</span> <strong>half</strong> waves, <span class="math inline">\(k = m \pi / L\)</span></td>
+<td>cosines and sines, <span class="math inline">\(\ell\)</span> <strong>whole</strong> waves (<span class="math inline">\(= 2\ell\)</span> half waves), <span class="math inline">\(k = 2 \pi \ell / L\)</span></td>
+</tr>
+<tr class="odd">
+<td>index</td>
+<td><span class="math inline">\(m = 1, \dots, N\)</span></td>
+<td><span class="math inline">\(\ell = 0, 1, \dots, N/2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The question.</strong> Think of <span class="math inline">\(N\)</span> values <span class="math inline">\(u_0, \dots, u_{N-1}\)</span> measured at equally spaced points around a latitude circle, for example the surface temperature at <span class="math inline">\(N\)</span> stations. Plotted, they look irregular (top panel of <a href="#fig-multiply-sum" class="quarto-xref">Figure&nbsp;<span>4.4</span></a>). Fourier analysis asks: <em>which waves is this signal made of, and how strong is each one?</em> A wave here is a pattern that repeats <span class="math inline">\(\ell\)</span> times around the circle: <span class="math inline">\(\ell = 1\)</span> is one warm and one cold half, <span class="math inline">\(\ell = 2\)</span> two of each, and so on. <span class="math inline">\(\ell = 0\)</span> is the constant part, the mean. The answer, one amplitude for each <span class="math inline">\(\ell\)</span>, is the <strong>spectrum</strong> of the signal.</p>
+<p><strong>Waves on the grid points.</strong> The domain has length <span class="math inline">\(L = N \Delta x\)</span> and the grid points are <span class="math inline">\(x_j = j \Delta x = j L / N\)</span>. A wave with <span class="math inline">\(\ell\)</span> crests in the domain has the wavenumber <span class="math inline">\(k_\ell = 2 \pi \ell / L\)</span>, and at the grid points</p>
+<p><span class="math display">\[
+k_\ell x_j = \frac{2 \pi \ell}{L} \cdot \frac{j L}{N} = \frac{2 \pi \ell j}{N} .
+\]</span></p>
+<p>A wave needs two numbers, its amplitude and its position. We therefore use a cosine and a sine for each <span class="math inline">\(\ell\)</span>, with coefficients <span class="math inline">\(a_\ell\)</span> and <span class="math inline">\(b_\ell\)</span>: a cosine has its crest at <span class="math inline">\(x = 0\)</span>, a sine a quarter wavelength further on, and the mix of the two places the crest anywhere. The signal is</p>
+<p><span id="eq-real-fourier"><span class="math display">\[
+u_j = a_0 + \sum_{\ell=1}^{N/2} \Big[ a_\ell \cos \frac{2 \pi \ell j}{N} + b_\ell \sin \frac{2 \pi \ell j}{N} \Big] .
+\tag{4.15}\]</span></span></p>
+<p>Why only up to <span class="math inline">\(\ell = N/2\)</span>? <span class="math inline">\(N\)</span> grid values cannot determine more than <span class="math inline">\(N\)</span> coefficients, and <span class="math inline">\(\ell = N/2\)</span> is already the shortest wave, which changes sign from point to point. Shorter waves cannot be told apart from longer ones; this is aliasing, <a href="#sec-aliasing" class="quarto-xref"><span>Section 4.3.4</span></a>.</p>
+</section>
+<section id="sec-dft" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="sec-dft"><span class="header-section-number">4.3.3</span> The discrete Fourier transform</h3>
+<p>The goal: compute the coefficients <span class="math inline">\(a_\ell\)</span> and <span class="math inline">\(b_\ell\)</span> from the data <span class="math inline">\(u_j\)</span>.</p>
+<p><strong>The idea: multiply and sum.</strong> To find out how much of the wave with <span class="math inline">\(n\)</span> crests the signal contains, we multiply the data point by point with that wave, the <strong>test wave</strong>, and add up:</p>
+<p><span class="math display">\[
+\sum_{j=0}^{N-1} u_j \cos \frac{2 \pi n j}{N} .
+\]</span></p>
+<p><a href="#fig-multiply-sum" class="quarto-xref">Figure&nbsp;<span>4.4</span></a> shows what happens. The signal there contains a cosine with <span class="math inline">\(n = 2\)</span> crests (amplitude 1) and a sine with 5 crests (amplitude 0.6).</p>
+<ul>
+<li>Multiplied with the matching test wave, <span class="math inline">\(n = 2\)</span>, the products are mostly positive: where the wave is positive, the test wave is positive too, and where it is negative, so is the test wave. The products add up, here to 12.</li>
+<li>Multiplied with a test wave that does not match, <span class="math inline">\(n = 3\)</span>, the products are positive at some points and negative at others, and they cancel. The sum is zero.</li>
+</ul>
+<p>So the sum picks out exactly the part of the signal that has the shape of the test wave, and ignores all other waves. This is the whole idea of the Fourier transform.</p>
+<div id="cell-fig-multiply-sum" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div id="fig-multiply-sum" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-multiply-sum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-multiply-sum-output-1.png" width="663" height="585" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multiply-sum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.4: The idea of the Fourier transform. Top: a signal at <span class="math inline">\(N = 24\)</span> points, <span class="math inline">\(\cos (2\pi \cdot 2 j / N) + 0.6 \sin (2\pi \cdot 5 j / N)\)</span>. Middle: multiplied with the matching test wave <span class="math inline">\(\cos (2\pi \cdot 2 j/N)\)</span> (line), the products (bars) are mostly positive and add up. Bottom: multiplied with <span class="math inline">\(\cos (2\pi \cdot 3 j/N)\)</span>, which is not in the signal, they cancel.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>From the sum to the coefficient.</strong> Put the signal <a href="#eq-real-fourier" class="quarto-xref">Equation&nbsp;<span>4.15</span></a> into the sum. All waves except the matching one drop out (why, we show next), and what is left is the matching cosine times itself:</p>
+<p><span class="math display">\[
+\sum_{j=0}^{N-1} u_j \cos \frac{2 \pi n j}{N}
+= a_n \sum_{j=0}^{N-1} \cos^2 \frac{2 \pi n j}{N} = a_n \, \frac{N}{2} ,
+\]</span></p>
+<p>because <span class="math inline">\(\cos^2 \alpha = \tfrac12 (1 + \cos 2\alpha)\)</span>: on average the square is <span class="math inline">\(\tfrac12\)</span>, so <span class="math inline">\(N\)</span> terms give <span class="math inline">\(N/2\)</span> (for <span class="math inline">\(0 &lt; n &lt; N/2\)</span>).</p>
+<p>Let us check this with <a href="#fig-multiply-sum" class="quarto-xref">Figure&nbsp;<span>4.4</span></a>. There <span class="math inline">\(N = 24\)</span> and the test wave has <span class="math inline">\(n = 2\)</span>, so the formula predicts the sum <span class="math inline">\(a_2 \cdot 24/2 = 12 \, a_2\)</span>. The figure shows that the sum is 12. Hence <span class="math inline">\(12 \, a_2 = 12\)</span>, or <span class="math inline">\(a_2 = 1\)</span>: exactly the amplitude of the cosine we built into the signal. The method recovers it.</p>
+<p>Solving for the coefficient, and the same with a sine as test wave,</p>
+<p><span id="eq-real-dft"><span class="math display">\[
+a_n = \frac{2}{N} \sum_{j=0}^{N-1} u_j \cos \frac{2 \pi n j}{N} , \qquad
+b_n = \frac{2}{N} \sum_{j=0}^{N-1} u_j \sin \frac{2 \pi n j}{N} , \qquad
+0 &lt; n &lt; \frac{N}{2} .
+\tag{4.16}\]</span></span></p>
+<p>For <span class="math inline">\(n = 0\)</span> the test wave is the constant 1, and <span class="math inline">\(a_0 = \frac1N \sum_j u_j\)</span> is the mean. This is the <strong>discrete Fourier transform</strong> (DFT) in real form. It is the same idea as <span class="math inline">\(\beta_m = \vec v_m^T \vec b\)</span> in <a href="#eq-eigen-solution" class="quarto-xref">Equation&nbsp;<span>4.7</span></a>: the waves are orthogonal vectors, and the coefficient of each is the product of the data with that wave.</p>
+<p><strong>Why the other waves cancel.</strong> The product of two waves with <span class="math inline">\(n\)</span> and <span class="math inline">\(\ell\)</span> crests is, by the product rules for cosine and sine, a combination of waves with <span class="math inline">\(n + \ell\)</span> and <span class="math inline">\(n - \ell\)</span> crests. So everything reduces to one question: why is the sum of a wave over all grid points zero? Here the complex exponential helps. The values <span class="math inline">\(e^{2 \pi i \, p j / N}\)</span>, <span class="math inline">\(j = 0, \dots, N - 1\)</span>, are points on the unit circle, <span class="math inline">\(p/N\)</span> of a turn apart (<a href="#fig-roots" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>). For <span class="math inline">\(p = 1\)</span> they are the corners of a regular polygon, spread evenly around the circle. Added as arrows from the origin, they balance: the sum is zero. Its real part is the sum of the cosines and its imaginary part the sum of the sines, so both are zero. For <span class="math inline">\(p = 3\)</span> the points are visited in a different order, but they are still spread evenly, and the sum is again zero. Only if <span class="math inline">\(p\)</span> is a multiple of <span class="math inline">\(N\)</span> does every point land on 1, and the sum is <span class="math inline">\(N\)</span>:</p>
+<p><span id="eq-orthogonality"><span class="math display">\[
+\sum_{j=0}^{N-1} e^{2 \pi i \, p j / N} =
+\begin{cases} N &amp; \text{if } p = 0, \pm N, \pm 2N, \dots , \\ 0 &amp; \text{otherwise.} \end{cases}
+\tag{4.17}\]</span></span></p>
+<div id="cell-fig-roots" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<div id="fig-roots" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-roots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-roots-output-1.png" width="707" height="250" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-roots-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.5: The points <span class="math inline">\(e^{2\pi i \, p j / N}\)</span> for <span class="math inline">\(N = 8\)</span>, <span class="math inline">\(j = 0, \dots, 7\)</span>, numbered by <span class="math inline">\(j\)</span>. For <span class="math inline">\(p = 1\)</span> and <span class="math inline">\(p = 3\)</span> they are spread evenly around the circle, and as arrows from the origin they add up to zero. For <span class="math inline">\(p = N = 8\)</span> every point is 1, and the sum is 8.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The arrows balance because turning the whole picture by one step, multiplying every point by <span class="math inline">\(q = e^{2 \pi i p / N}\)</span>, only renumbers the points and leaves the sum <span class="math inline">\(S\)</span> unchanged: <span class="math inline">\(q S = S\)</span>. With <span class="math inline">\(q \ne 1\)</span> this is possible only for <span class="math inline">\(S = 0\)</span>. (Written out, this is the geometric series <span class="math inline">\(\sum_j q^j = (1 - q^N)/(1 - q)\)</span> with <span class="math inline">\(q^N = 1\)</span>.)</p>
+<p><strong>The complex form.</strong> The two real sums of <a href="#eq-real-dft" class="quarto-xref">Equation&nbsp;<span>4.16</span></a> can be packed into one complex number, with <span class="math inline">\(e^{-i\alpha} = \cos \alpha - i \sin \alpha\)</span>:</p>
+<p><span id="eq-dft"><span class="math display">\[
+\hat u_n = \frac{1}{N} \sum_{j=0}^{N-1} u_j \, e^{-2 \pi i \, n j / N}
+= \frac{1}{N} \sum_{j} u_j \cos \frac{2 \pi n j}{N} - \frac{i}{N} \sum_{j} u_j \sin \frac{2 \pi n j}{N}
+= \frac{a_n - i \, b_n}{2} .
+\tag{4.18}\]</span></span></p>
+<p>This is the DFT as it is usually written, and as NumPy computes it. Nothing new happens in it: the real part holds the cosine coefficient, the imaginary part the sine coefficient. The amplitude of the wave, <span class="math inline">\(\sqrt{a_n^2 + b_n^2}\)</span>, is therefore</p>
+<p><span class="math display">\[
+\sqrt{a_n^2 + b_n^2} = 2 \, |\hat u_n| ,
+\]</span></p>
+<p>and the angle of <span class="math inline">\(\hat u_n\)</span> in the complex plane gives the position of the crest. Why the factor 2? A real wave is the sum of two rotations, <span class="math inline">\(e^{+i\alpha}\)</span> and <span class="math inline">\(e^{-i\alpha}\)</span> (<a href="#eq-cos-sin-exp" class="quarto-xref">Equation&nbsp;<span>4.14</span></a>), and <span class="math inline">\(\hat u_n\)</span> measures only one of them; the other half sits in <span class="math inline">\(\hat u_{N-n}\)</span>, the wave turning the other way. Conversely, the signal is rebuilt from its amplitudes by</p>
+<p><span id="eq-idft"><span class="math display">\[
+u_j = \sum_{\ell=0}^{N-1} \hat u_\ell \, e^{2 \pi i \, \ell j / N} ,
+\tag{4.19}\]</span></span></p>
+<p>the inverse DFT, which is <a href="#eq-real-fourier" class="quarto-xref">Equation&nbsp;<span>4.15</span></a> in complex form.</p>
+<p><strong>A worked example.</strong> Four values, <span class="math inline">\(N = 4\)</span>, <span class="math inline">\(u = (1, 2, 1, 0)\)</span>. The test waves with <span class="math inline">\(n = 1\)</span> are <span class="math inline">\(\cos (\pi j / 2) = (1, 0, -1, 0)\)</span> and <span class="math inline">\(\sin (\pi j / 2) = (0, 1, 0, -1)\)</span>. Multiply and sum:</p>
+<p><span class="math display">\[
+\begin{aligned}
+a_0 &amp;= \tfrac14 (1 + 2 + 1 + 0) = 1 , \\
+a_1 &amp;= \tfrac24 (1 \cdot 1 + 2 \cdot 0 + 1 \cdot (-1) + 0 \cdot 0) = 0 , \\
+b_1 &amp;= \tfrac24 (1 \cdot 0 + 2 \cdot 1 + 1 \cdot 0 + 0 \cdot (-1)) = 1 .
+\end{aligned}
+\]</span></p>
+<p>So <span class="math inline">\(u_j = 1 + \sin (\pi j / 2)\)</span>: the mean 1 plus one sine wave of amplitude 1. Check: <span class="math inline">\(j = 0, 1, 2, 3\)</span> gives <span class="math inline">\(1, 2, 1, 0\)</span>. In complex form, <span class="math inline">\(\hat u_1 = (a_1 - i b_1)/2 = -0.5 i\)</span>, and <span class="math inline">\(2 |\hat u_1| = 1\)</span> is the amplitude. NumPy gives the same:</p>
+<div id="9e72c15f" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> np.array([<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>])</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="bu">len</span>(u)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>j <span class="op">=</span> np.arange(N)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># by hand: multiply with the test waves and sum</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>a1 <span class="op">=</span> <span class="dv">2</span> <span class="op">/</span> N <span class="op">*</span> np.<span class="bu">sum</span>(u <span class="op">*</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> <span class="dv">1</span> <span class="op">*</span> j <span class="op">/</span> N))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>b1 <span class="op">=</span> <span class="dv">2</span> <span class="op">/</span> N <span class="op">*</span> np.<span class="bu">sum</span>(u <span class="op">*</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> <span class="dv">1</span> <span class="op">*</span> j <span class="op">/</span> N))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"mean"</span>, u.mean(), <span class="st">" a1"</span>, <span class="bu">round</span>(a1, <span class="dv">12</span>), <span class="st">" b1"</span>, <span class="bu">round</span>(b1, <span class="dv">12</span>))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># with the FFT: rfft returns N * u_hat for n = 0, ..., N/2</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>u_hat <span class="op">=</span> np.fft.rfft(u) <span class="op">/</span> N</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"u_hat"</span>, u_hat, <span class="st">" amplitude of n = 1:"</span>, <span class="dv">2</span> <span class="op">*</span> <span class="bu">abs</span>(u_hat[<span class="dv">1</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mean 1.0  a1 0.0  b1 1.0
+u_hat [1.+0.j  0.-0.5j 0.+0.j ]  amplitude of n = 1: 1.0</code></pre>
+</div>
+</div>
+<p><strong>In practice.</strong> Computed directly, <a href="#eq-dft" class="quarto-xref">Equation&nbsp;<span>4.18</span></a> costs <span class="math inline">\(N\)</span> operations for each of the <span class="math inline">\(N\)</span> amplitudes, <span class="math inline">\(N^2\)</span> in total. The <strong>fast Fourier transform</strong> (FFT) obtains the same numbers with <span class="math inline">\(O(N \log N)\)</span> operations: for <span class="math inline">\(N = 10^6\)</span> about <span class="math inline">\(2 \times 10^7\)</span> instead of <span class="math inline">\(10^{12}\)</span>. In NumPy, <code>np.fft.rfft(u)</code> returns <span class="math inline">\(N \hat u_n\)</span> for <span class="math inline">\(n = 0, \dots, N/2\)</span>, without the factor <span class="math inline">\(1/N\)</span>. The amplitude spectrum of a real signal is therefore <code>2 * abs(np.fft.rfft(u)) / N</code> (and the mean is <code>abs(np.fft.rfft(u)[0]) / N</code>, without the 2). <a href="#fig-spectrum" class="quarto-xref">Figure&nbsp;<span>4.6</span></a> applies this to a noisy signal.</p>
+<div id="cell-fig-spectrum" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>N, L <span class="op">=</span> <span class="dv">128</span>, <span class="fl">1.0</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(N) <span class="op">*</span> L <span class="op">/</span> N</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">1</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>signal <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> <span class="dv">3</span> <span class="op">*</span> x) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> <span class="dv">10</span> <span class="op">*</span> x) <span class="op">+</span> <span class="fl">0.2</span> <span class="op">*</span> rng.standard_normal(N)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>amplitude <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> <span class="bu">abs</span>(np.fft.rfft(signal)) <span class="op">/</span> N</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>ell <span class="op">=</span> np.fft.rfftfreq(N, d<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> N)       <span class="co"># number of waves in the domain</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">3</span>))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ax1.plot(x, signal)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">"$x$"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">"$u$"</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ax2.stem(ell, amplitude, basefmt<span class="op">=</span><span class="st">" "</span>, markerfmt<span class="op">=</span><span class="st">"."</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>ax2.set_xlim(<span class="dv">0</span>, <span class="dv">30</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="vs">r"number of waves in the domain, </span><span class="dv">$</span><span class="er">\</span><span class="vs">ell</span><span class="dv">$</span><span class="vs">"</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"amplitude"</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-spectrum" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spectrum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-spectrum-output-1.png" width="857" height="278" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spectrum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.6: A signal composed of two waves and noise (left) and its amplitude spectrum (right). The two waves stand out as peaks with their amplitudes 1 and 0.5; the noise is spread thinly over all <span class="math inline">\(\ell\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To find how much of a wave is in a signal, multiply the signal with that wave and sum (<a href="#eq-real-dft" class="quarto-xref">Equation&nbsp;<span>4.16</span></a>). All other waves cancel, because a wave summed over all grid points gives zero (<a href="#eq-orthogonality" class="quarto-xref">Equation&nbsp;<span>4.17</span></a>). In complex form, <span class="math inline">\(\hat u_n = \frac1N \sum_j u_j e^{-2\pi i n j/N}\)</span> (<a href="#eq-dft" class="quarto-xref">Equation&nbsp;<span>4.18</span></a>) holds the cosine and the sine coefficient at once, and the amplitude of the wave is <span class="math inline">\(2 |\hat u_n|\)</span>. In NumPy: <code>2 * abs(np.fft.rfft(u)) / N</code>.</p>
+</div>
+</div>
+</section>
+<section id="sec-aliasing" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="sec-aliasing"><span class="header-section-number">4.3.4</span> The shortest wave and aliasing</h3>
+<p>The goal: find the shortest wave a grid can represent, and see what happens to shorter waves.</p>
+<p>The shortest wave that a grid can represent has one crest and one trough on two neighbouring points. Its wavelength is <span class="math inline">\(2 \Delta x\)</span> and its wavenumber is the <strong>Nyquist wavenumber</strong> <span class="math inline">\(k_{\max} = \pi / \Delta x\)</span>.</p>
+<p>What happens to a wave with a larger wavenumber? Consider the wavenumbers <span class="math inline">\(k\)</span> and <span class="math inline">\(k + 2 \pi / \Delta x\)</span>. At the grid points <span class="math inline">\(x_j = j \Delta x\)</span></p>
+<p><span class="math display">\[
+e^{i (k + 2 \pi / \Delta x) \, x_j} = e^{i k x_j} \, e^{2 \pi i \, j} = e^{i k x_j} ,
+\]</span></p>
+<p>because <span class="math inline">\(e^{2 \pi i j} = 1\)</span> for every integer <span class="math inline">\(j\)</span>. The two waves have the same values at all grid points. On the grid they cannot be distinguished. A wave that is shorter than <span class="math inline">\(2 \Delta x\)</span> therefore does not disappear when it is sampled: it is mistaken for a longer wave with a wavenumber in the range <span class="math inline">\(|k| \le k_{\max}\)</span>. This is <strong>aliasing</strong>.</p>
+<p>In <a href="#fig-aliasing" class="quarto-xref">Figure&nbsp;<span>4.7</span></a> a wave with wavelength <span class="math inline">\(\tfrac43 \Delta x\)</span>, that is <span class="math inline">\(k = \tfrac32 \pi / \Delta x\)</span>, appears as the wave with <span class="math inline">\(k - 2 \pi / \Delta x = -\tfrac12 \pi / \Delta x\)</span>, which has the wavelength <span class="math inline">\(4 \Delta x\)</span>.</p>
+<div id="cell-fig-aliasing" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div id="fig-aliasing" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-aliasing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-aliasing-output-1.png" width="582" height="253" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aliasing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.7: Aliasing. At the grid points (dots) a wave with wavelength <span class="math inline">\(4\Delta x / 3\)</span> cannot be distinguished from a wave with wavelength <span class="math inline">\(4 \Delta x\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Aliasing matters in nonlinear models. The product of two waves is</p>
+<p><span class="math display">\[
+e^{i k_1 x} \, e^{i k_2 x} = e^{i (k_1 + k_2) x} ,
+\]</span></p>
+<p>a wave with the wavenumber <span class="math inline">\(k_1 + k_2\)</span>. A nonlinear term such as <span class="math inline">\(u \, \partial u / \partial x\)</span> therefore creates shorter waves from longer ones. If <span class="math inline">\(k_1 + k_2\)</span> exceeds <span class="math inline">\(k_{\max}\)</span>, the grid misrepresents the product as a longer wave, and energy appears at scales where it does not belong. This can make a model unstable (Chapter 17).</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The shortest wave on a grid has the wavelength <span class="math inline">\(2\Delta x\)</span>, the wavenumber <span class="math inline">\(k_{\max} = \pi / \Delta x\)</span>. A wave with <span class="math inline">\(k\)</span> and one with <span class="math inline">\(k + 2\pi/\Delta x\)</span> have the same grid values. Shorter waves therefore do not vanish but appear as longer ones (aliasing), for example when a nonlinear term creates them.</p>
+</div>
+</div>
+</section>
+<section id="sec-waves-test" class="level3" data-number="4.3.5">
+<h3 data-number="4.3.5" class="anchored" data-anchor-id="sec-waves-test"><span class="header-section-number">4.3.5</span> Why waves are the natural test for a numerical method</h3>
+<p>The goal: find out how accurately a difference formula treats a wave of a given length. For a linear equation with constant coefficients each wave evolves independently of the others. It therefore suffices to understand what a numerical method does to a single wave <span class="math inline">\(e^{ikx}\)</span>, and that is easy to compute.</p>
+<p>The exact derivative of a wave is</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}}{\mathrm{d}x} e^{ikx} = i k \, e^{ikx} :
+\]</span></p>
+<p>the wave is multiplied by <span class="math inline">\(ik\)</span>. For the central difference <a href="03-numerical-toolbox.html#eq-fd-central" class="quarto-xref">Equation&nbsp;<span>3.5</span></a> we factor out <span class="math inline">\(e^{ikx}\)</span> and use <span class="math inline">\(e^{i\alpha} - e^{-i\alpha} = 2 i \sin \alpha\)</span>:</p>
+<p><span class="math display">\[
+\frac{e^{ik(x + \Delta x)} - e^{ik(x - \Delta x)}}{2 \Delta x}
+= \frac{e^{ik \Delta x} - e^{-ik \Delta x}}{2 \Delta x} \, e^{ikx}
+= i \, \frac{\sin (k \Delta x)}{\Delta x} \, e^{ikx} .
+\]</span></p>
+<p>The wave is again multiplied by <span class="math inline">\(i\)</span> times a real number. The numerical derivative is that of a wave with the <strong>modified wavenumber</strong></p>
+<p><span id="eq-modified-wavenumber"><span class="math display">\[
+k_{\text{eff}} = \frac{\sin (k \Delta x)}{\Delta x} .
+\tag{4.20}\]</span></span></p>
+<p>For <span class="math inline">\(k \Delta x \ll 1\)</span> the expansion <span class="math inline">\(\sin (k \Delta x) \approx k \Delta x - (k \Delta x)^3 / 6\)</span> gives <span class="math inline">\(k_{\text{eff}} \approx k \left[ 1 - (k \Delta x)^2 / 6 \right]\)</span>: the relative error is <span class="math inline">\((k \Delta x)^2 / 6\)</span>. This is the truncation error of <a href="03-numerical-toolbox.html#eq-fd-central" class="quarto-xref">Equation&nbsp;<span>3.5</span></a>, now expressed for each wave separately.</p>
+<div id="cell-fig-modified-wavenumber" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<div id="fig-modified-wavenumber" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-modified-wavenumber-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-matrices-waves_files/figure-html/fig-modified-wavenumber-output-1.png" width="478" height="366" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-modified-wavenumber-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.8: Modified wavenumber of the central differences of second and fourth order. The exact derivative corresponds to the diagonal.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-modified-wavenumber" class="quarto-xref">Figure&nbsp;<span>4.8</span></a> shows what the statement “second order” hides. For long waves the approximation is excellent. For the <span class="math inline">\(4 \Delta x\)</span> wave, <span class="math inline">\(k \Delta x = \pi / 2\)</span>, the derivative is too small by the factor <span class="math inline">\(\sin (\pi/2) / (\pi/2) = 0.64\)</span>. For the <span class="math inline">\(2 \Delta x\)</span> wave it is zero: the central difference does not see the shortest wave at all. A wave needs about ten grid points per wavelength to be treated accurately by a scheme of second order; then <span class="math inline">\(k \Delta x = \pi / 5\)</span> and the error is 6 %.</p>
+<p>This has a consequence that every user of model output should know. The smallest features that a model represents correctly are several times larger than its grid spacing. The <strong>effective resolution</strong> of a weather model with a grid spacing of 2 km is closer to 10 km.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The central difference differentiates the wave <span class="math inline">\(e^{ikx}\)</span> as if it had the modified wavenumber <span class="math inline">\(k_{\text{eff}} = \sin (k \Delta x) / \Delta x\)</span> (<a href="#eq-modified-wavenumber" class="quarto-xref">Equation&nbsp;<span>4.20</span></a>). The relative error is <span class="math inline">\((k \Delta x)^2 / 6\)</span> for long waves, 36 % for the <span class="math inline">\(4 \Delta x\)</span> wave, and 100 % for the <span class="math inline">\(2 \Delta x\)</span> wave. About ten grid points per wavelength are needed for an error of a few percent.</p>
+</div>
+</div>
+</section>
+<section id="sec-second-difference" class="level3" data-number="4.3.6">
+<h3 data-number="4.3.6" class="anchored" data-anchor-id="sec-second-difference"><span class="header-section-number">4.3.6</span> The second difference and the model matrix</h3>
+<p>The goal: apply the same analysis to the second difference, and show that it gives back the eigenvalues of the model matrix. The calculation for the second difference <a href="03-numerical-toolbox.html#eq-fd-second" class="quarto-xref">Equation&nbsp;<span>3.6</span></a>, with <span class="math inline">\(e^{i\alpha} + e^{-i\alpha} = 2 \cos \alpha\)</span>, gives</p>
+<p><span id="eq-second-difference-wave"><span class="math display">\[
+\frac{e^{ik(x + \Delta x)} - 2 e^{ikx} + e^{ik(x - \Delta x)}}{\Delta x^2}
+= - \frac{2 - 2 \cos (k \Delta x)}{\Delta x^2} \, e^{ikx}
+= - \frac{4}{\Delta x^2} \sin^2 \frac{k \Delta x}{2} \, e^{ikx} .
+\tag{4.21}\]</span></span></p>
+<p>The exact second derivative multiplies the wave by <span class="math inline">\(-k^2\)</span>. The second difference multiplies it by <span class="math inline">\(-\frac{4}{\Delta x^2} \sin^2 \frac{k\Delta x}{2}\)</span>, which for long waves, <span class="math inline">\(\sin \alpha \approx \alpha\)</span>, is again about <span class="math inline">\(-k^2\)</span>.</p>
+<p>Now compare with the model matrix. Take <span class="math inline">\(\Delta x = h\)</span> and the wavenumber <span class="math inline">\(k_m = m \pi / L\)</span> of eigenvector <span class="math inline">\(m\)</span>, so that <span class="math inline">\(k_m \Delta x = \theta_m\)</span>. Then the factor in <a href="#eq-second-difference-wave" class="quarto-xref">Equation&nbsp;<span>4.21</span></a> is</p>
+<p><span class="math display">\[
+- \frac{4}{h^2} \sin^2 \frac{\theta_m}{2} = - \frac{\lambda_m}{h^2} ,
+\]</span></p>
+<p>with <span class="math inline">\(\lambda_m\)</span> from <a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.6</span></a>. The second difference is <span class="math inline">\(-A / h^2\)</span>, with the minus sign and the <span class="math inline">\(h^2\)</span> that we moved to the right hand side in <a href="#sec-model-problem" class="quarto-xref"><span>Section 4.1.1</span></a>. So the factor by which the second difference multiplies a wave is, up to <span class="math inline">\(-1/h^2\)</span>, the eigenvalue of <span class="math inline">\(A\)</span>.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Result: two views of one fact
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Waves are the eigenvectors of difference operators with constant coefficients, and the factor by which a wave is multiplied is the eigenvalue. For the second difference,</p>
+<p><span class="math display">\[
+\text{wave analysis: } - \frac{4}{\Delta x^2} \sin^2 \frac{k \Delta x}{2}
+\quad \Longleftrightarrow \quad
+\text{matrix: } - \frac{\lambda_m}{h^2} , \quad \lambda_m = 4 \sin^2 \frac{\theta_m}{2} ,
+\]</span></p>
+<p>with <span class="math inline">\(k \Delta x = \theta_m\)</span>. The wave analysis gives the eigenvalues without setting up the matrix.</p>
+</div>
+</div>
+<p>Applied to a complete scheme in space and time, this analysis shows whether a wave is damped, amplified or moved at the wrong speed. This is the von Neumann stability analysis (Chapter 12, Chapter 13).</p>
+</section>
+</section>
+<section id="summary" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">4.4</span> Summary</h2>
+<ul>
+<li><strong>The model matrix.</strong> Discretizing <span class="math inline">\(-u'' = f\)</span> with Dirichlet values gives <span class="math inline">\(A \vec x = \vec b\)</span> with <span class="math inline">\(A = \operatorname{tridiag}(-1, 2, -1)\)</span> and <span class="math inline">\(\vec b = h^2 \vec f\)</span> (<a href="#eq-model-matrix" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>). Each row is the stencil of the difference formula.</li>
+<li><strong>Sparse, symmetric, positive definite.</strong> <span class="math inline">\(A\)</span> has <span class="math inline">\(3N - 2\)</span> non-zeros. Its quadratic form is a sum of squares (<a href="#eq-model-quadratic-form" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>), so <span class="math inline">\(A\)</span> is positive definite and <span class="math inline">\(A \vec x = \vec b\)</span> has exactly one solution.</li>
+<li><strong>Eigenvalues.</strong> For <span class="math inline">\(m = 1, \dots, N\)</span> (the number of half waves), <span class="math inline">\(\lambda_m = 4 \sin^2 \big( m \pi / (2 (N + 1)) \big)\)</span> with sine waves as eigenvectors (<a href="#eq-model-eigenvalues" class="quarto-xref">Equation&nbsp;<span>4.6</span></a>). They lie between <span class="math inline">\(\lambda_1 \approx \pi^2 / (N + 1)^2\)</span> and <span class="math inline">\(\lambda_N \approx 4\)</span>.</li>
+<li><strong>Norm and condition number.</strong> For a symmetric matrix <span class="math inline">\(\|A\|_2 = \max |\lambda_m|\)</span> (<a href="#eq-norm-eigen" class="quarto-xref">Equation&nbsp;<span>4.9</span></a>). The condition number <span class="math inline">\(\kappa = \lambda_{\max} / \lambda_{\min}\)</span> (<a href="#eq-condition-spd" class="quarto-xref">Equation&nbsp;<span>4.11</span></a>) bounds the amplification of relative errors. For the model matrix <span class="math inline">\(\kappa \approx 4 (N + 1)^2 / \pi^2\)</span> grows as <span class="math inline">\(1 / h^2\)</span> (<a href="#eq-model-condition" class="quarto-xref">Equation&nbsp;<span>4.12</span></a>).</li>
+<li><strong>Waves on a grid.</strong> The DFT (<a href="#eq-dft" class="quarto-xref">Equation&nbsp;<span>4.18</span></a>) splits <span class="math inline">\(N\)</span> grid values into <span class="math inline">\(N\)</span> waves. The shortest wave is <span class="math inline">\(2 \Delta x\)</span>; shorter waves are aliased.</li>
+<li><strong>Difference formulas and waves.</strong> A difference formula multiplies a wave by a factor. For the first derivative this gives the modified wavenumber (<a href="#eq-modified-wavenumber" class="quarto-xref">Equation&nbsp;<span>4.20</span></a>): about ten points per wavelength are needed. For the second difference the factor is <span class="math inline">\(-\lambda_m / h^2\)</span>: wave analysis and eigenvalues are two views of one fact.</li>
+</ul>
+</section>
+<section id="further-reading" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">4.5</span> Further reading</h2>
+<p><span class="citation" data-cites="durran2010">Durran (<a href="references.html#ref-durran2010" role="doc-biblioref">2010</a>)</span>, chapter 3, for the wave view of finite differences; <span class="citation" data-cites="shewchuk1994">Shewchuk (<a href="references.html#ref-shewchuk1994" role="doc-biblioref">1994</a>)</span> for eigenvalues, quadratic forms and the condition number.</p>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-durran2010" class="csl-entry" role="listitem">
+Durran, Dale R. 2010. <em>Numerical Methods for Fluid Dynamics: With Applications to Geophysics</em>. 2nd ed. Springer.
+</div>
+<div id="ref-shewchuk1994" class="csl-entry" role="listitem">
+Shewchuk, Jonathan R. 1994. <em>An Introduction to the Conjugate Gradient Method Without the Agonizing Pain</em>. Carnegie Mellon University.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03-numerical-toolbox.html" class="pagination-link" aria-label="The numerical toolbox I: derivatives, integrals, roots">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05-one-step-methods.html" class="pagination-link" aria-label="One-step methods">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

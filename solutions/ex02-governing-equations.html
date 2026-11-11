@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exercise 2: Vector calculus, conservation laws, classification</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="ex02-governing-equations_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ex02-governing-equations_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="ex02-governing-equations_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="ex02-governing-equations_files/libs/quarto-html/popper.min.js"></script>
+<script src="ex02-governing-equations_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ex02-governing-equations_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ex02-governing-equations_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ex02-governing-equations_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ex02-governing-equations_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ex02-governing-equations_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ex02-governing-equations_files/libs/bootstrap/bootstrap-52b7431fd5103eb639085582735ab625.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="ex02-governing-equations.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Exercise 2: Vector calculus, conservation laws, classification</h1>
+<p class="subtitle lead">Prognostic Modelling (pea700), WiSe 2026/27</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Out: week 2 · Back: week 3 · 15 points</em></p>
+<p>Covers unit 2 of the script. Hand in your solutions in the folder <code>ex02/</code> of your repository, as PDF or in the markdown cells of a notebook.</p>
+<section id="problem-1-gradient-2-points" class="level2">
+<h2 class="anchored" data-anchor-id="problem-1-gradient-2-points">Problem 1: Gradient (2 points)</h2>
+<p>The temperature on a plate is <span class="math inline">\(T(x, y) = 20 - x^2 - 2 y^2\)</span> (in °C, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> in m).</p>
+<ol type="a">
+<li><p>Compute the gradient at the point <span class="math inline">\((1, 1)\)</span> and the unit vector in its direction.</p></li>
+<li><p>In which direction does heat flow at this point according to Fourier’s law, and what is the largest rate of change of temperature with distance?</p></li>
+</ol>
+<section id="solution" class="level3">
+<h3 class="anchored" data-anchor-id="solution">Solution</h3>
+<p>a) The partial derivatives are taken with the other variable held fixed. The constant 20 and the term in the other variable drop out:</p>
+<p><span class="math display">\[
+\frac{\partial T}{\partial x} = 0 - 2x - 0 = -2x, \qquad
+\frac{\partial T}{\partial y} = 0 - 0 - 4y = -4y .
+\]</span></p>
+<p>Hence</p>
+<p><span class="math display">\[
+\nabla T = \frac{\partial T}{\partial x} \vec i + \frac{\partial T}{\partial y} \vec j
+= -2x \, \vec i - 4y \, \vec j ,
+\qquad
+\nabla T(1, 1) = -2 \vec i - 4 \vec j \quad \text{(°C/m)} .
+\]</span></p>
+<p>Its magnitude is</p>
+<p><span class="math display">\[
+\|\nabla T(1, 1)\| = \sqrt{(-2)^2 + (-4)^2} = \sqrt{4 + 16} = \sqrt{20} = 2 \sqrt 5 ,
+\]</span></p>
+<p>and the unit vector in its direction is the gradient divided by its magnitude:</p>
+<p><span class="math display">\[
+\vec e = \frac{\nabla T}{\|\nabla T\|} = \frac{-2 \vec i - 4 \vec j}{2 \sqrt 5}
+= \frac{-\vec i - 2 \vec j}{\sqrt 5} .
+\]</span></p>
+<p>Check: <span class="math inline">\(\|\vec e\|^2 = (1 + 4)/5 = 1\)</span>. Both components are negative: the temperature increases towards the origin, where <span class="math inline">\(T\)</span> has its maximum of 20 °C.</p>
+<p>b) Fourier’s law gives the heat flux <span class="math inline">\(\vec F = -k \nabla T\)</span> with <span class="math inline">\(k &gt; 0\)</span>. Because of the minus sign the flux points opposite to the gradient, from warm to cold:</p>
+<p><span class="math display">\[
+\vec F(1, 1) = -k \left( -2 \vec i - 4 \vec j \right) = k \left( 2 \vec i + 4 \vec j \right) ,
+\qquad \text{direction} \quad -\vec e = \frac{\vec i + 2 \vec j}{\sqrt 5} .
+\]</span></p>
+<p>Heat flows away from the warm centre, outward and more strongly in <span class="math inline">\(y\)</span> than in <span class="math inline">\(x\)</span>.</p>
+<p>The rate of change of <span class="math inline">\(T\)</span> in the direction of a unit vector <span class="math inline">\(\vec n\)</span> is the directional derivative</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}T}{\mathrm{d}s} = \nabla T \cdot \vec n
+= \|\nabla T\| \, \|\vec n\| \cos \alpha = \|\nabla T\| \cos \alpha ,
+\]</span></p>
+<p>where <span class="math inline">\(\alpha\)</span> is the angle between <span class="math inline">\(\nabla T\)</span> and <span class="math inline">\(\vec n\)</span>. It is largest for <span class="math inline">\(\alpha = 0\)</span>, that is in the direction of the gradient, and its largest value is</p>
+<p><span class="math display">\[
+\|\nabla T(1, 1)\| = 2 \sqrt 5 \approx 4.47 \text{ °C/m} .
+\]</span></p>
+<p>In the direction of the heat flux, <span class="math inline">\(\alpha = \pi\)</span>, the temperature decreases at the same rate.</p>
+<p>Points: a) 1, b) 1.</p>
+</section>
+</section>
+<section id="problem-2-laplacian-3-points" class="level2">
+<h2 class="anchored" data-anchor-id="problem-2-laplacian-3-points">Problem 2: Laplacian (3 points)</h2>
+<p>Let <span class="math inline">\(f(x, y) = a x y + a x^2 + b y^3 + y^3\)</span> with constants <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. Compute <span class="math inline">\(\nabla \cdot (\nabla f)\)</span>. For which <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> does <span class="math inline">\(f\)</span> satisfy the Laplace equation everywhere?</p>
+<section id="solution-1" class="level3">
+<h3 class="anchored" data-anchor-id="solution-1">Solution</h3>
+<p><strong>Gradient.</strong> Term by term, holding <span class="math inline">\(y\)</span> fixed for <span class="math inline">\(\partial / \partial x\)</span> and <span class="math inline">\(x\)</span> fixed for <span class="math inline">\(\partial / \partial y\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial f}{\partial x} &amp;= a y + 2 a x + 0 + 0 = a y + 2 a x, \\
+\frac{\partial f}{\partial y} &amp;= a x + 0 + 3 b y^2 + 3 y^2 = a x + 3 (b + 1) \, y^2 ,
+\end{aligned}
+\]</span></p>
+<p>so <span class="math inline">\(\nabla f = (a y + 2 a x) \, \vec i + \big( a x + 3 (b + 1) y^2 \big) \, \vec j\)</span>.</p>
+<p><strong>Divergence of the gradient.</strong> The divergence of <span class="math inline">\(\vec F = F_1 \vec i + F_2 \vec j\)</span> is <span class="math inline">\(\partial F_1 / \partial x + \partial F_2 / \partial y\)</span>. With <span class="math inline">\(F_1 = \partial f / \partial x\)</span> and <span class="math inline">\(F_2 = \partial f / \partial y\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial x} (a y + 2 a x) = 0 + 2a = 2a, \qquad
+\frac{\partial}{\partial y} \big( a x + 3 (b + 1) y^2 \big) = 0 + 6 (b + 1) \, y ,
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\nabla \cdot (\nabla f) = \nabla^2 f = 2 a + 6 (b + 1) \, y .
+\]</span></p>
+<p>The mixed term <span class="math inline">\(a x y\)</span> does not contribute: its second derivatives <span class="math inline">\(\partial^2 (xy) / \partial x^2\)</span> and <span class="math inline">\(\partial^2 (xy) / \partial y^2\)</span> are both zero.</p>
+<p><strong>Conclusion.</strong> The Laplace equation <span class="math inline">\(\nabla^2 f = 0\)</span> must hold at every point, that is for all <span class="math inline">\(y\)</span>. A polynomial in <span class="math inline">\(y\)</span> is zero for all <span class="math inline">\(y\)</span> only if all its coefficients are zero:</p>
+<p><span class="math display">\[
+y^0: \; 2a = 0 \;\Rightarrow\; a = 0, \qquad
+y^1: \; 6 (b + 1) = 0 \;\Rightarrow\; b = -1 .
+\]</span></p>
+<p>With these values <span class="math inline">\(f = 0 + 0 - y^3 + y^3 = 0\)</span>: only the trivial function remains. (A choice such as <span class="math inline">\(a = -3 y (b + 1)\)</span> is not admissible, because <span class="math inline">\(a\)</span> is a constant.)</p>
+<p>Points: gradient 1, Laplacian 1, conclusion 1.</p>
+</section>
+</section>
+<section id="problem-3-divergence-of-a-radial-field-3-points" class="level2">
+<h2 class="anchored" data-anchor-id="problem-3-divergence-of-a-radial-field-3-points">Problem 3: Divergence of a radial field (3 points)</h2>
+<p>Consider the vector field</p>
+<p><span class="math display">\[
+\vec E = \frac{\vec r}{\|\vec r\|^{p}}, \qquad
+\vec r = x \vec i + y \vec j + z \vec k .
+\]</span></p>
+<ol type="a">
+<li><p>Derive <span class="math inline">\(\nabla \cdot \vec E\)</span> in Cartesian coordinates.</p></li>
+<li><p>For which <span class="math inline">\(p\)</span> is the field free of divergence away from the origin? Which physical fields have this form?</p></li>
+</ol>
+<section id="solution-2" class="level3">
+<h3 class="anchored" data-anchor-id="solution-2">Solution</h3>
+<p>a) We write <span class="math inline">\(r = \|\vec r\| = (x^2 + y^2 + z^2)^{1/2}\)</span>. The components of <span class="math inline">\(\vec E\)</span> are</p>
+<p><span class="math display">\[
+E_1 = x \, r^{-p}, \qquad E_2 = y \, r^{-p}, \qquad E_3 = z \, r^{-p} .
+\]</span></p>
+<p><strong>Derivative of <span class="math inline">\(r\)</span>.</strong> By the chain rule,</p>
+<p><span class="math display">\[
+\frac{\partial r}{\partial x}
+= \frac12 (x^2 + y^2 + z^2)^{-1/2} \cdot 2x
+= \frac{x}{r} ,
+\]</span></p>
+<p>and in the same way <span class="math inline">\(\partial r / \partial y = y / r\)</span> and <span class="math inline">\(\partial r / \partial z = z / r\)</span>.</p>
+<p><strong>Derivative of <span class="math inline">\(r^{-p}\)</span>.</strong> Again by the chain rule, with the result above,</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial x} r^{-p}
+= -p \, r^{-p-1} \, \frac{\partial r}{\partial x}
+= -p \, r^{-p-1} \, \frac{x}{r}
+= -p \, x \, r^{-p-2} .
+\]</span></p>
+<p><strong>Derivative of <span class="math inline">\(E_1\)</span>.</strong> By the product rule for <span class="math inline">\(x \cdot r^{-p}\)</span>,</p>
+<p><span class="math display">\[
+\frac{\partial E_1}{\partial x}
+= \frac{\partial x}{\partial x} \, r^{-p} + x \, \frac{\partial r^{-p}}{\partial x}
+= r^{-p} + x \left( -p \, x \, r^{-p-2} \right)
+= \frac{1}{r^{p}} - \frac{p \, x^2}{r^{p + 2}} .
+\]</span></p>
+<p>Correspondingly,</p>
+<p><span class="math display">\[
+\frac{\partial E_2}{\partial y} = \frac{1}{r^{p}} - \frac{p \, y^2}{r^{p + 2}}, \qquad
+\frac{\partial E_3}{\partial z} = \frac{1}{r^{p}} - \frac{p \, z^2}{r^{p + 2}} .
+\]</span></p>
+<p><strong>Sum.</strong> Adding the three and using <span class="math inline">\(x^2 + y^2 + z^2 = r^2\)</span>,</p>
+<p><span class="math display">\[
+\nabla \cdot \vec E = \frac{3}{r^{p}} - \frac{p \, (x^2 + y^2 + z^2)}{r^{p + 2}}
+= \frac{3}{r^{p}} - \frac{p \, r^2}{r^{p + 2}}
+= \frac{3}{r^{p}} - \frac{p}{r^{p}}
+= \frac{3 - p}{r^{p}} .
+\]</span></p>
+<p>Check: for <span class="math inline">\(p = 0\)</span> the field is <span class="math inline">\(\vec E = \vec r\)</span>, and directly <span class="math inline">\(\nabla \cdot \vec r = 1 + 1 + 1 = 3\)</span>, which agrees with <span class="math inline">\((3 - 0)/r^0 = 3\)</span>.</p>
+<p>b) <span class="math inline">\(\nabla \cdot \vec E = 0\)</span> for <span class="math inline">\(r \ne 0\)</span> requires <span class="math inline">\(3 - p = 0\)</span>, so <span class="math inline">\(p = 3\)</span>. Then</p>
+<p><span class="math display">\[
+\vec E = \frac{\vec r}{r^3} = \frac{1}{r^2} \, \frac{\vec r}{r}, \qquad
+\|\vec E\| = \frac{1}{r^2} :
+\]</span></p>
+<p>a field that points radially outward and whose magnitude decreases as <span class="math inline">\(1 / r^2\)</span>. This is the field of a point source: the gravitational field of a point mass (with a minus sign, it points inward) and the electric field of a point charge.</p>
+<p>Interpretation with the divergence theorem: on a sphere of radius <span class="math inline">\(R\)</span> the outward normal is <span class="math inline">\(\vec r / r\)</span>, so <span class="math inline">\(\vec E \cdot \vec r / r = r^2 / r^{p+1} = R^{1 - p}\)</span> on the sphere. The flux through the sphere is this value times the area <span class="math inline">\(4 \pi R^2\)</span>:</p>
+<p><span class="math display">\[
+\oint_S \vec E \cdot \mathrm{d}\vec A = R^{1 - p} \cdot 4 \pi R^2 = 4 \pi R^{3 - p} .
+\]</span></p>
+<p>It is independent of <span class="math inline">\(R\)</span> exactly for <span class="math inline">\(p = 3\)</span>: the flux through every sphere around the origin is the same, <span class="math inline">\(4\pi\)</span>, so no flux is created or lost between two spheres, and the divergence there is zero. The whole flux originates in the point source at the origin, where the field is not defined.</p>
+<p>Points: a) 2, b) 1.</p>
+</section>
+</section>
+<section id="problem-4-deriving-a-conservation-law-4-points" class="level2">
+<h2 class="anchored" data-anchor-id="problem-4-deriving-a-conservation-law-4-points">Problem 4: Deriving a conservation law (4 points)</h2>
+<p>A dissolved substance with concentration <span class="math inline">\(c(x, t)\)</span> (kg/m³) is transported in a river with constant cross-section <span class="math inline">\(A\)</span> and constant velocity <span class="math inline">\(v\)</span>. It is mixed by turbulence, described as diffusion with coefficient <span class="math inline">\(D\)</span>, and it decays at the rate <span class="math inline">\(\lambda c\)</span> (kg/m³/s).</p>
+<ol type="a">
+<li><p>Write down the mass balance for the river section between <span class="math inline">\(x\)</span> and <span class="math inline">\(x + \Delta x\)</span>, and derive the differential equation for <span class="math inline">\(c\)</span> by taking the limit <span class="math inline">\(\Delta x \to 0\)</span>.</p></li>
+<li><p>Classify the equation: order, linear or nonlinear, type.</p></li>
+<li><p>Which initial and boundary conditions are needed for a river section of length <span class="math inline">\(L\)</span>? Propose physically meaningful ones.</p></li>
+</ol>
+<section id="solution-3" class="level3">
+<h3 class="anchored" data-anchor-id="solution-3">Solution</h3>
+<p>a) <strong>Convention.</strong> <span class="math inline">\(x\)</span> points downstream, <span class="math inline">\(v &gt; 0\)</span>, and the flux <span class="math inline">\(F\)</span> (kg/m²/s) is counted positive in the <span class="math inline">\(+x\)</span> direction.</p>
+<p><strong>Flux law.</strong> The flux is the sum of the advective flux <span class="math inline">\(v c\)</span> and the diffusive flux from Fick’s law, <span class="math inline">\(-D \, \partial c / \partial x\)</span> (down the gradient):</p>
+<p><span class="math display">\[
+F = v c - D \frac{\partial c}{\partial x} .
+\]</span></p>
+<p><strong>Balance.</strong> The mass in the section is <span class="math inline">\(c \, A \, \Delta x\)</span> (for small <span class="math inline">\(\Delta x\)</span>, with <span class="math inline">\(c\)</span> taken at a point inside the section). It changes by</p>
+<ul>
+<li>the inflow through the cross-section at <span class="math inline">\(x\)</span>: <span class="math inline">\(+A \, F(x)\)</span>, because a positive <span class="math inline">\(F\)</span> carries mass into the section;</li>
+<li>the outflow through the cross-section at <span class="math inline">\(x + \Delta x\)</span>: <span class="math inline">\(-A \, F(x + \Delta x)\)</span>, because a positive <span class="math inline">\(F\)</span> carries mass out of the section;</li>
+<li>decay inside the section: <span class="math inline">\(-\lambda c \, A \, \Delta x\)</span>.</li>
+</ul>
+<p><span class="math display">\[
+\frac{\partial}{\partial t} (c \, A \, \Delta x) =
+A \, F(x) - A \, F(x + \Delta x) - \lambda c \, A \, \Delta x .
+\]</span></p>
+<p><strong>Limit.</strong> <span class="math inline">\(A\)</span> and <span class="math inline">\(\Delta x\)</span> do not depend on time, so they can be taken out of the time derivative. Dividing by <span class="math inline">\(A \Delta x\)</span>,</p>
+<p><span class="math display">\[
+\frac{\partial c}{\partial t} =
+- \frac{F(x + \Delta x) - F(x)}{\Delta x} - \lambda c .
+\]</span></p>
+<p>Note the order in the numerator: we wrote <span class="math inline">\(F(x) - F(x + \Delta x) =
+-\big[ F(x + \Delta x) - F(x) \big]\)</span> to obtain a forward difference quotient. For <span class="math inline">\(\Delta x \to 0\)</span> it becomes the derivative:</p>
+<p><span class="math display">\[
+\frac{\partial c}{\partial t} = - \frac{\partial F}{\partial x} - \lambda c .
+\]</span></p>
+<p><strong>Inserting the flux law.</strong> With constant <span class="math inline">\(v\)</span> and <span class="math inline">\(D\)</span>,</p>
+<p><span class="math display">\[
+\frac{\partial F}{\partial x}
+= \frac{\partial}{\partial x} (v c) - \frac{\partial}{\partial x} \left( D \frac{\partial c}{\partial x} \right)
+= v \frac{\partial c}{\partial x} - D \frac{\partial^2 c}{\partial x^2} ,
+\]</span></p>
+<p>and therefore, with the minus sign in front distributed over both terms,</p>
+<p><span class="math display">\[
+\frac{\partial c}{\partial t}
+= - v \frac{\partial c}{\partial x} + D \frac{\partial^2 c}{\partial x^2} - \lambda c ,
+\]</span></p>
+<p>or, with the advection term on the left,</p>
+<p><span class="math display">\[
+\frac{\partial c}{\partial t} + v \frac{\partial c}{\partial x} =
+D \frac{\partial^2 c}{\partial x^2} - \lambda c .
+\]</span></p>
+<p>Sign checks: without transport (<span class="math inline">\(v = D = 0\)</span>) the equation is <span class="math inline">\(\mathrm{d}c / \mathrm{d}t = -\lambda c\)</span> with the solution <span class="math inline">\(c = c_0 e^{-\lambda t}\)</span>, which decays for <span class="math inline">\(\lambda &gt; 0\)</span>. The diffusion term <span class="math inline">\(D \, \partial^2 c / \partial x^2\)</span> has a positive sign, so it lowers <span class="math inline">\(c\)</span> at a maximum (<span class="math inline">\(\partial^2 c / \partial x^2 &lt; 0\)</span>) and raises it at a minimum, as diffusion must.</p>
+<p>b) <strong>Order:</strong> the highest derivative is <span class="math inline">\(\partial^2 c / \partial x^2\)</span>: second order (first order in time).</p>
+<p><strong>Linear:</strong> <span class="math inline">\(c\)</span> and its derivatives appear only to the first power, are not multiplied with each other, and the coefficients <span class="math inline">\(v\)</span>, <span class="math inline">\(D\)</span>, <span class="math inline">\(\lambda\)</span> do not depend on <span class="math inline">\(c\)</span>. There is no term independent of <span class="math inline">\(c\)</span>, so it is also homogeneous.</p>
+<p><strong>Type:</strong> we bring all terms to one side,</p>
+<p><span class="math display">\[
+D \frac{\partial^2 c}{\partial x^2} - \frac{\partial c}{\partial t}
+- v \frac{\partial c}{\partial x} - \lambda c = 0 ,
+\]</span></p>
+<p>and compare with the form <span class="math inline">\(a \, u_{xx} + 2 b \, u_{xt} + \tilde c \, u_{tt} + \dots\)</span> of the script, here with the variables <span class="math inline">\((x, t)\)</span>; we write <span class="math inline">\(\tilde c\)</span> for the third coefficient to avoid a clash with the concentration <span class="math inline">\(c\)</span>. The coefficients of the second derivatives are <span class="math inline">\(a = D\)</span>, <span class="math inline">\(b = 0\)</span> (no mixed derivative) and <span class="math inline">\(\tilde c = 0\)</span> (no second time derivative). Then</p>
+<p><span class="math display">\[
+b^2 - a \tilde c = 0 - D \cdot 0 = 0 :
+\]</span></p>
+<p>parabolic. The first-order terms do not enter the classification. If advection dominates over diffusion, that is if the Péclet number <span class="math inline">\(v L / D\)</span> is large, the equation behaves like the hyperbolic advection equation <span class="math inline">\(\partial c / \partial t + v \, \partial c / \partial x = 0\)</span>.</p>
+<p>c) <strong>Initial condition:</strong> one, because the equation is of first order in time: the concentration along the river at the start, <span class="math inline">\(c(x, 0) = c_0(x)\)</span> for <span class="math inline">\(0 \le x \le L\)</span>.</p>
+<p><strong>Boundary conditions:</strong> two, one at each end, because it is of second order in space. A physically meaningful choice is</p>
+<ul>
+<li>at the inflow, <span class="math inline">\(x = 0\)</span>: the concentration of the water entering the section, <span class="math inline">\(c(0, t) = c_{\text{in}}(t)\)</span> (Dirichlet), for example from a measuring station upstream;</li>
+<li>at the outflow, <span class="math inline">\(x = L\)</span>: <span class="math inline">\(\partial c / \partial x (L, t) = 0\)</span> (Neumann). It sets the diffusive flux <span class="math inline">\(-D \, \partial c / \partial x\)</span> to zero, so that the total flux there is the advective flux <span class="math inline">\(v c\)</span>: the substance leaves with the flow, and no concentration is imposed on the water downstream, about which we know nothing.</li>
+</ul>
+<p>Points: a) 2, b) 1, c) 1.</p>
+</section>
+</section>
+<section id="problem-5-classification-3-points" class="level2">
+<h2 class="anchored" data-anchor-id="problem-5-classification-3-points">Problem 5: Classification (3 points)</h2>
+<p>For each equation state whether it is an ODE or a PDE, its order, whether it is linear, and for the PDEs of second order the type.</p>
+<ol type="1">
+<li><span class="math inline">\(\dfrac{\partial u}{\partial t} = D \dfrac{\partial^2 u}{\partial x^2}\)</span></li>
+<li><span class="math inline">\(\dfrac{\partial^2 u}{\partial t^2} = c^2 \dfrac{\partial^2 u}{\partial x^2}\)</span></li>
+<li><span class="math inline">\(\dfrac{\partial^2 \phi}{\partial x^2} + \dfrac{\partial^2 \phi}{\partial y^2} = -\rho(x, y)\)</span></li>
+<li><span class="math inline">\(\dfrac{\mathrm{d}^2 \theta}{\mathrm{d}t^2} + \dfrac{g}{L} \sin \theta = 0\)</span></li>
+<li><span class="math inline">\(\dfrac{\partial u}{\partial t} + u \dfrac{\partial u}{\partial x} = \nu \dfrac{\partial^2 u}{\partial x^2}\)</span></li>
+<li><span class="math inline">\(\dfrac{\partial \theta(\psi)}{\partial t} = \dfrac{\partial}{\partial z} \left[ K(\psi) \left( \dfrac{\partial \psi}{\partial z} + 1 \right) \right]\)</span></li>
+</ol>
+<section id="solution-4" class="level3">
+<h3 class="anchored" data-anchor-id="solution-4">Solution</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Equation</th>
+<th>Kind</th>
+<th>Order</th>
+<th>Linear</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>diffusion</td>
+<td>PDE</td>
+<td>2</td>
+<td>yes</td>
+<td>parabolic</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>wave</td>
+<td>PDE</td>
+<td>2</td>
+<td>yes</td>
+<td>hyperbolic</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Poisson</td>
+<td>PDE</td>
+<td>2</td>
+<td>yes (inhomogeneous)</td>
+<td>elliptic</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>pendulum</td>
+<td>ODE</td>
+<td>2</td>
+<td>no (<span class="math inline">\(\sin \theta\)</span>)</td>
+<td>–</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Burgers</td>
+<td>PDE</td>
+<td>2</td>
+<td>no (<span class="math inline">\(u \, u_x\)</span>)</td>
+<td>parabolic</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Richards</td>
+<td>PDE</td>
+<td>2</td>
+<td>no (<span class="math inline">\(K\)</span> and <span class="math inline">\(\theta\)</span> depend on <span class="math inline">\(\psi\)</span>)</td>
+<td>parabolic</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule.</strong> For the type we write each second-order PDE in the form <span class="math inline">\(a \, u_{xx} + 2 b \, u_{xy} + c \, u_{yy} + \text{lower-order terms} = f\)</span>, with all terms on one side, and evaluate <span class="math inline">\(b^2 - ac\)</span>: negative means elliptic, zero parabolic, positive hyperbolic. To avoid a clash with the wave speed <span class="math inline">\(c\)</span> in equation 2, we call the three coefficients <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> and <span class="math inline">\(\tilde c\)</span> below.</p>
+<p>1. Diffusion, variables <span class="math inline">\((x, t)\)</span>. Written as <span class="math inline">\(D \, u_{xx} - u_t = 0\)</span>: <span class="math inline">\(a = D\)</span>, <span class="math inline">\(b = 0\)</span>, <span class="math inline">\(\tilde c = 0\)</span> (no <span class="math inline">\(u_{tt}\)</span>). <span class="math inline">\(b^2 - a \tilde c = 0\)</span>: <strong>parabolic</strong>. <span class="math inline">\(u\)</span> and its derivatives appear linearly: linear, and homogeneous.</p>
+<p>2. Wave, variables <span class="math inline">\((x, t)\)</span>. Written as <span class="math inline">\(c^2 u_{xx} - u_{tt} = 0\)</span>: <span class="math inline">\(a = c^2\)</span>, <span class="math inline">\(b = 0\)</span>, <span class="math inline">\(\tilde c = -1\)</span>. Note the minus sign that moving <span class="math inline">\(u_{tt}\)</span> to the other side produces. Then</p>
+<p><span class="math display">\[
+b^2 - a \tilde c = 0 - c^2 \cdot (-1) = c^2 &gt; 0 :
+\]</span></p>
+<p><strong>hyperbolic</strong>. Linear and homogeneous.</p>
+<p>3. Poisson, variables <span class="math inline">\((x, y)\)</span>. <span class="math inline">\(\phi_{xx} + \phi_{yy} = -\rho\)</span>: <span class="math inline">\(a = 1\)</span>, <span class="math inline">\(b = 0\)</span>, <span class="math inline">\(\tilde c = 1\)</span>, <span class="math inline">\(b^2 - a \tilde c = -1 &lt; 0\)</span>: <strong>elliptic</strong>. Linear; the right hand side <span class="math inline">\(-\rho(x, y)\)</span> does not depend on <span class="math inline">\(\phi\)</span>, so the equation is inhomogeneous.</p>
+<p>4. Pendulum. Only one independent variable, <span class="math inline">\(t\)</span>: an <strong>ODE</strong> of second order. <strong>Nonlinear</strong>, because the unknown appears inside <span class="math inline">\(\sin \theta\)</span>. For small angles, <span class="math inline">\(\sin \theta \approx \theta\)</span> gives the linear harmonic oscillator. The type classification applies only to PDEs.</p>
+<p>5. Burgers, variables <span class="math inline">\((x, t)\)</span>. The term <span class="math inline">\(u \, u_x\)</span> is a product of the unknown with its own derivative: <strong>nonlinear</strong>. The type is determined by the second derivatives alone, and these appear linearly with a constant coefficient: <span class="math inline">\(\nu \, u_{xx} - u_t - u \, u_x = 0\)</span> gives <span class="math inline">\(a = \nu\)</span>, <span class="math inline">\(b = 0\)</span>, <span class="math inline">\(\tilde c = 0\)</span>, <span class="math inline">\(b^2 - a \tilde c = 0\)</span>: <strong>parabolic</strong>.</p>
+<p>6. Richards, variables <span class="math inline">\((z, t)\)</span>. To see the structure we carry out the derivatives. On the left, by the chain rule,</p>
+<p><span class="math display">\[
+\frac{\partial \theta(\psi)}{\partial t} = \frac{\mathrm{d}\theta}{\mathrm{d}\psi} \, \frac{\partial \psi}{\partial t}
+= C(\psi) \, \frac{\partial \psi}{\partial t} ,
+\]</span></p>
+<p>with the specific moisture capacity <span class="math inline">\(C = \mathrm{d}\theta / \mathrm{d}\psi\)</span>. On the right, by the product rule and the chain rule <span class="math inline">\(\partial K / \partial z = (\mathrm{d}K / \mathrm{d}\psi) \, \partial \psi / \partial z\)</span>,</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial z} \left[ K \left( \frac{\partial \psi}{\partial z} + 1 \right) \right]
+= K \frac{\partial^2 \psi}{\partial z^2}
++ \frac{\mathrm{d}K}{\mathrm{d}\psi} \frac{\partial \psi}{\partial z} \left( \frac{\partial \psi}{\partial z} + 1 \right) .
+\]</span></p>
+<p>The equation is</p>
+<p><span class="math display">\[
+K(\psi) \, \psi_{zz} - C(\psi) \, \psi_t
++ \frac{\mathrm{d}K}{\mathrm{d}\psi} \left( \psi_z^2 + \psi_z \right) = 0 .
+\]</span></p>
+<p>It is <strong>nonlinear</strong> for three reasons: the coefficients <span class="math inline">\(K\)</span> and <span class="math inline">\(C\)</span> depend on the unknown <span class="math inline">\(\psi\)</span>, and <span class="math inline">\(\psi_z^2\)</span> is a square of a derivative. Order 2. The only second derivative is <span class="math inline">\(\psi_{zz}\)</span> with <span class="math inline">\(a = K(\psi) &gt; 0\)</span>, <span class="math inline">\(b = 0\)</span>, <span class="math inline">\(\tilde c = 0\)</span>: <span class="math inline">\(b^2 - a \tilde c = 0\)</span>, <strong>parabolic</strong>. The “+1” is gravity: with <span class="math inline">\(z\)</span> pointing upward, the water flux <span class="math inline">\(-K \, \partial (\psi + z) / \partial z\)</span> is directed downward even without a gradient of <span class="math inline">\(\psi\)</span>.</p>
+<p>Half a point for each row.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
