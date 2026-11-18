@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Governing equations and their classification – Prognostic Modelling</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03-numerical-toolbox.html" rel="next">
+<link href="./01-introduction.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3892b3adcc577e567f7e69fe50577df6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./02-governing-equations.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Prognostic Modelling</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-governing-equations.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-numerical-toolbox.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-matrices-waves.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">The numerical toolbox II: matrices and waves</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Time integration of ODEs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-one-step-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">One-step methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#vector-calculus-recap" id="toc-vector-calculus-recap" class="nav-link active" data-scroll-target="#vector-calculus-recap"><span class="header-section-number">2.1</span> Vector calculus recap</a>
+  <ul class="collapse">
+  <li><a href="#derivatives" id="toc-derivatives" class="nav-link" data-scroll-target="#derivatives"><span class="header-section-number">2.1.1</span> Derivatives</a></li>
+  <li><a href="#vectors" id="toc-vectors" class="nav-link" data-scroll-target="#vectors"><span class="header-section-number">2.1.2</span> Vectors</a></li>
+  <li><a href="#the-gradient" id="toc-the-gradient" class="nav-link" data-scroll-target="#the-gradient"><span class="header-section-number">2.1.3</span> The gradient</a></li>
+  <li><a href="#the-divergence" id="toc-the-divergence" class="nav-link" data-scroll-target="#the-divergence"><span class="header-section-number">2.1.4</span> The divergence</a></li>
+  <li><a href="#curl-and-laplacian" id="toc-curl-and-laplacian" class="nav-link" data-scroll-target="#curl-and-laplacian"><span class="header-section-number">2.1.5</span> Curl and Laplacian</a></li>
+  </ul></li>
+  <li><a href="#conservation-laws" id="toc-conservation-laws" class="nav-link" data-scroll-target="#conservation-laws"><span class="header-section-number">2.2</span> Conservation laws</a></li>
+  <li><a href="#classification-of-differential-equations" id="toc-classification-of-differential-equations" class="nav-link" data-scroll-target="#classification-of-differential-equations"><span class="header-section-number">2.3</span> Classification of differential equations</a>
+  <ul class="collapse">
+  <li><a href="#ordinary-and-partial-differential-equations" id="toc-ordinary-and-partial-differential-equations" class="nav-link" data-scroll-target="#ordinary-and-partial-differential-equations"><span class="header-section-number">2.3.1</span> Ordinary and partial differential equations</a></li>
+  <li><a href="#systems" id="toc-systems" class="nav-link" data-scroll-target="#systems"><span class="header-section-number">2.3.2</span> Systems</a></li>
+  <li><a href="#order" id="toc-order" class="nav-link" data-scroll-target="#order"><span class="header-section-number">2.3.3</span> Order</a></li>
+  <li><a href="#linear-and-nonlinear" id="toc-linear-and-nonlinear" class="nav-link" data-scroll-target="#linear-and-nonlinear"><span class="header-section-number">2.3.4</span> Linear and nonlinear</a></li>
+  <li><a href="#elliptic-parabolic-hyperbolic" id="toc-elliptic-parabolic-hyperbolic" class="nav-link" data-scroll-target="#elliptic-parabolic-hyperbolic"><span class="header-section-number">2.3.5</span> Elliptic, parabolic, hyperbolic</a></li>
+  </ul></li>
+  <li><a href="#sec-prototype-equations" id="toc-sec-prototype-equations" class="nav-link" data-scroll-target="#sec-prototype-equations"><span class="header-section-number">2.4</span> Prototype equations</a></li>
+  <li><a href="#the-equations-of-this-lecture" id="toc-the-equations-of-this-lecture" class="nav-link" data-scroll-target="#the-equations-of-this-lecture"><span class="header-section-number">2.5</span> The equations of this lecture</a></li>
+  <li><a href="#initial-and-boundary-conditions" id="toc-initial-and-boundary-conditions" class="nav-link" data-scroll-target="#initial-and-boundary-conditions"><span class="header-section-number">2.6</span> Initial and boundary conditions</a></li>
+  <li><a href="#well-posed-problems" id="toc-well-posed-problems" class="nav-link" data-scroll-target="#well-posed-problems"><span class="header-section-number">2.7</span> Well-posed problems</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">2.8</span> Summary</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">2.9</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-introduction.html">Foundations</a></li><li class="breadcrumb-item"><a href="./02-governing-equations.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-governing-equations" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Governing equations and their classification</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning goals
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After this unit you can</p>
+<ul>
+<li>compute and interpret gradient, divergence, curl and Laplacian,</li>
+<li>derive a conservation law from a balance over a control volume,</li>
+<li>classify a differential equation by order, linearity and type,</li>
+<li>recognise the prototype equations for diffusion, advection and waves in the equations of atmospheric, hydrological and seismic models,</li>
+<li>choose initial and boundary conditions that make a problem well-posed.</li>
+</ul>
+</div>
+</div>
+<p>Numerical modelling starts on paper with the classification of the problem. The type of an equation decides which numerical methods work and which fail. This unit provides the language: the operators of vector calculus, the conservation laws built from them, the classification of the resulting equations, and the equations of this lecture with their types.</p>
+<section id="vector-calculus-recap" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="vector-calculus-recap"><span class="header-section-number">2.1</span> Vector calculus recap</h2>
+<section id="derivatives" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="derivatives"><span class="header-section-number">2.1.1</span> Derivatives</h3>
+<p>If the unknown depends on a single variable, for example <span class="math inline">\(u(t)\)</span>, its rate of change is the ordinary derivative <span class="math inline">\(\mathrm{d}u/\mathrm{d}t\)</span>. If it depends on several variables, for example <span class="math inline">\(u(x, t)\)</span>, the partial derivatives <span class="math inline">\(\partial u/\partial t\)</span> and <span class="math inline">\(\partial u/\partial x\)</span> give the rate of change with respect to one variable while the others are held fixed. Derivatives of order <span class="math inline">\(n\)</span> are written <span class="math inline">\(\mathrm{d}^n u/\mathrm{d}t^n\)</span> and <span class="math inline">\(\partial^n u/\partial x^n\)</span>. We also use the short forms <span class="math inline">\(u_t\)</span>, <span class="math inline">\(u_x\)</span>, <span class="math inline">\(u_{xx}\)</span>.</p>
+</section>
+<section id="vectors" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="vectors"><span class="header-section-number">2.1.2</span> Vectors</h3>
+<p>A vector in the plane is written <span class="math inline">\(\vec v = v_1 \vec i + v_2 \vec j\)</span>, in space <span class="math inline">\(\vec v = v_1 \vec i + v_2 \vec j + v_3 \vec k\)</span>, where <span class="math inline">\(\vec i, \vec j, \vec k\)</span> are the unit vectors along the coordinate axes. Its magnitude is</p>
+<p><span class="math display">\[
+\| \vec v \| = \sqrt{v_1^2 + v_2^2 + v_3^2},
+\]</span></p>
+<p>and the unit vector in the direction of <span class="math inline">\(\vec v\)</span> is <span class="math inline">\(\vec v / \|\vec v\|\)</span>.</p>
+</section>
+<section id="the-gradient" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="the-gradient"><span class="header-section-number">2.1.3</span> The gradient</h3>
+<p>The gradient of a scalar field <span class="math inline">\(f(x, y, z)\)</span> is the vector</p>
+<p><span class="math display">\[
+\operatorname{grad} f = \nabla f =
+\frac{\partial f}{\partial x} \vec i +
+\frac{\partial f}{\partial y} \vec j +
+\frac{\partial f}{\partial z} \vec k .
+\]</span></p>
+<p>It has two geometric properties, shown in <a href="#fig-gradient" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>.</p>
+<ul>
+<li><span class="math inline">\(\nabla f\)</span> points in the direction in which <span class="math inline">\(f\)</span> increases fastest, and is perpendicular to the contour of <span class="math inline">\(f\)</span> through the point.</li>
+<li><span class="math inline">\(\|\nabla f\|\)</span> is the rate of change in that direction. It is large where the contours are close together.</li>
+</ul>
+<p>In physics, gradients drive fluxes: heat flows down the temperature gradient, groundwater flows down the gradient of hydraulic head, and the pressure gradient accelerates the wind.</p>
+<div id="cell-fig-gradient" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div id="fig-gradient" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gradient-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-governing-equations_files/figure-html/fig-gradient-output-1.png" width="429" height="361" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gradient-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: Contours of <span class="math inline">\(f(x, y) = x + e^{y}\)</span> and its gradient vectors. The vectors are perpendicular to the contours and longer where the contours are closer.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise: gradient of <span class="math inline">\(f(x, y) = x + e^{y}\)</span> at the point <span class="math inline">\((1, 1)\)</span>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\nabla f = \vec i + e^{y} \vec j\)</span>, so <span class="math inline">\(\nabla f(1, 1) = \vec i + e \, \vec j\)</span>. The maximum rate of change at this point is <span class="math inline">\(\|\nabla f\| = \sqrt{1 + e^2} \approx 2.90\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-divergence" class="level3" data-number="2.1.4">
+<h3 data-number="2.1.4" class="anchored" data-anchor-id="the-divergence"><span class="header-section-number">2.1.4</span> The divergence</h3>
+<p>The divergence of a vector field <span class="math inline">\(\vec F\)</span> measures the outflow per unit volume at a point. Geometrically, it is the flux out of a small closed surface <span class="math inline">\(S\)</span> around the point, divided by the enclosed volume <span class="math inline">\(V\)</span>, in the limit of vanishing volume:</p>
+<p><span id="eq-div-geometric"><span class="math display">\[
+\operatorname{div} \vec F = \nabla \cdot \vec F =
+\lim_{V \to 0} \frac{1}{V} \oint_S \vec F \cdot \mathrm{d}\vec A .
+\tag{2.1}\]</span></span></p>
+<p>Here <span class="math inline">\(\mathrm{d}\vec A\)</span> is the surface element with the direction of the outward normal. In Cartesian coordinates the divergence is</p>
+<p><span id="eq-div-cartesian"><span class="math display">\[
+\nabla \cdot \vec F =
+\frac{\partial F_1}{\partial x} +
+\frac{\partial F_2}{\partial y} +
+\frac{\partial F_3}{\partial z} .
+\tag{2.2}\]</span></span></p>
+<p>Why do both definitions agree? Consider a small box with one corner at <span class="math inline">\((x_0, y_0, z_0)\)</span> and edge lengths <span class="math inline">\(\Delta x, \Delta y, \Delta z\)</span> (<a href="#fig-box" class="quarto-xref">Figure&nbsp;<span>2.2</span></a>). On the face at <span class="math inline">\(x = x_0\)</span> the outward normal is <span class="math inline">\(-\vec i\)</span>. If <span class="math inline">\(\vec F\)</span> is approximately constant over this small face, the flux through it is</p>
+<p><span class="math display">\[
+\int_{S_1} \vec F \cdot \mathrm{d}\vec A \approx -F_1(x_0, y_0, z_0) \, \Delta y \, \Delta z .
+\]</span></p>
+<p>On the opposite face at <span class="math inline">\(x = x_0 + \Delta x\)</span> the outward normal is <span class="math inline">\(+\vec i\)</span>, and the flux is <span class="math inline">\(F_1(x_0 + \Delta x, y_0, z_0) \, \Delta y \, \Delta z\)</span>. The sum of the two is</p>
+<p><span class="math display">\[
+\frac{F_1(x_0 + \Delta x, y_0, z_0) - F_1(x_0, y_0, z_0)}{\Delta x}
+\, \Delta x \, \Delta y \, \Delta z
+\approx \frac{\partial F_1}{\partial x} \, \Delta x \, \Delta y \, \Delta z .
+\]</span></p>
+<p>The other two pairs of faces contribute in the same way. Dividing the total flux by the volume <span class="math inline">\(\Delta x \, \Delta y \, \Delta z\)</span> gives <a href="#eq-div-cartesian" class="quarto-xref">Equation&nbsp;<span>2.2</span></a>.</p>
+<div id="cell-fig-box" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div id="fig-box" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-box-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-governing-equations_files/figure-html/fig-box-output-1.png" width="428" height="211" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-box-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: Fluxes in the <span class="math inline">\(x\)</span> direction through a control volume. The divergence is the net outflow per unit volume.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This derivation is more than a proof. Summing fluxes over the faces of a small box is exactly what the finite volume method does (Chapter 9).</p>
+<p>Two results that we use constantly:</p>
+<p><strong>Product rule.</strong> For a scalar field <span class="math inline">\(g\)</span> and a vector field <span class="math inline">\(\vec F\)</span>,</p>
+<p><span id="eq-div-product"><span class="math display">\[
+\nabla \cdot (g \vec F) = g \, \nabla \cdot \vec F + \vec F \cdot \nabla g .
+\tag{2.3}\]</span></span></p>
+<p><strong>Divergence theorem (Gauss).</strong> For a volume <span class="math inline">\(V\)</span> with closed surface <span class="math inline">\(S\)</span>,</p>
+<p><span id="eq-gauss"><span class="math display">\[
+\int_V \nabla \cdot \vec F \, \mathrm{d}V = \oint_S \vec F \cdot \mathrm{d}\vec A .
+\tag{2.4}\]</span></span></p>
+<p>What flows out through the surface equals the sum of all sources inside.</p>
+</section>
+<section id="curl-and-laplacian" class="level3" data-number="2.1.5">
+<h3 data-number="2.1.5" class="anchored" data-anchor-id="curl-and-laplacian"><span class="header-section-number">2.1.5</span> Curl and Laplacian</h3>
+<p>The <strong>curl</strong> <span class="math inline">\(\nabla \times \vec F\)</span> measures the local rotation of a vector field. For a horizontal wind field <span class="math inline">\(\vec v = u \vec i + v \vec j\)</span> its vertical component is the relative vorticity</p>
+<p><span class="math display">\[
+\zeta = \frac{\partial v}{\partial x} - \frac{\partial u}{\partial y},
+\]</span></p>
+<p>a central quantity of dynamic meteorology. A small paddle wheel placed in the flow and carried along with it spins with the angular velocity <span class="math inline">\(\zeta/2\)</span>: anticlockwise for <span class="math inline">\(\zeta &gt; 0\)</span>, clockwise for <span class="math inline">\(\zeta &lt; 0\)</span>. <a href="#fig-curl" class="quarto-xref">Figure&nbsp;<span>2.3</span></a> shows two examples. In solid-body rotation, <span class="math inline">\(u = -y\)</span>, <span class="math inline">\(v = x\)</span>, we get <span class="math inline">\(\zeta = 1 - (-1) = 2\)</span>. In the shear flow <span class="math inline">\(u = y\)</span>, <span class="math inline">\(v = 0\)</span>, we get <span class="math inline">\(\zeta = 0 - 1 = -1\)</span>. The streamlines of the shear flow are straight lines, yet the flow has vorticity: the faster flow on the upper side of the wheel pushes it clockwise. Curl measures local rotation, not curved streamlines.</p>
+<div id="cell-fig-curl" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-curl" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-curl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-governing-equations_files/figure-html/fig-curl-output-1.png" width="278" height="547" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-curl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: Two velocity fields with vorticity, each with a paddle wheel (red) and its sense of rotation. Top: solid-body rotation, <span class="math inline">\(\zeta = 2\)</span>, anticlockwise. Bottom: shear flow with straight streamlines, <span class="math inline">\(\zeta = -1\)</span>, clockwise.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The <strong>Laplacian</strong> is the divergence of the gradient:</p>
+<p><span class="math display">\[
+\nabla^2 f = \nabla \cdot (\nabla f) =
+\frac{\partial^2 f}{\partial x^2} +
+\frac{\partial^2 f}{\partial y^2} +
+\frac{\partial^2 f}{\partial z^2} .
+\]</span></p>
+<p>It compares the value of <span class="math inline">\(f\)</span> at a point with the average over its neighbourhood. To see this, start in one dimension and take the two neighbours of <span class="math inline">\(x\)</span> at distance <span class="math inline">\(h\)</span>. Their Taylor expansions are</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(x + h) &amp;= f(x) + h f'(x) + \frac{h^2}{2} f''(x) + \frac{h^3}{6} f'''(x) + O(h^4), \\
+f(x - h) &amp;= f(x) - h f'(x) + \frac{h^2}{2} f''(x) - \frac{h^3}{6} f'''(x) + O(h^4).
+\end{aligned}
+\]</span></p>
+<p>Adding the two lines, the odd-order terms cancel:</p>
+<p><span class="math display">\[
+f(x + h) + f(x - h) = 2 f(x) + h^2 f''(x) + O(h^4).
+\]</span></p>
+<p>Dividing by 2 and subtracting <span class="math inline">\(f(x)\)</span> gives the difference between the average of the neighbours and the value at the point:</p>
+<p><span class="math display">\[
+\underbrace{\frac{f(x + h) + f(x - h)}{2}}_{\text{neighbour average}} - f(x)
+= \frac{h^2}{2} \, f''(x) + O(h^4).
+\]</span></p>
+<p>In two dimensions we do the same in the <span class="math inline">\(x\)</span> and the <span class="math inline">\(y\)</span> direction, with the four neighbours <span class="math inline">\((x \pm h, y)\)</span> and <span class="math inline">\((x, y \pm h)\)</span>. Each pair gives its own second derivative, exactly as in one dimension:</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(x + h, y) + f(x - h, y) &amp;= 2 f(x, y) + h^2 f_{xx} + O(h^4), \\
+f(x, y + h) + f(x, y - h) &amp;= 2 f(x, y) + h^2 f_{yy} + O(h^4).
+\end{aligned}
+\]</span></p>
+<p>We call the average over the four neighbours <span class="math inline">\(\bar f\)</span>. Adding the two lines and dividing by 4 gives</p>
+<p><span class="math display">\[
+\bar f = f(x, y) + \frac{h^2}{4} \left( f_{xx} + f_{yy} \right) + O(h^4),
+\]</span></p>
+<p>and hence</p>
+<p><span class="math display">\[
+\bar f - f(x, y) = \frac{h^2}{4} \, \nabla^2 f + O(h^4).
+\]</span></p>
+<p>In three dimensions, with six neighbours, the factor is <span class="math inline">\(h^2/6\)</span>. So, up to a positive factor, the Laplacian is the amount by which the neighbourhood average exceeds the value at the point:</p>
+<ul>
+<li><span class="math inline">\(\nabla^2 f &lt; 0\)</span>: <span class="math inline">\(f\)</span> is larger than its surroundings, as at a local maximum (a peak);</li>
+<li><span class="math inline">\(\nabla^2 f &gt; 0\)</span>: <span class="math inline">\(f\)</span> is smaller than its surroundings, as at a local minimum (a trough);</li>
+<li><span class="math inline">\(\nabla^2 f = 0\)</span>: <span class="math inline">\(f\)</span> equals the average of its surroundings. Such functions are called harmonic; they have no interior maxima or minima.</li>
+</ul>
+<p>This is why the Laplacian appears in every equation that describes smoothing. In the diffusion equation <span class="math inline">\(\partial u/\partial t = D \nabla^2 u\)</span> with <span class="math inline">\(D &gt; 0\)</span>, <span class="math inline">\(u\)</span> decreases where it lies above the average of its neighbourhood and increases where it lies below. Peaks are eroded, troughs are filled, and the field approaches its local average. Rearranged, the formula above is also the finite difference approximation</p>
+<p><span class="math display">\[
+\nabla^2 f \approx \frac{f(x + h, y) + f(x - h, y) + f(x, y + h) + f(x, y - h) - 4 f(x, y)}{h^2}
+\]</span></p>
+<p>that we will use for elliptic and parabolic problems.</p>
+</section>
+</section>
+<section id="conservation-laws" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="conservation-laws"><span class="header-section-number">2.2</span> Conservation laws</h2>
+<p>Nearly all equations of this lecture state that a quantity is conserved: mass, momentum or energy. They are all derived with the same argument.</p>
+<p>Let <span class="math inline">\(u\)</span> be the density of the conserved quantity (amount per volume) and <span class="math inline">\(\vec F\)</span> its flux (amount per area and time). The amount inside a fixed volume <span class="math inline">\(V\)</span> changes only by flux through the surface and by sources <span class="math inline">\(s\)</span> (amount per volume and time) inside:</p>
+<p><span id="eq-conservation-integral"><span class="math display">\[
+\frac{\mathrm{d}}{\mathrm{d}t} \int_V u \, \mathrm{d}V =
+- \oint_S \vec F \cdot \mathrm{d}\vec A + \int_V s \, \mathrm{d}V .
+\tag{2.5}\]</span></span></p>
+<p>The minus sign appears because <span class="math inline">\(\mathrm{d}\vec A\)</span> points outward. We turn this balance into a differential equation in three steps.</p>
+<ol type="1">
+<li>The volume is fixed in space, so the time derivative can be taken inside the integral: <span class="math inline">\(\frac{\mathrm{d}}{\mathrm{d}t} \int_V u \, \mathrm{d}V = \int_V \frac{\partial u}{\partial t} \, \mathrm{d}V\)</span>.</li>
+<li>The divergence theorem <a href="#eq-gauss" class="quarto-xref">Equation&nbsp;<span>2.4</span></a> converts the surface integral into a volume integral: <span class="math inline">\(\oint_S \vec F \cdot \mathrm{d}\vec A = \int_V \nabla \cdot \vec F \, \mathrm{d}V\)</span>.</li>
+<li>All terms are now integrals over the same volume and can be collected:</li>
+</ol>
+<p><span class="math display">\[
+\int_V \left( \frac{\partial u}{\partial t} + \nabla \cdot \vec F - s \right) \mathrm{d}V = 0 .
+\]</span></p>
+<p>This holds for every volume <span class="math inline">\(V\)</span>, however small and wherever it is placed. That is only possible if the integrand itself vanishes everywhere, which gives the differential form</p>
+<p><span id="eq-conservation"><span class="math display">\[
+\frac{\partial u}{\partial t} + \nabla \cdot \vec F = s .
+\tag{2.6}\]</span></span></p>
+<p><a href="#eq-conservation" class="quarto-xref">Equation&nbsp;<span>2.6</span></a> is a prognostic equation for <span class="math inline">\(u\)</span>, but it is not yet closed, because it contains the unknown flux. A <strong>flux law</strong> (constitutive relation) expresses <span class="math inline">\(\vec F\)</span> in terms of <span class="math inline">\(u\)</span>. Two flux laws cover most of this lecture.</p>
+<p><strong>Advective flux.</strong> The quantity is carried along by a velocity field <span class="math inline">\(\vec v\)</span>:</p>
+<p><span class="math display">\[
+\vec F = \vec v \, u .
+\]</span></p>
+<p><strong>Diffusive flux.</strong> The quantity flows down its own gradient:</p>
+<p><span class="math display">\[
+\vec F = -D \, \nabla u .
+\]</span></p>
+<p>The second law has many names, depending on the quantity.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Law</th>
+<th>Flux</th>
+<th>Driven by</th>
+<th>Coefficient</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fourier</td>
+<td>heat</td>
+<td>temperature gradient</td>
+<td>thermal conductivity</td>
+</tr>
+<tr class="even">
+<td>Fick</td>
+<td>dissolved substance</td>
+<td>concentration gradient</td>
+<td>diffusion coefficient</td>
+</tr>
+<tr class="odd">
+<td>Darcy</td>
+<td>groundwater</td>
+<td>gradient of hydraulic head</td>
+<td>hydraulic conductivity</td>
+</tr>
+</tbody>
+</table>
+<p>We insert the total flux <span class="math inline">\(\vec F = \vec v \, u - D \, \nabla u\)</span> into <a href="#eq-conservation" class="quarto-xref">Equation&nbsp;<span>2.6</span></a> and keep track of every sign. The divergence is linear, so it acts on the two parts separately:</p>
+<p><span class="math display">\[
+\nabla \cdot \vec F = \nabla \cdot (\vec v \, u) + \nabla \cdot (-D \, \nabla u)
+= \nabla \cdot (\vec v \, u) - \nabla \cdot (D \, \nabla u) .
+\]</span></p>
+<p>Inserted into <a href="#eq-conservation" class="quarto-xref">Equation&nbsp;<span>2.6</span></a>:</p>
+<p><span class="math display">\[
+\frac{\partial u}{\partial t} + \nabla \cdot (\vec v \, u) - \nabla \cdot (D \, \nabla u) = s .
+\]</span></p>
+<p>Moving the diffusion term to the right-hand side changes its sign once more, which gives the <strong>advection–diffusion equation</strong></p>
+<p><span id="eq-advection-diffusion"><span class="math display">\[
+\frac{\partial u}{\partial t} + \nabla \cdot (\vec v \, u) =
+\nabla \cdot (D \, \nabla u) + s .
+\tag{2.7}\]</span></span></p>
+<p>The diffusion term now carries a plus sign. Two minus signs have cancelled: the one from the outward normal in <a href="#eq-conservation-integral" class="quarto-xref">Equation&nbsp;<span>2.5</span></a> (flux out of the volume reduces <span class="math inline">\(u\)</span>) and the one from the flux law (the flux points down the gradient).</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Keep track of the signs
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Lost or doubled minus signs are among the most frequent and most time-consuming errors in numerical modelling, in course projects as well as in research codes. A code with a sign error usually runs; it just gives wrong results, and the error is often found only after days of debugging. The signs depend on conventions that differ between textbooks, disciplines and codes:</p>
+<ul>
+<li><strong>Direction of the normal</strong>: outward (as here) or inward.</li>
+<li><strong>Flux law</strong>: <span class="math inline">\(\vec F = -D \nabla u\)</span>, or a flux defined positive in the direction of decreasing <span class="math inline">\(u\)</span>.</li>
+<li><strong>Vertical coordinate</strong>: <span class="math inline">\(z\)</span> pointing up (height) or down (depth, common in hydrology and seismology). Gravity terms change sign with it.</li>
+<li><strong>Operator</strong>: many solvers are written for <span class="math inline">\(-\nabla^2 u = f\)</span>, because the matrix of <span class="math inline">\(-\nabla^2\)</span> is positive definite (<a href="04-matrices-waves.html" class="quarto-xref"><span>Chapter 4</span></a>); others for <span class="math inline">\(\nabla^2 u = f\)</span>.</li>
+<li><strong>Source term</strong>: <span class="math inline">\(s &gt; 0\)</span> as a source or as a sink (e.g.&nbsp;extraction from a well, or evaporation).</li>
+</ul>
+<p>Three habits prevent most of these errors:</p>
+<ol type="1">
+<li><strong>Write the convention down</strong> at the top of the derivation and in the code (which direction is positive, what the flux means).</li>
+<li><strong>Check the physics of the result.</strong> In <span class="math inline">\(\partial u/\partial t = D \nabla^2 u\)</span>, at a maximum <span class="math inline">\(\nabla^2 u &lt; 0\)</span> (see the Laplacian above), so <span class="math inline">\(u\)</span> must decrease there. With the wrong sign the maximum grows; this is anti-diffusion, and it is unstable.</li>
+<li><strong>Test the code on a case with a known answer</strong>: a Gaussian must spread and flatten, the total amount <span class="math inline">\(\int u \, \mathrm{d}V\)</span> must stay constant without sources, and water must flow from high to low hydraulic head.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Flux form and advective form
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With the product rule <a href="#eq-div-product" class="quarto-xref">Equation&nbsp;<span>2.3</span></a> the advection term becomes <span class="math inline">\(\nabla \cdot (\vec v u) = \vec v \cdot \nabla u + u \, \nabla \cdot \vec v\)</span>. For a divergence-free (incompressible) flow the last term vanishes and the equation can be written in <strong>advective form</strong>, <span class="math inline">\(\partial u/\partial t + \vec v \cdot \nabla u = \dots\)</span></p>
+<p>The two forms are mathematically equivalent. Their discretizations are not. A discretization of the <strong>flux form</strong> conserves the total amount of <span class="math inline">\(u\)</span> exactly, because what leaves one grid cell enters its neighbour. A discretization of the advective form in general does not (Chapter 14).</p>
+</div>
+</div>
+</section>
+<section id="classification-of-differential-equations" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="classification-of-differential-equations"><span class="header-section-number">2.3</span> Classification of differential equations</h2>
+<section id="ordinary-and-partial-differential-equations" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="ordinary-and-partial-differential-equations"><span class="header-section-number">2.3.1</span> Ordinary and partial differential equations</h3>
+<p>If the unknown depends on one independent variable, the equation contains only ordinary derivatives and is an <strong>ordinary differential equation</strong> (ODE). An example is the equation for the charge <span class="math inline">\(Q(t)\)</span> on a capacitor in a circuit with inductance <span class="math inline">\(L\)</span>, resistance <span class="math inline">\(R\)</span> and capacitance <span class="math inline">\(C\)</span>:</p>
+<p><span class="math display">\[
+L \frac{\mathrm{d}^2 Q}{\mathrm{d}t^2} + R \frac{\mathrm{d}Q}{\mathrm{d}t} + \frac{1}{C} Q = E(t) .
+\]</span></p>
+<p>If the unknown depends on several independent variables, the equation contains partial derivatives and is a <strong>partial differential equation</strong> (PDE). The advection–diffusion equation <a href="#eq-advection-diffusion" class="quarto-xref">Equation&nbsp;<span>2.7</span></a> is a PDE.</p>
+</section>
+<section id="systems" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="systems"><span class="header-section-number">2.3.2</span> Systems</h3>
+<p>Several unknowns coupled by several equations form a system. The predator–prey equations</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}x}{\mathrm{d}t} = a x - \alpha x y, \qquad
+\frac{\mathrm{d}y}{\mathrm{d}t} = -c y + \gamma x y
+\]</span></p>
+<p>for the number of prey <span class="math inline">\(x\)</span> and predators <span class="math inline">\(y\)</span> are a system of two ODEs. The models of the atmosphere and the ocean are systems of PDEs, one for each prognostic variable.</p>
+</section>
+<section id="order" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="order"><span class="header-section-number">2.3.3</span> Order</h3>
+<p>The order of a differential equation is the order of the highest derivative in it. It determines how many initial and boundary conditions are needed.</p>
+<p>Every ODE of order <span class="math inline">\(n\)</span> can be rewritten as a system of <span class="math inline">\(n\)</span> first-order ODEs. For Newton’s law <a href="01-introduction.html#eq-newton" class="quarto-xref">Equation&nbsp;<span>1.1</span></a> we introduce the velocity <span class="math inline">\(v = \mathrm{d}u/\mathrm{d}t\)</span> as a second unknown:</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}u}{\mathrm{d}t} = v, \qquad
+\frac{\mathrm{d}v}{\mathrm{d}t} = \frac{F}{m} .
+\]</span></p>
+<p>This is important in practice: numerical methods and software for ODEs are written for first-order systems. PDEs of second order in time can be treated in the same way; for seismic waves we will see that the wave equation is equivalent to a system of two first-order equations.</p>
+</section>
+<section id="linear-and-nonlinear" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="linear-and-nonlinear"><span class="header-section-number">2.3.4</span> Linear and nonlinear</h3>
+<p>An equation is <strong>linear</strong> if the unknown and its derivatives appear only to the first power and are not multiplied with each other. The coefficients may depend on the independent variables. The general linear ODE of order <span class="math inline">\(n\)</span> is</p>
+<p><span class="math display">\[
+a_0(t) \, y^{(n)} + a_1(t) \, y^{(n-1)} + \dots + a_n(t) \, y = g(t) .
+\]</span></p>
+<p>It is <strong>homogeneous</strong> if <span class="math inline">\(g(t) = 0\)</span>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Equation</th>
+<th>Order</th>
+<th>Linear?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(y' - 2 x y = e^{x}\)</span></td>
+<td>1</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(y'' + 4 y' + 4 y = 0\)</span></td>
+<td>2</td>
+<td>yes, homogeneous</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(y' = x / y\)</span></td>
+<td>1</td>
+<td>no</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(y'' + \sin y = x^2\)</span></td>
+<td>2</td>
+<td>no</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(y''' + 2 e^{t} y'' + y y' = t^4\)</span></td>
+<td>3</td>
+<td>no</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u_t + c(x) \, u_x = 0\)</span></td>
+<td>1</td>
+<td>yes</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u_t + u \, u_x = 0\)</span></td>
+<td>1</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p>The last two rows deserve attention. Advection by a <em>given</em> velocity field <span class="math inline">\(c(x)\)</span> is linear, even though the coefficient varies. Advection of the velocity by itself, as in the momentum equations of atmosphere and ocean, is nonlinear.</p>
+<p>The pendulum equation</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}^2 \theta}{\mathrm{d}t^2} + \frac{g}{L} \sin \theta = 0
+\]</span></p>
+<p>is nonlinear. For small angles <span class="math inline">\(\sin \theta \approx \theta\)</span>, and it becomes the linear equation of the harmonic oscillator. This <strong>linearization</strong> is a standard tool: the stability of numerical methods is analysed for linear equations, and the results are then applied to the nonlinear problem with care.</p>
+<p>Linearity has a great practical advantage. Solutions of a linear homogeneous equation can be added (superposition), so that the solution can be analysed wave by wave (<a href="04-matrices-waves.html" class="quarto-xref"><span>Chapter 4</span></a>). Discretizing a linear PDE gives a linear system of algebraic equations; discretizing a nonlinear PDE gives a nonlinear system that has to be solved iteratively (Chapter 17).</p>
+</section>
+<section id="elliptic-parabolic-hyperbolic" class="level3" data-number="2.3.5">
+<h3 data-number="2.3.5" class="anchored" data-anchor-id="elliptic-parabolic-hyperbolic"><span class="header-section-number">2.3.5</span> Elliptic, parabolic, hyperbolic</h3>
+<p>The most important classification of PDEs concerns their type. Linear second-order PDEs in two independent variables have the general form</p>
+<p><span id="eq-second-order"><span class="math display">\[
+a \, u_{xx} + 2 b \, u_{xy} + c \, u_{yy} + \text{lower-order terms} = f ,
+\tag{2.8}\]</span></span></p>
+<p>where the second variable <span class="math inline">\(y\)</span> may be a space coordinate or time. The type is determined by the coefficients of the second derivatives alone:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Condition</th>
+<th>Prototype</th>
+<th>Eigenvalues of <span class="math inline">\(A\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Elliptic</td>
+<td><span class="math inline">\(b^2 - ac &lt; 0\)</span></td>
+<td>Laplace, Poisson: <span class="math inline">\(u_{xx} + u_{yy} = f\)</span></td>
+<td>same sign</td>
+</tr>
+<tr class="even">
+<td>Parabolic</td>
+<td><span class="math inline">\(b^2 - ac = 0\)</span></td>
+<td>Diffusion: <span class="math inline">\(u_t = D u_{xx}\)</span></td>
+<td>one is zero</td>
+</tr>
+<tr class="odd">
+<td>Hyperbolic</td>
+<td><span class="math inline">\(b^2 - ac &gt; 0\)</span></td>
+<td>Wave: <span class="math inline">\(u_{tt} = c^2 u_{xx}\)</span></td>
+<td>opposite signs</td>
+</tr>
+</tbody>
+</table>
+<p>The names come from the quadratic form <span class="math inline">\(q(x, y) = a x^2 + 2 b x y + c y^2\)</span>, whose contour <span class="math inline">\(q = 1\)</span> is an ellipse or a hyperbola under the first and third condition. In matrix notation,</p>
+<p><span class="math display">\[
+q(x, y) = \begin{pmatrix} x &amp; y \end{pmatrix} A \begin{pmatrix} x \\ y \end{pmatrix},
+\qquad
+A = \begin{pmatrix} a &amp; b \\ b &amp; c \end{pmatrix},
+\]</span></p>
+<p>and the condition can be read off the signs of the eigenvalues of <span class="math inline">\(A\)</span>. To see why, we compute the eigenvalues. They are the roots of the characteristic polynomial</p>
+<p><span class="math display">\[
+\det(A - \lambda I) =
+\begin{vmatrix} a - \lambda &amp; b \\ b &amp; c - \lambda \end{vmatrix}
+= (a - \lambda)(c - \lambda) - b^2
+= \lambda^2 - (a + c) \, \lambda + (ac - b^2) .
+\]</span></p>
+<p>A quadratic polynomial with roots <span class="math inline">\(\lambda_1\)</span> and <span class="math inline">\(\lambda_2\)</span> can be written as <span class="math inline">\((\lambda - \lambda_1)(\lambda - \lambda_2) = \lambda^2 - (\lambda_1 + \lambda_2) \lambda + \lambda_1 \lambda_2\)</span>. Comparing the coefficients gives</p>
+<p><span class="math display">\[
+\lambda_1 + \lambda_2 = a + c , \qquad
+\lambda_1 \lambda_2 = ac - b^2 = \det A .
+\]</span></p>
+<p>The eigenvalues are real, because <span class="math inline">\(A\)</span> is symmetric. The discriminant of the characteristic polynomial confirms this: <span class="math inline">\((a + c)^2 - 4(ac - b^2) = (a - c)^2 + 4 b^2 \ge 0\)</span>. The sign of the product <span class="math inline">\(\lambda_1 \lambda_2\)</span> therefore decides the type, and it is the opposite of the sign of <span class="math inline">\(b^2 - ac\)</span>:</p>
+<ul>
+<li><span class="math inline">\(b^2 - ac &lt; 0\)</span>: <span class="math inline">\(\lambda_1 \lambda_2 &gt; 0\)</span>, both eigenvalues have the same sign (elliptic);</li>
+<li><span class="math inline">\(b^2 - ac = 0\)</span>: <span class="math inline">\(\lambda_1 \lambda_2 = 0\)</span>, one eigenvalue is zero (parabolic);</li>
+<li><span class="math inline">\(b^2 - ac &gt; 0\)</span>: <span class="math inline">\(\lambda_1 \lambda_2 &lt; 0\)</span>, the eigenvalues have opposite signs (hyperbolic).</li>
+</ul>
+<p>The geometric meaning follows from the eigenvectors. Because <span class="math inline">\(A\)</span> is symmetric, its eigenvectors are orthogonal, and in coordinates <span class="math inline">\((\xi, \eta)\)</span> along the eigenvectors the mixed term disappears:</p>
+<p><span class="math display">\[
+q = \lambda_1 \xi^2 + \lambda_2 \eta^2 .
+\]</span></p>
+<p>For <span class="math inline">\(\lambda_1, \lambda_2 &gt; 0\)</span> the contour <span class="math inline">\(q = 1\)</span> is an ellipse with semi-axes <span class="math inline">\(1/\sqrt{\lambda_1}\)</span> and <span class="math inline">\(1/\sqrt{\lambda_2}\)</span>. For eigenvalues of opposite sign it is a hyperbola. If <span class="math inline">\(\lambda_2 = 0\)</span>, <span class="math inline">\(q = \lambda_1 \xi^2\)</span> does not depend on <span class="math inline">\(\eta\)</span> at all, and <span class="math inline">\(q = 1\)</span> degenerates into two parallel lines, the limiting case between ellipse and hyperbola. The same rotation of coordinates applied to the PDE removes the mixed derivative and gives its <strong>canonical form</strong> <span class="math inline">\(\lambda_1 u_{\xi\xi} + \lambda_2 u_{\eta\eta} + \text{lower-order terms} = f\)</span>. Elliptic equations then look like the Poisson equation, hyperbolic ones like the wave equation, and parabolic ones contain only one second derivative, like the diffusion equation.</p>
+<p>As an example, take <span class="math inline">\(u_{xx} + 4 u_{xy} + u_{yy} = 0\)</span>, that is <span class="math inline">\(a = c = 1\)</span> and <span class="math inline">\(b = 2\)</span>. The condition gives <span class="math inline">\(b^2 - ac = 4 - 1 = 3 &gt; 0\)</span>: hyperbolic. The eigenvalues confirm this: <span class="math inline">\(\lambda_1 + \lambda_2 = 2\)</span> and <span class="math inline">\(\lambda_1 \lambda_2 = 1 - 4 = -3\)</span>, so <span class="math inline">\(\lambda_1 = 3\)</span> and <span class="math inline">\(\lambda_2 = -1\)</span>, of opposite sign. The mixed derivative hides the type: both pure second derivatives have the same sign, yet the equation is a wave equation in rotated coordinates.</p>
+<p>The eigenvalue formulation carries over to more than two variables, where the condition <span class="math inline">\(b^2 - ac\)</span> no longer exists <span class="citation" data-cites="wick2020">(<a href="references.html#ref-wick2020" role="doc-biblioref">Wick 2020</a>)</span>. With <span class="math inline">\(n\)</span> independent variables, <span class="math inline">\(A\)</span> is a symmetric <span class="math inline">\(n \times n\)</span> matrix. The equation is elliptic if all eigenvalues have the same sign, parabolic if one eigenvalue is zero and the others have the same sign, and hyperbolic if one eigenvalue has the opposite sign of the others. The heat equation <span class="math inline">\(u_t = D (u_{xx} + u_{yy})\)</span> in the variables <span class="math inline">\((x, y, t)\)</span>, for example, has the eigenvalues <span class="math inline">\(D\)</span>, <span class="math inline">\(D\)</span> and <span class="math inline">\(0\)</span> (up to an overall sign): parabolic. We meet quadratic forms again when we solve linear systems by minimisation (Chapter 11).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Check: classify the diffusion equation with this rule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Write <span class="math inline">\(u_t - D u_{xx} = 0\)</span> with the variables <span class="math inline">\((x, t)\)</span> in the form <a href="#eq-second-order" class="quarto-xref">Equation&nbsp;<span>2.8</span></a>. The only second derivative is <span class="math inline">\(u_{xx}\)</span> with <span class="math inline">\(a = -D\)</span>, and <span class="math inline">\(b = c = 0\)</span>. Hence <span class="math inline">\(b^2 - ac = 0\)</span>: parabolic. For the wave equation <span class="math inline">\(u_{tt} - c_0^2 u_{xx} = 0\)</span> we have <span class="math inline">\(a = -c_0^2\)</span>, <span class="math inline">\(b = 0\)</span>, <span class="math inline">\(c = 1\)</span> and <span class="math inline">\(b^2 - ac = c_0^2 &gt; 0\)</span>: hyperbolic.</p>
+</div>
+</div>
+</div>
+<p>What the three types mean physically is shown by their prototypes in the next section.</p>
+</section>
+</section>
+<section id="sec-prototype-equations" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="sec-prototype-equations"><span class="header-section-number">2.4</span> Prototype equations</h2>
+<p>Three special cases of conservation laws in one space dimension serve as prototypes, one for each type of the classification. Each has its own physical behaviour, and each requires its own numerical treatment.</p>
+<p><strong>Diffusion equation</strong> (heat equation), from <a href="#eq-advection-diffusion" class="quarto-xref">Equation&nbsp;<span>2.7</span></a> with <span class="math inline">\(\vec v = 0\)</span> and constant <span class="math inline">\(D\)</span>; parabolic:</p>
+<p><span id="eq-diffusion"><span class="math display">\[
+\frac{\partial u}{\partial t} = D \frac{\partial^2 u}{\partial x^2} .
+\tag{2.9}\]</span></span></p>
+<p><strong>Advection equation</strong>, with constant velocity <span class="math inline">\(c\)</span> and <span class="math inline">\(D = 0\)</span>; of first order and hyperbolic:</p>
+<p><span id="eq-advection"><span class="math display">\[
+\frac{\partial u}{\partial t} + c \frac{\partial u}{\partial x} = 0 .
+\tag{2.10}\]</span></span></p>
+<p><strong>Wave equation</strong>, with wave speed <span class="math inline">\(c\)</span>; hyperbolic:</p>
+<p><span id="eq-wave"><span class="math display">\[
+\frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2} .
+\tag{2.11}\]</span></span></p>
+<p>On an unbounded domain all three have exact solutions for the initial condition <span class="math inline">\(u(x, 0) = f(x)\)</span>.</p>
+<p><strong>Advection.</strong> The solution is <span class="math inline">\(u(x, t) = f(x - ct)\)</span>: the initial shape moves with velocity <span class="math inline">\(c\)</span> and does not change. Information travels along the lines <span class="math inline">\(x - ct = \text{const}\)</span>, the <strong>characteristics</strong> of the equation, with the finite speed <span class="math inline">\(c\)</span>; first-order equations with this property are called hyperbolic, like the wave equation. To verify the solution, set <span class="math inline">\(\xi = x - ct\)</span> and apply the chain rule:</p>
+<p><span class="math display">\[
+\frac{\partial u}{\partial t} = f'(\xi) \frac{\partial \xi}{\partial t} = -c \, f'(\xi), \qquad
+\frac{\partial u}{\partial x} = f'(\xi) \frac{\partial \xi}{\partial x} = f'(\xi)
+\quad \Longrightarrow \quad
+\frac{\partial u}{\partial t} + c \frac{\partial u}{\partial x} = 0 .
+\]</span></p>
+<p>This verifies the solution but does not tell us where it comes from. The box derives it.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Derivation: the method of characteristics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We look at <span class="math inline">\(u\)</span> along a curve <span class="math inline">\(x(t)\)</span> in the <span class="math inline">\((x, t)\)</span> plane, that is at the function <span class="math inline">\(U(t) = u(x(t), t)\)</span>. Its rate of change follows from the chain rule for a function of two variables, both of which depend on <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}U}{\mathrm{d}t}
+= \frac{\partial u}{\partial x} \frac{\mathrm{d}x}{\mathrm{d}t} + \frac{\partial u}{\partial t} \frac{\mathrm{d}t}{\mathrm{d}t}
+= \frac{\partial u}{\partial t} + \frac{\mathrm{d}x}{\mathrm{d}t} \, \frac{\partial u}{\partial x} .
+\]</span></p>
+<p>The right-hand side looks like the left-hand side of <a href="#eq-advection" class="quarto-xref">Equation&nbsp;<span>2.10</span></a>. We choose the curve such that the two agree, that is with</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}x}{\mathrm{d}t} = c .
+\]</span></p>
+<p>Integrating from <span class="math inline">\(t = 0\)</span>, where the curve starts at the point <span class="math inline">\(x_0\)</span>, gives the straight line <span class="math inline">\(x(t) = x_0 + c t\)</span>. Along this line the PDE becomes an ODE:</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}U}{\mathrm{d}t}
+= \frac{\partial u}{\partial t} + c \, \frac{\partial u}{\partial x} = 0 .
+\]</span></p>
+<p>So <span class="math inline">\(U\)</span> does not change, and <span class="math inline">\(u\)</span> keeps the value it had at the starting point:</p>
+<p><span class="math display">\[
+u(x_0 + c t, t) = U(t) = U(0) = u(x_0, 0) = f(x_0) .
+\]</span></p>
+<p>Finally we express <span class="math inline">\(x_0\)</span> by the point <span class="math inline">\((x, t)\)</span> we are interested in. The characteristic through <span class="math inline">\((x, t)\)</span> started at <span class="math inline">\(x_0 = x - c t\)</span>, hence</p>
+<p><span class="math display">\[
+u(x, t) = f(x - c t) .
+\]</span></p>
+<p>The derivation shows more than the verification:</p>
+<ul>
+<li><strong>Uniqueness.</strong> Every point <span class="math inline">\((x, t)\)</span> lies on exactly one characteristic, and the value there is fixed by the initial condition. There is no other solution.</li>
+<li><strong>Domain of dependence.</strong> <span class="math inline">\(u(x, t)\)</span> depends only on the initial value at the single point <span class="math inline">\(x - ct\)</span>, not on <span class="math inline">\(f\)</span> anywhere else. Information travels along the characteristics with speed <span class="math inline">\(c\)</span>.</li>
+<li><strong>Generalisation.</strong> The same steps work for a variable velocity <span class="math inline">\(c(x, t)\)</span>: the characteristics are the solutions of the ODE <span class="math inline">\(\mathrm{d}x/\mathrm{d}t = c(x, t)\)</span>, are no longer straight, and <span class="math inline">\(u\)</span> is still constant along them. We return to this view of advection in the semi-Lagrangian methods (Chapter 14).</li>
+</ul>
+</div>
+</div>
+<p><strong>Wave equation.</strong> Differentiating once more gives <span class="math inline">\(\partial^2 u / \partial t^2 = c^2 f''(\xi)\)</span> and <span class="math inline">\(\partial^2 u / \partial x^2 = f''(\xi)\)</span>, so <span class="math inline">\(f(x - ct)\)</span> also solves the wave equation. The sign of <span class="math inline">\(c\)</span> drops out in the second derivative, so <span class="math inline">\(f(x + ct)\)</span> is a solution as well. For zero initial velocity the solution is <span class="math inline">\(u(x, t) = \tfrac12 [f(x - ct) + f(x + ct)]\)</span>: the initial shape splits into two halves that travel in opposite directions. At <span class="math inline">\(t = 0\)</span> the two halves add up to <span class="math inline">\(f(x)\)</span>, and their time derivatives, <span class="math inline">\(\mp \tfrac12 c f'(x)\)</span>, cancel.</p>
+<p><strong>Diffusion.</strong> For the Gaussian initial condition <span class="math inline">\(f(x) = e^{-x^2 / w^2}\)</span> the solution remains a Gaussian that widens and flattens,</p>
+<p><span class="math display">\[
+u(x, t) = \frac{w}{\sqrt{w^2 + 4 D t}} \exp \left( - \frac{x^2}{w^2 + 4 D t} \right) .
+\]</span></p>
+<p>The squared width grows linearly in time, <span class="math inline">\(w^2 + 4Dt\)</span>, and the amplitude decreases such that the integral of <span class="math inline">\(u\)</span>, the total amount, stays constant.</p>
+<div id="cell-fig-prototypes" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">801</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> <span class="fl">1.0</span>                       <span class="co"># width of the initial Gaussian</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x: np.exp(<span class="op">-</span>(x <span class="op">/</span> w) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>D, c <span class="op">=</span> <span class="fl">1.0</span>, <span class="fl">1.0</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> diffusion(x, t):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> w <span class="op">/</span> np.sqrt(w<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> D <span class="op">*</span> t) <span class="op">*</span> np.exp(<span class="op">-</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">/</span> (w<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> D <span class="op">*</span> t))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>solutions <span class="op">=</span> {</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Diffusion"</span>: diffusion,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Advection"</span>: <span class="kw">lambda</span> x, t: f(x <span class="op">-</span> c <span class="op">*</span> t),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Wave"</span>: <span class="kw">lambda</span> x, t: <span class="fl">0.5</span> <span class="op">*</span> (f(x <span class="op">-</span> c <span class="op">*</span> t) <span class="op">+</span> f(x <span class="op">+</span> c <span class="op">*</span> t)),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">2.8</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (name, u) <span class="kw">in</span> <span class="bu">zip</span>(axes, solutions.items()):</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    ax.plot(x, f(x), <span class="st">"k"</span>, label<span class="op">=</span><span class="st">"$t = 0$"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>]:</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        ax.plot(x, u(x, t), label<span class="op">=</span><span class="ss">f"$t = </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">$"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    ax.set_title(name)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"$x$"</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">"$u$"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-prototypes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prototypes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-governing-equations_files/figure-html/fig-prototypes-output-1.png" width="856" height="259" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prototypes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4: Exact solutions of the three prototype equations for the same Gaussian initial condition (black) at three later times.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-prototypes" class="quarto-xref">Figure&nbsp;<span>2.4</span></a> contains the most important physical distinction of this lecture. Diffusion smooths and has no direction. Advection and waves transport information with a finite speed and preserve the shape. A good numerical method must reproduce this behaviour: it must not move a diffusing profile, and it must not smear or distort a travelling one. The second requirement turns out to be the harder one (Chapter 13).</p>
+<p>A fourth prototype, the elliptic one, has no time derivative. In steady state, <span class="math inline">\(\partial u / \partial t = 0\)</span>, the diffusion equation with a source becomes the <strong>Poisson equation</strong></p>
+<p><span id="eq-poisson"><span class="math display">\[
+- \nabla^2 u = f ,
+\tag{2.12}\]</span></span></p>
+<p>and for <span class="math inline">\(f = 0\)</span> the <strong>Laplace equation</strong>. It describes equilibria: steady temperature and groundwater fields, the gravitational potential, the pressure in an incompressible fluid.</p>
+<p><a href="#fig-prototypes" class="quarto-xref">Figure&nbsp;<span>2.4</span></a> and the Poisson equation show why the classification matters: the three types behave differently.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Elliptic</th>
+<th>Parabolic</th>
+<th>Hyperbolic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Describes</td>
+<td>equilibrium</td>
+<td>smoothing, relaxation to equilibrium</td>
+<td>propagation</td>
+</tr>
+<tr class="even">
+<td>A disturbance is felt</td>
+<td>everywhere at once</td>
+<td>everywhere at once, but damped</td>
+<td>only where the wave has arrived; finite speed</td>
+</tr>
+<tr class="odd">
+<td>Solution is</td>
+<td>smoother than the data</td>
+<td>smoother than the initial condition</td>
+<td>as rough as the initial condition</td>
+</tr>
+<tr class="even">
+<td>Needs</td>
+<td>boundary conditions on the whole boundary</td>
+<td>initial condition and boundary conditions</td>
+<td>initial conditions; boundary conditions only where information enters</td>
+</tr>
+<tr class="odd">
+<td>Numerical task</td>
+<td>solve one large linear system</td>
+<td>time stepping, often implicit</td>
+<td>time stepping with attention to the propagation speed</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-equations-of-this-lecture" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="the-equations-of-this-lecture"><span class="header-section-number">2.5</span> The equations of this lecture</h2>
+<p>The equations of real models are combinations of the prototypes. We list the ones that appear in later units, so that you recognise the building blocks.</p>
+<p><strong>Shallow water equations.</strong> A layer of fluid of depth <span class="math inline">\(h\)</span> and velocity <span class="math inline">\(u\)</span> over a flat bottom, in one dimension and without rotation:</p>
+<p><span id="eq-shallow-water"><span class="math display">\[
+\begin{aligned}
+\frac{\partial h}{\partial t} + \frac{\partial (h u)}{\partial x} &amp;= 0, \\
+\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} + g \frac{\partial h}{\partial x} &amp;= 0 .
+\end{aligned}
+\tag{2.13}\]</span></span></p>
+<p>The first equation is conservation of mass in flux form, the second is conservation of momentum in advective form. The system is nonlinear.</p>
+<p>To see what it describes we <strong>linearize</strong> it about a state of rest with depth <span class="math inline">\(H\)</span>. We write <span class="math inline">\(h = H + \eta\)</span> and assume that the surface elevation <span class="math inline">\(\eta\)</span> and the velocity <span class="math inline">\(u\)</span> are small, so that products of small quantities can be neglected: <span class="math inline">\(h u \approx H u\)</span> and <span class="math inline">\(u \, \partial u / \partial x \approx 0\)</span>. What remains is</p>
+<p><span id="eq-shallow-water-linear"><span class="math display">\[
+\frac{\partial \eta}{\partial t} + H \frac{\partial u}{\partial x} = 0, \qquad
+\frac{\partial u}{\partial t} + g \frac{\partial \eta}{\partial x} = 0 .
+\tag{2.14}\]</span></span></p>
+<p>These are two first-order equations for two unknowns. We combine them into one second-order equation for <span class="math inline">\(\eta\)</span> alone by eliminating <span class="math inline">\(u\)</span>. The two equations are coupled through derivatives of <span class="math inline">\(u\)</span>: the first contains <span class="math inline">\(\partial u / \partial x\)</span>, the second <span class="math inline">\(\partial u / \partial t\)</span>. Differentiating the first equation with respect to <span class="math inline">\(t\)</span> and the second with respect to <span class="math inline">\(x\)</span> produces the same mixed derivative of <span class="math inline">\(u\)</span> in both. Since <span class="math inline">\(H\)</span> and <span class="math inline">\(g\)</span> are constants, they stay in front of the derivatives:</p>
+<p><span class="math display">\[
+\frac{\partial^2 \eta}{\partial t^2} + H \frac{\partial^2 u}{\partial t \, \partial x} = 0,
+\qquad
+\frac{\partial^2 u}{\partial x \, \partial t} + g \frac{\partial^2 \eta}{\partial x^2} = 0 .
+\]</span></p>
+<p>For smooth functions the order of differentiation does not matter (Schwarz’s theorem), so <span class="math inline">\(\partial^2 u / \partial t \, \partial x = \partial^2 u / \partial x \, \partial t\)</span>. The second equation gives this mixed derivative in terms of <span class="math inline">\(\eta\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial^2 u}{\partial x \, \partial t} = - g \frac{\partial^2 \eta}{\partial x^2} .
+\]</span></p>
+<p>Inserting it into the first equation,</p>
+<p><span class="math display">\[
+\frac{\partial^2 \eta}{\partial t^2} + H \left( - g \frac{\partial^2 \eta}{\partial x^2} \right) = 0 ,
+\]</span></p>
+<p>and moving the second term to the right-hand side gives</p>
+<p><span class="math display">\[
+\frac{\partial^2 \eta}{\partial t^2} = g H \frac{\partial^2 \eta}{\partial x^2} ,
+\]</span></p>
+<p>the wave equation <a href="#eq-wave" class="quarto-xref">Equation&nbsp;<span>2.11</span></a> with <span class="math inline">\(c = \sqrt{g H}\)</span>. The shallow water equations describe <strong>gravity waves</strong>; they are a hyperbolic system. Note how the signs work out: the minus sign from solving the second equation for the mixed derivative and the one from moving the term to the right-hand side combine to <span class="math inline">\(+gH\)</span>. Since <span class="math inline">\(g H &gt; 0\)</span> the result is a wave equation; with <span class="math inline">\(-gH\)</span> it would be elliptic, and there would be no waves. Eliminating <span class="math inline">\(\eta\)</span> instead, by differentiating the first equation with respect to <span class="math inline">\(x\)</span> and the second with respect to <span class="math inline">\(t\)</span>, gives the same wave equation for <span class="math inline">\(u\)</span>. For an ocean of depth 4 km, <span class="math inline">\(c = \sqrt{9.81 \cdot 4000}\)</span> m/s <span class="math inline">\(\approx 200\)</span> m/s, the speed of a tsunami. With rotation added the system contains much of the dynamics of the atmosphere and the ocean, which makes it the standard test bed for the numerical methods of weather and climate models (Chapter 15).</p>
+<p>What makes a system of first-order equations hyperbolic? A first-order system</p>
+<p><span class="math display">\[
+\frac{\partial \vec q}{\partial t} + B \frac{\partial \vec q}{\partial x} = 0
+\]</span></p>
+<p>is hyperbolic if the matrix <span class="math inline">\(B\)</span> has real eigenvalues and a full set of eigenvectors. It can then be decomposed into advection equations, one for each eigenvalue, and the eigenvalues are the speeds.</p>
+<p>For the linearized shallow water equations <a href="#eq-shallow-water-linear" class="quarto-xref">Equation&nbsp;<span>2.14</span></a>, <span class="math inline">\(\vec q = (\eta, u)^T\)</span> and</p>
+<p><span class="math display">\[
+B = \begin{pmatrix} 0 &amp; H \\ g &amp; 0 \end{pmatrix}, \qquad
+\det (B - \lambda I) = \lambda^2 - g H = 0
+\quad \Longrightarrow \quad \lambda = \pm \sqrt{g H} .
+\]</span></p>
+<p>The two eigenvalues are the speeds of the gravity waves travelling to the right and to the left. For the full equations <a href="#eq-shallow-water" class="quarto-xref">Equation&nbsp;<span>2.13</span></a> the same calculation gives <span class="math inline">\(u \pm \sqrt{g h}\)</span>: the waves are in addition carried by the flow.</p>
+<p><strong>Primitive equations.</strong> The equations of atmospheric and ocean models are the conservation laws for momentum, mass and energy of a stratified fluid on the rotating sphere, with the hydrostatic approximation in the vertical. Each is an advection equation for one prognostic variable with source terms: pressure gradient and Coriolis force for momentum, heating for temperature, phase changes for humidity. Their dynamics are dominated by advection and waves, that is, by hyperbolic behaviour; diffusion terms represent the mixing by turbulence.</p>
+<p><strong>Groundwater flow.</strong> Conservation of mass with Darcy’s law gives a diffusion equation for the hydraulic head <span class="math inline">\(h\)</span>,</p>
+<p><span id="eq-groundwater"><span class="math display">\[
+S_s \frac{\partial h}{\partial t} = \nabla \cdot (K \, \nabla h) + q ,
+\tag{2.15}\]</span></span></p>
+<p>with specific storage <span class="math inline">\(S_s\)</span>, hydraulic conductivity <span class="math inline">\(K\)</span> and sources <span class="math inline">\(q\)</span>. It is parabolic, and in steady state elliptic. <span class="math inline">\(K\)</span> varies in space over many orders of magnitude, which is the main numerical difficulty (Chapter 9).</p>
+<p><strong>Richards equation.</strong> In the unsaturated soil, water content <span class="math inline">\(\theta\)</span> and hydraulic conductivity <span class="math inline">\(K\)</span> depend on the pressure head <span class="math inline">\(\psi\)</span>:</p>
+<p><span id="eq-richards"><span class="math display">\[
+\frac{\partial \theta(\psi)}{\partial t} = \nabla \cdot \left[ K(\psi) \, \nabla (\psi + z) \right] .
+\tag{2.16}\]</span></span></p>
+<p>The equation is a parabolic diffusion equation whose coefficients depend strongly on the solution. It is the prototype of a nonlinear problem in this lecture (Chapter 17).</p>
+<p><strong>Seismic waves.</strong> Conservation of momentum with Hooke’s law gives, for a shear wave propagating in the <span class="math inline">\(x\)</span> direction with particle velocity <span class="math inline">\(v\)</span> and shear stress <span class="math inline">\(\sigma\)</span>,</p>
+<p><span id="eq-elastic"><span class="math display">\[
+\rho \frac{\partial v}{\partial t} = \frac{\partial \sigma}{\partial x}, \qquad
+\frac{\partial \sigma}{\partial t} = \mu \frac{\partial v}{\partial x} ,
+\tag{2.17}\]</span></span></p>
+<p>with density <span class="math inline">\(\rho\)</span> and shear modulus <span class="math inline">\(\mu\)</span>. For constant <span class="math inline">\(\rho\)</span> and <span class="math inline">\(\mu\)</span> we differentiate the first equation with respect to <span class="math inline">\(t\)</span> and insert the second:</p>
+<p><span class="math display">\[
+\rho \frac{\partial^2 v}{\partial t^2}
+= \frac{\partial}{\partial x} \frac{\partial \sigma}{\partial t}
+= \mu \frac{\partial^2 v}{\partial x^2}
+\quad \Longrightarrow \quad
+\frac{\partial^2 v}{\partial t^2} = \frac{\mu}{\rho} \frac{\partial^2 v}{\partial x^2} .
+\]</span></p>
+<p>This is the wave equation <a href="#eq-wave" class="quarto-xref">Equation&nbsp;<span>2.11</span></a> with the shear wave speed <span class="math inline">\(c = \sqrt{\mu / \rho}\)</span>, and <a href="#eq-elastic" class="quarto-xref">Equation&nbsp;<span>2.17</span></a> is a hyperbolic system. The structure is the same as in <a href="#eq-shallow-water-linear" class="quarto-xref">Equation&nbsp;<span>2.14</span></a>: two first-order equations for two variables that drive each other.</p>
+<p>Real models mix the types. The advection–diffusion equation <a href="#eq-advection-diffusion" class="quarto-xref">Equation&nbsp;<span>2.7</span></a> is formally parabolic, but behaves like a hyperbolic equation when advection dominates. The same holds for the Navier–Stokes equations at high Reynolds number. Numerical models therefore often treat the terms of one equation with different methods (Chapter 18).</p>
+</section>
+<section id="initial-and-boundary-conditions" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="initial-and-boundary-conditions"><span class="header-section-number">2.6</span> Initial and boundary conditions</h2>
+<p>A differential equation has many solutions. Initial and boundary conditions select one.</p>
+<p><strong>Initial conditions</strong> prescribe the state at <span class="math inline">\(t = 0\)</span>. Their number equals the order of the time derivative: one for the diffusion equation, <span class="math inline">\(u(x, 0) = u_0(x)\)</span>, and two for the wave equation, <span class="math inline">\(u(x, 0)\)</span> and <span class="math inline">\(u_t(x, 0)\)</span>.</p>
+<p><strong>Boundary conditions</strong> prescribe the behaviour on the boundary <span class="math inline">\(\partial\Omega\)</span> of the domain <span class="math inline">\(\Omega\)</span>. For second-order equations three types are used, where <span class="math inline">\(\partial u / \partial n\)</span> is the derivative in the direction of the outward normal.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Condition on <span class="math inline">\(\partial\Omega\)</span></th>
+<th>Physical meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dirichlet</td>
+<td><span class="math inline">\(u = g\)</span></td>
+<td>the value is prescribed</td>
+<td>fixed temperature; water level of a lake bounding an aquifer</td>
+</tr>
+<tr class="even">
+<td>Neumann</td>
+<td><span class="math inline">\(\partial u / \partial n = g\)</span></td>
+<td>the flux is prescribed</td>
+<td>insulated wall or impermeable layer (<span class="math inline">\(g = 0\)</span>); prescribed heat flux</td>
+</tr>
+<tr class="odd">
+<td>Robin</td>
+<td><span class="math inline">\(\partial u / \partial n + \alpha u = g\)</span></td>
+<td>the flux depends on the value</td>
+<td>heat exchange with the surrounding air</td>
+</tr>
+</tbody>
+</table>
+<p>A condition with <span class="math inline">\(g = 0\)</span> is called homogeneous. On each part of the boundary exactly one condition is prescribed.</p>
+<p>A fourth kind is common in atmospheric modelling: <strong>periodic</strong> boundary conditions, <span class="math inline">\(u(0, t) = u(L, t)\)</span>. On a latitude circle they are exact. Limited-area models face the opposite situation: their lateral boundaries are artificial, and waves must be able to leave the domain without reflection. Such open boundaries are a subject of their own (Chapter 16).</p>
+</section>
+<section id="well-posed-problems" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="well-posed-problems"><span class="header-section-number">2.7</span> Well-posed problems</h2>
+<p>A problem is <strong>well-posed</strong> in the sense of Hadamard<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> if</p>
+<ol type="1">
+<li>a solution exists,</li>
+<li>the solution is unique,</li>
+<li>the solution depends continuously on the data, that is on initial conditions, boundary conditions and parameters.</li>
+</ol>
+<p>If one of the conditions is violated, a numerical solution is meaningless or impossible. Three examples show that this is of practical relevance.</p>
+<p><strong>Too few conditions.</strong> The Poisson equation with Neumann conditions on the whole boundary prescribes only fluxes. If <span class="math inline">\(u\)</span> is a solution, so is <span class="math inline">\(u\)</span> plus any constant, which violates condition 2. Moreover a solution exists only if the prescribed boundary fluxes balance the sources, which concerns condition 1. In the discrete problem this shows up as a singular matrix.</p>
+<p><strong>The wrong direction of time.</strong> The diffusion equation smooths. Solving it backward in time, in order to find the initial state that led to an observed state, must therefore roughen: small-scale errors in the observed state are amplified without bound, which violates condition 3. Problems of this kind, where causes are inferred from effects, are the <strong>inverse problems</strong> of geophysics and the <strong>data assimilation</strong> problem of meteorology. They need additional information to become well-posed (Chapter 21).</p>
+<p><strong>The wrong kind of conditions.</strong> Hadamard’s own example shows that the conditions must match the type of the equation. Take the Laplace equation in the upper half plane <span class="math inline">\(y &gt; 0\)</span> and prescribe, as for the wave equation, the value and the normal derivative on the line <span class="math inline">\(y = 0\)</span>:</p>
+<p><span class="math display">\[
+u_{xx} + u_{yy} = 0, \qquad
+u(x, 0) = 0, \qquad
+u_y(x, 0) = \frac{1}{n} \sin(n x) .
+\]</span></p>
+<p>We look for a solution of the form <span class="math inline">\(u = \sin(n x) \, Y(y)\)</span>. Inserting it, <span class="math inline">\(u_{xx} = -n^2 \sin(n x) \, Y\)</span> and <span class="math inline">\(u_{yy} = \sin(n x) \, Y''\)</span>, so the PDE becomes the ODE <span class="math inline">\(Y'' = n^2 Y\)</span> with the general solution <span class="math inline">\(Y = A \cosh(n y) + B \sinh(n y)\)</span>. The first condition gives <span class="math inline">\(Y(0) = A = 0\)</span>. The second gives <span class="math inline">\(Y'(0) = n B = 1/n\)</span>, so <span class="math inline">\(B = 1/n^2\)</span> and</p>
+<p><span class="math display">\[
+u(x, y) = \frac{1}{n^2} \sin(n x) \sinh(n y) .
+\]</span></p>
+<p>Now let <span class="math inline">\(n \to \infty\)</span>. The data tend to zero, <span class="math inline">\(|u_y(x, 0)| \le 1/n\)</span>, and for zero data the solution is <span class="math inline">\(u = 0\)</span>. But at any fixed height <span class="math inline">\(y &gt; 0\)</span> the solution grows without bound, since <span class="math inline">\(\sinh(n y) \approx \tfrac12 e^{n y}\)</span>: at <span class="math inline">\(y = 1\)</span> and <span class="math inline">\(n = 20\)</span>, data of size <span class="math inline">\(0.05\)</span> produce a solution of size <span class="math inline">\(\tfrac{1}{400} \sinh(20) \approx 6 \cdot 10^5\)</span>. Condition 3 is violated.</p>
+<p>The same data are harmless for the wave equation <span class="math inline">\(u_{tt} = u_{xx}\)</span> with <span class="math inline">\(t\)</span> in place of <span class="math inline">\(y\)</span>. There the ODE is <span class="math inline">\(Y'' = -n^2 Y\)</span>, the hyperbolic functions become trigonometric ones, and the solution <span class="math inline">\(u = \frac{1}{n^2} \sin(n x) \sin(n t)\)</span> stays below <span class="math inline">\(1/n^2\)</span>. The only difference is the sign in front of <span class="math inline">\(n^2\)</span>, and that sign is the type of the equation. An elliptic equation needs one condition on the whole boundary, not two conditions on part of it (see the table in <a href="#sec-prototype-equations" class="quarto-xref"><span>Section 2.4</span></a>). In geophysics this example appears as the <strong>downward continuation</strong> of gravity and magnetic fields: computing the field at depth from measurements at the surface amplifies the short wavelengths exponentially.</p>
+<p>Condition 3 for the mathematical problem has a counterpart for the numerical method: stability (Chapter 6). And well-posed does not mean predictable for all times. The equations of the atmosphere are well-posed, yet small errors in the initial state grow so fast that the forecast loses its value after about two weeks (Chapter 8).</p>
+</section>
+<section id="summary" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">2.8</span> Summary</h2>
+<ul>
+<li>Gradient, divergence, curl and Laplacian are the building blocks of all equations in this lecture. The divergence is the net outflow per volume.</li>
+<li>A conservation law states that the amount in a volume changes only by the flux through its surface and by sources: <span class="math inline">\(\partial u / \partial t + \nabla \cdot \vec F = s\)</span>. Advective and diffusive fluxes close the equation.</li>
+<li>Classify before you compute: ODE or PDE, order, linear or nonlinear, elliptic, parabolic or hyperbolic. The type decides the numerical method.</li>
+<li>The prototypes show what the types mean: diffusion smooths; advection and waves propagate with finite speed; the Poisson equation describes equilibria.</li>
+<li>The equations of atmospheric, hydrological and seismic models are combinations of the prototypes, and each can be classified the same way.</li>
+<li>A well-posed problem has the right number of initial and boundary conditions, and its solution depends continuously on the data.</li>
+</ul>
+</section>
+<section id="further-reading" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">2.9</span> Further reading</h2>
+<p><span class="citation" data-cites="boyce2009">Boyce and DiPrima (<a href="references.html#ref-boyce2009" role="doc-biblioref">2009</a>)</span>, chapter 1, for the classification of ODEs; <span class="citation" data-cites="wick2020">Wick (<a href="references.html#ref-wick2020" role="doc-biblioref">2020</a>)</span> for the classification of PDEs and well-posedness; <span class="citation" data-cites="durran2010">Durran (<a href="references.html#ref-durran2010" role="doc-biblioref">2010</a>)</span>, chapter 1, for the equations of geophysical fluid dynamics.</p>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-boyce2009" class="csl-entry" role="listitem">
+Boyce, William E., and Richard C. DiPrima. 2009. <em>Elementary Differential Equations and Boundary Value Problems</em>. 9th ed. Wiley.
+</div>
+<div id="ref-durran2010" class="csl-entry" role="listitem">
+Durran, Dale R. 2010. <em>Numerical Methods for Fluid Dynamics: With Applications to Geophysics</em>. 2nd ed. Springer.
+</div>
+<div id="ref-wick2020" class="csl-entry" role="listitem">
+Wick, Thomas. 2020. <em>Numerical Methods for Partial Differential Equations</em>. Leibniz Universit<span>ä</span>t Hannover.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Jacques Hadamard (1865–1963), French mathematician, who formulated these conditions in 1902 and also proved the prime number theorem.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./01-introduction.html" class="pagination-link" aria-label="What is prognostic modelling?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is prognostic modelling?</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03-numerical-toolbox.html" class="pagination-link" aria-label="The numerical toolbox I: derivatives, integrals, roots">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The numerical toolbox I: derivatives, integrals, roots</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
